@@ -6,7 +6,7 @@
       "green_by": "manual-build",
       "method": "real-work",
       "contributions": 9,
-      "signal_source": "check@18:00 CEST — github-mcp:list_commits+search_commits (check.sh exit 2, cloud egress repo-scoped); 9 commits on main today by tompulsarlabs <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email",
+      "signal_source": "failsafe@22:30 CEST final confirmation — github-mcp:list_commits (check.sh exit 2, cloud egress repo-scoped); still 9 commits on main today by tompulsarlabs <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email; no new commits since check@18:00, real work already covered so failsafe journal not needed",
       "nudge_sent": false,
       "nudge_converted": null,
       "failsafe_fired": false
