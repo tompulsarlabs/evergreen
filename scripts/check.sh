@@ -15,6 +15,15 @@ TODAY=$(TZ="$TZ_NAME" date +%F)
 RAW_OFFSET=$(TZ="$TZ_NAME" date +%z)
 OFFSET="${RAW_OFFSET:0:3}:${RAW_OFFSET:3}"
 
+# Auth-free fallback: parse the public contributions HTML (the graph itself).
+# Returns the day's data-level (0 = grey, 1-4 = green shades); counts as >=1 contribution.
+query_level_html() {
+  local html td
+  html=$(curl -fsSL --max-time 20 "https://github.com/users/${LOGIN}/contributions") || return 1
+  td=$(printf '%s' "$html" | tr '<' '\n' | grep -F "data-date=\"$TODAY\"" | head -1) || return 1
+  printf '%s' "$td" | sed -n 's/.*data-level="\([0-9]\)".*/\1/p' | grep . || return 1
+}
+
 query_count() {
   gh api graphql \
     -f query='query($login:String!,$from:DateTime!,$to:DateTime!){
@@ -31,13 +40,26 @@ query_count() {
            | select(.date==\"$TODAY\") | .contributionCount] | add // 0"
 }
 
-COUNT=$(query_count)
+# Prefer the authenticated GraphQL count; fall back to the public graph HTML
+# when gh is unavailable/unauthenticated (e.g. cloud sandboxes).
+get_signal() {
+  if command -v gh >/dev/null 2>&1 && COUNT=$(query_count 2>/dev/null); then
+    SOURCE="graphql"
+  elif COUNT=$(query_level_html); then
+    SOURCE="graph-html (data-level)"
+  else
+    echo "$TODAY ($TZ_NAME) $LOGIN: no signal — graphql and graph-html both failed" >&2
+    return 1
+  fi
+}
+
+get_signal || exit 2
 attempt=1
 while [ "$COUNT" -lt 1 ] && [ "$attempt" -lt "$RETRIES" ]; do
   sleep "$RETRY_WAIT"
-  COUNT=$(query_count)
+  get_signal || exit 2
   attempt=$((attempt + 1))
 done
 
-echo "$TODAY ($TZ_NAME) $LOGIN: $COUNT contribution(s) [attempt $attempt/$RETRIES]"
+echo "$TODAY ($TZ_NAME) $LOGIN: $COUNT via $SOURCE [attempt $attempt/$RETRIES]"
 [ "$COUNT" -ge 1 ]
