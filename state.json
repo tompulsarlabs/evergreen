@@ -1,5 +1,14 @@
 {
-  "streak": 0,
-  "last_green": null,
-  "days": {}
+  "streak": 1,
+  "last_green": "2026-08-23",
+  "days": {
+    "2026-08-23": {
+      "green_by": "manual-build",
+      "method": "real-work",
+      "contributions": 2,
+      "nudge_sent": false,
+      "nudge_converted": null,
+      "failsafe_fired": false
+    }
+  }
 }

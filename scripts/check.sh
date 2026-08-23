@@ -7,7 +7,9 @@ LOGIN="${EVERGREEN_LOGIN:-tompulsarlabs}"
 TZ_NAME="${EVERGREEN_TZ:-Europe/Berlin}"
 
 TODAY=$(TZ="$TZ_NAME" date +%F)
-OFFSET=$(TZ="$TZ_NAME" date +%:z)
+# BSD date has no %:z — splice the colon into +0200 → +02:00
+RAW_OFFSET=$(TZ="$TZ_NAME" date +%z)
+OFFSET="${RAW_OFFSET:0:3}:${RAW_OFFSET:3}"
 
 COUNT=$(gh api graphql \
   -f query='query($login:String!,$from:DateTime!,$to:DateTime!){
