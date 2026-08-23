@@ -27,6 +27,21 @@ for today in `Europe/Berlin`), never by the rendered graph. After any failsafe
 commit, re-run the check until today ≥ 1; if it stays 0 after 3 attempts over
 15 minutes, alert loudly with the misconfig checklist: email? branch? fork? visibility?
 
+## Immutable: commit attribution encodes intent
+
+Routines run in ephemeral cloud sessions, so all state (journal drafts, state.json,
+watchlist changes) must be committed to `main` to survive between runs. To keep
+system bookkeeping from lighting the graph as noise:
+
+- **System commits** (scout drafts, state recording, watchlist sync) are authored as
+  `evergreen-bot <bot@evergreen.invalid>` — an unconnected address that never counts.
+- **Contribution commits** (the failsafe journal entry, and only that) are authored as
+  `commit_name <commit_email>` from `config.yml` — the connected address.
+
+Always set author explicitly per commit (`git -c user.name=… -c user.email=… commit`),
+never inherit the environment's git config. The graph therefore reflects exactly one
+thing: real work, or the day's genuine journal entry — never the system's own churn.
+
 ## Immutable: no synthetic contributions
 
 No empty commits, no backdating, no content-free filler. The failsafe commit is
@@ -40,14 +55,22 @@ for the retro to fix — not a license to automate noise.
 
 - **Scout (09:00)** — sync watchlist (`gh api user/repos`, minus forks/archived/excludes).
   Gather candidates: open PRs close to merge, assigned issues, branches with recent
-  pushes but no PR, yesterday's carry-over. Draft `journal/<today>.md` locally in the
-  run (committed only by failsafe or by real activity notes). Silent.
-- **Check (18:00)** — run `scripts/check.sh`. Green → record outcome in state, stay
-  silent. Grey → one notification naming the single most concrete candidate.
-- **Failsafe (22:30)** — still grey → finalize today's journal entry, commit to
-  `main` with author from `config.yml`, push, verify per the immutable rule.
-  Record outcome either way: `state.json` gets `{date: {green_by, method, nudge_sent,
-  nudge_converted, failsafe_fired}}`; bump or reset `streak`.
+  pushes but no PR, yesterday's carry-over. Draft `journal/<today>.md` and commit it
+  **bot-authored** (`scout: <date> — <n> candidates, top: <one-liner>`). Silent.
+- **Check (18:00)** — run `scripts/check.sh`. Green → record outcome in state
+  (bot-authored commit), stay silent. Grey → nudge with the single most concrete
+  candidate. Nudge channel (provisional, validate in soak): a Google Calendar event
+  ~15 min out titled with the candidate, so it hits the phone natively.
+- **Failsafe (22:30)** — still grey → finalize today's journal entry, commit it
+  **Tom-authored** per the attribution rule, push, verify per the immutable rule.
+  Record outcome either way — `state.json` gets `{date: {green_by, method,
+  contributions: <final count from check>, nudge_sent, nudge_converted,
+  failsafe_fired}}` (bot-authored); bump or reset `streak`.
+
+**Ops note (DST):** cron schedules are pinned in UTC (07:00 / 16:00 / 20:30). When
+Berlin flips CEST→CET in late October, local fire times shift to 08:00 / 17:00 /
+21:30 — a safe direction (failsafe moves *earlier*). The retro nearest the flip
+should re-pin the UTC crons if the original local times matter.
 
 ## Tunable: retro (Sunday 10:00)
 
