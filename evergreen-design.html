@@ -390,7 +390,24 @@
 </section>
 
 <section>
-  <p class="eyebrow">§6 · Failure modes</p>
+  <p class="eyebrow">§6 · As built</p>
+  <h2>What three live cloud tests changed</h2>
+  <p>The system is live: repo at <code>tompulsarlabs/evergreen</code>, four routines scheduled, day 1 green, tag <code>v1</code>. Forced test runs surfaced four deviations from the plan above:</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Discovery</th><th>Consequence</th></tr></thead>
+      <tbody>
+        <tr><td>Cloud github.com egress is<br>entirely repo-scoped</td><td>GraphQL, REST, and even the public contributions HTML 403 in the sandbox. Verification is a ladder: GraphQL (local) → contributions-HTML <code>data-level</code> parse (<code>check.sh</code> handles both) → <strong>built-in GitHub MCP tools</strong> in cloud runs (user-scoped; verified working).</td></tr>
+        <tr><td>PushNotification works<br>from cloud runs</td><td>It's the nudge channel — verified reaching mobile. The calendar event demoted to fallback.</td></tr>
+        <tr><td>Cloud runs are ephemeral</td><td>Scout drafts and state must be committed to survive between runs — so <strong>attribution encodes intent</strong>: bookkeeping commits are authored <code>evergreen-bot &lt;bot@evergreen.invalid&gt;</code> (unconnected, never lights the graph); only journal entries and real work carry the connected author. Validated live.</td></tr>
+        <tr><td>The contributions API flaps<br>(0/2/3/5 within minutes)</td><td>Grey is only trusted after retries; a fresh push can transiently read as 0.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">§7 · Failure modes</p>
   <h2>How it degrades</h2>
   <div class="scroll">
     <table>

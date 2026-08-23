@@ -116,7 +116,29 @@ Phase 4 is deliberately optional: the cloud-only core never depends on the Mac b
 
 ---
 
-## 6. Failure modes
+## 6. As built (2026-08-23)
+
+Deviations from the plan above, discovered via three forced cloud test runs:
+
+- **The cloud sandbox's github.com egress is entirely repo-scoped** — GraphQL, REST,
+  and even the public contributions HTML all 403 there. Verification is now a ladder:
+  GraphQL `contributionsCollection` (local/gh) → public contributions-HTML `data-level`
+  parse (anywhere unproxied; `scripts/check.sh` does both) → **built-in GitHub MCP
+  tools** in cloud runs (`list_commits` on evergreen + `search_commits`/`search_issues`/
+  `search_pull_requests` cross-repo; user-scoped, verified working).
+- **Nudge channel is PushNotification** — verified reaching mobile from cloud runs;
+  the Google Calendar event is the fallback, not the primary.
+- **Attribution encodes intent**: cloud runs are ephemeral, so scout drafts and state
+  must be committed to survive between runs; those bookkeeping commits are authored
+  `evergreen-bot <bot@evergreen.invalid>` (unconnected → never lights the graph), and
+  only failsafe journal entries + real work carry the connected author. Validated
+  live: bot-authored state commit pushed from cloud, graph unaffected.
+- **The contributions API flaps** (0/2/3/5 across replicas within minutes) — grey is
+  only trusted after retries; a fresh push can transiently read as 0.
+- Routines created with no explicit MCP connections get **all** the user's connectors
+  attached by default — least-privilege requires explicitly clearing them.
+
+## 7. Failure modes
 
 | Failure | Mitigation |
 |---------|-----------|
