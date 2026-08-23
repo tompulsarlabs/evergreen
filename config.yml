@@ -1,0 +1,22 @@
+# Evergreen configuration — tunable by the weekly retro (learn: commits)
+login: tompulsarlabs
+timezone: Europe/Berlin
+
+# Commit identity for failsafe commits. MUST stay a GitHub-connected address
+# (rule 2 in DESIGN.md §1). The noreply form is guaranteed-connected.
+commit_email: 249609836+tompulsarlabs@users.noreply.github.com
+commit_name: tompulsarlabs
+
+schedule:            # local times in `timezone`; nothing after 22:30 (midnight margin)
+  scout: "09:00"
+  check: "18:00"
+  failsafe: "22:30"
+  retro: "SUN 10:00"
+
+watchlist:
+  source: auto       # scout syncs from `gh api user/repos`; forks + archived excluded
+  exclude: []        # manual opt-outs by full name, e.g. tompulsarlabs/scratch
+
+notifications:
+  quiet_when_green: true
+  nudge_style: concrete-candidate   # always name one specific next action

@@ -1,0 +1,439 @@
+<title>Evergreen</title>
+<style>
+  :root {
+    --bg: #f9faf8;
+    --surface: #ffffff;
+    --ink: #17211a;
+    --muted: #5b6a5f;
+    --line: #dce4dd;
+    --accent: #2da44e;
+    --accent-ink: #1a7f37;
+    --code-bg: #f0f4f1;
+    --cell: #e6ece7;
+    --g1: #9be9a8; --g2: #40c463; --g3: #30a14e; --g4: #216e39;
+    --warn-bg: #fff8f0;
+    --warn-line: #e8d3b8;
+    --warn-ink: #7a4f10;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e120f;
+      --surface: #151b17;
+      --ink: #dbe4dc;
+      --muted: #8ba190;
+      --line: #253028;
+      --accent: #3fb950;
+      --accent-ink: #56d364;
+      --code-bg: #121812;
+      --cell: #1c231e;
+      --g1: #0e4429; --g2: #006d32; --g3: #26a641; --g4: #39d353;
+      --warn-bg: #1d1812;
+      --warn-line: #4a3a20;
+      --warn-ink: #d9a94f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e120f;
+    --surface: #151b17;
+    --ink: #dbe4dc;
+    --muted: #8ba190;
+    --line: #253028;
+    --accent: #3fb950;
+    --accent-ink: #56d364;
+    --code-bg: #121812;
+    --cell: #1c231e;
+    --g1: #0e4429; --g2: #006d32; --g3: #26a641; --g4: #39d353;
+    --warn-bg: #1d1812;
+    --warn-line: #4a3a20;
+    --warn-ink: #d9a94f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 24px 96px;
+  }
+  main { max-width: 46rem; margin: 0 auto; }
+
+  .mono, h1, h2, .eyebrow, .time, code, pre, .phase-tag {
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  /* ---- header ---- */
+  header { padding: 72px 0 12px; }
+  .matrix {
+    display: grid;
+    grid-template-rows: repeat(7, 11px);
+    grid-auto-flow: column;
+    grid-auto-columns: 11px;
+    gap: 3px;
+    margin-bottom: 36px;
+    width: max-content;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .matrix span { border-radius: 2px; background: var(--cell); }
+  .matrix .l1 { background: var(--g1); }
+  .matrix .l2 { background: var(--g2); }
+  .matrix .l3 { background: var(--g3); }
+  .matrix .l4 { background: var(--g4); }
+  h1 {
+    font-size: 2.35rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+  .subtitle { color: var(--muted); max-width: 38rem; margin: 0 0 8px; }
+  .meta { color: var(--muted); font-size: 0.8rem; }
+  .meta code { background: none; padding: 0; color: inherit; }
+
+  /* ---- sections ---- */
+  section { margin-top: 64px; }
+  .eyebrow {
+    color: var(--accent-ink);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+  p { margin: 0 0 14px; max-width: 42rem; }
+  strong { font-weight: 600; }
+  .stance {
+    border-left: 3px solid var(--accent);
+    padding: 2px 0 2px 18px;
+    color: var(--muted);
+    max-width: 40rem;
+  }
+  .stance strong { color: var(--ink); }
+
+  /* ---- tables ---- */
+  .scroll { overflow-x: auto; margin: 20px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: 0 16px 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  td {
+    padding: 11px 16px 11px 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  td:first-child, th:first-child { white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+
+  /* ---- code ---- */
+  code {
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    font-size: 0.85em;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .c-prefix { color: var(--accent-ink); font-weight: 600; }
+  .c-dim { color: var(--muted); }
+
+  /* ---- escalation ladder ---- */
+  .ladder { margin: 24px 0; display: flex; flex-direction: column; }
+  .rung {
+    display: grid;
+    grid-template-columns: 72px 16px 1fr;
+    gap: 0 18px;
+    position: relative;
+  }
+  .rung + .rung .rung-body { padding-top: 0; }
+  .time {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent-ink);
+    text-align: right;
+    padding-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .rail { position: relative; }
+  .rail::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 26px;
+    bottom: -4px;
+    width: 1px;
+    background: var(--line);
+  }
+  .rung:last-child .rail::before { display: none; }
+  .dot {
+    position: absolute;
+    left: 50%;
+    top: 7px;
+    transform: translateX(-50%);
+    width: 11px; height: 11px;
+    border-radius: 3px;
+    background: var(--cell);
+  }
+  .rung:nth-child(1) .dot { background: var(--g1); }
+  .rung:nth-child(2) .dot { background: var(--g3); }
+  .rung:nth-child(3) .dot { background: var(--g4); }
+  .rung-body { padding-bottom: 26px; }
+  .rung-body h3 {
+    font-size: 0.95rem;
+    font-weight: 650;
+    margin: 0 0 4px;
+  }
+  .rung-body p { font-size: 0.92rem; color: var(--muted); margin: 0; max-width: 38rem; }
+  .rung-body p strong { color: var(--ink); font-weight: 600; }
+
+  /* ---- callout ---- */
+  .blocker {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-line);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 0.92rem;
+    margin: 20px 0;
+  }
+  .blocker .tag {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warn-ink);
+  }
+  .blocker p { margin: 6px 0 0; max-width: none; }
+
+  ol.prereqs { padding-left: 1.2rem; margin: 16px 0; }
+  ol.prereqs li { margin-bottom: 12px; max-width: 40rem; }
+  ol.prereqs li::marker { color: var(--accent-ink); font-weight: 600; }
+
+  .phase-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 650;
+    color: var(--accent-ink);
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 7px;
+    white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 80px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
+
+<main>
+<header>
+  <div class="matrix" id="matrix" aria-hidden="true"></div>
+  <h1>Evergreen</h1>
+  <p class="subtitle">A self-learning daily loop that keeps the <code>tompulsarlabs</code> contribution graph green — by getting real work shipped first, and guaranteeing the floor with a genuine journal commit when it isn't.</p>
+  <p class="meta">Design doc · 2026-08-22 · source at <code>~/Build/evergreen/DESIGN.md</code></p>
+</header>
+
+<section>
+  <p class="stance"><strong>Stance:</strong> no empty commits, no backdating, no synthetic noise. The failsafe commit is a real daily engineering journal. The system makes you ship — it doesn't fake it.</p>
+</section>
+
+<section>
+  <p class="eyebrow">§1 · Hard constraints</p>
+  <h2>GitHub's counting rules</h2>
+  <p>Rules 1–5 verified against GitHub's docs (2026-08-22); rule 6 isn't confirmed in the docs pages checked, so the design covers it with scheduling margin plus API verification, which makes the exact boundary rule immaterial. These are the rules most likely to make the system "work" while the graph stays grey, so they're design constraints, not footnotes.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Rule</th><th>Design consequence</th></tr></thead>
+      <tbody>
+        <tr><td>Default branch only<br><span class="c-dim">(or <code>gh-pages</code>)</span></td><td>Failsafe commits go straight to <code>main</code> of the state repo.</td></tr>
+        <tr><td>Author email must be<br>connected to the account</td><td>Setup verifies <code>git config user.email</code> against <code>gh api user/emails</code>. Safest value: <code>&lt;id&gt;+tompulsarlabs@users.noreply.github.com</code>. The most common silent-grey cause.</td></tr>
+        <tr><td>Forks never count</td><td>Watchlist excludes forks; the state repo is standalone.</td></tr>
+        <tr><td>Private repos are anonymized,<br>and only shown if toggled on</td><td>Decision: make the state repo <strong>public</strong> with non-sensitive journal content. Fallback: private + "Private contributions" toggle on.</td></tr>
+        <tr><td>Graph can lag up to 24&nbsp;h</td><td>Verification queries the GraphQL API, never the rendered graph.</td></tr>
+        <tr><td>Day boundary follows the<br>commit timestamp's timezone</td><td>Everything is pinned to <code>Europe/Berlin</code>; nothing runs within 90 minutes of midnight.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">§2 · Architecture</p>
+  <h2>One repo is the system</h2>
+  <p>A public repo, <code>tompulsarlabs/evergreen</code>, is simultaneously the config, the memory, the guaranteed-green floor, and the version history:</p>
+<pre><code>evergreen/
+├── config.yml        <span class="c-dim"># watchlist repos, cutoffs, timezone, notification prefs</span>
+├── playbook.md       <span class="c-dim"># the agent's own instructions — the learning loop edits THIS</span>
+├── state.json        <span class="c-dim"># streak, last-green date, per-day outcome log</span>
+├── journal/
+│   └── 2026-08-22.md <span class="c-dim"># one entry per day: candidates, outcome, streak</span>
+└── CHANGELOG.md      <span class="c-dim"># playbook revisions, tagged v1, v2, …</span></code></pre>
+  <p>The loop runs as <strong>Claude Code cloud scheduled agents</strong>, so it works while the Mac sleeps. Three daily runs form the escalation ladder:</p>
+
+  <div class="ladder">
+    <div class="rung">
+      <div class="time">09:00</div>
+      <div class="rail"><span class="dot"></span></div>
+      <div class="rung-body">
+        <h3>Scout</h3>
+        <p>Auto-sync the watchlist from <code>gh api user/repos</code> (forks and archived excluded), honoring manual excludes in <code>config.yml</code> — <strong>"all projects" never depends on a hand-curated list</strong>. Then enumerate real shippable candidates: PRs one review from merge, assigned issues, stale branches, yesterday's carry-over. Draft today's journal entry. Quiet.</p>
+      </div>
+    </div>
+    <div class="rung">
+      <div class="time">18:00</div>
+      <div class="rail"><span class="dot"></span></div>
+      <div class="rung-body">
+        <h3>Check + nudge</h3>
+        <p>Query today's contributions. <strong>Green → log silently.</strong> Grey → one push notification with the single most concrete candidate: <em>"Grey so far. sybil #12 is one review from merge."</em></p>
+      </div>
+    </div>
+    <div class="rung">
+      <div class="time">22:30</div>
+      <div class="rail"><span class="dot"></span></div>
+      <div class="rung-body">
+        <h3>Failsafe + verify</h3>
+        <p>Still grey → finalize the journal entry (findings, outcome, streak, tomorrow's top candidate), commit to <code>main</code>, push. Then <strong>re-query the API until today ≥ 1</strong> — a failed verification alerts loudly the same night, catching email/branch/visibility misconfig immediately.</p>
+      </div>
+    </div>
+  </div>
+
+  <p>The ladder prefers real work by construction: 13.5 hours of runway between scout and failsafe, and every nudge points at a concrete next action, not a generic reminder.</p>
+  <p><strong>Attribution note:</strong> the failsafe commit runs in the cloud sandbox, where this Mac's <code>git config</code> doesn't exist — inheriting environment config there is exactly the silent-grey email failure from rule&nbsp;2. Author identity is explicit per commit: pass author/email in the commit command, or commit via GitHub's Contents API, which attributes to the token owner when author is omitted (confirm against the REST docs in Phase&nbsp;1).</p>
+  <p>"Green" is defined by the authoritative query — <code>contributionsCollection</code> counts commits, PRs, issues, and reviews, exactly matching the graph. Because reviews count, the scout treats "review that open PR" as a first-class candidate — often the cheapest real contribution of the day.</p>
+<pre><code>query($login: String!, $from: DateTime!, $to: DateTime!) {
+  user(login: $login) {
+    contributionsCollection(from: $from, to: $to) {
+      contributionCalendar {
+        weeks { contributionDays { date contributionCount } }
+      }
+      restrictedContributionsCount   <span class="c-dim"># private-repo activity</span>
+    }
+  }
+}</code></pre>
+  <p class="meta"><code>from</code>/<code>to</code> span today 00:00–23:59 <em>with the Berlin offset</em>, so "today" means the same thing to the checker and to the graph.</p>
+</section>
+
+<section>
+  <p class="eyebrow">§3 · Self-learning loop</p>
+  <h2>The git history is the learning record</h2>
+  <p>A weekly retro run (Sunday 10:00) reads the last 7–30 days of outcomes in <code>state.json</code> — how often the failsafe fired, which nudges converted into real commits within four hours, which repos actually produce shipped work — then makes one or two adjustments by editing <code>playbook.md</code> and <code>config.yml</code>. The next day's runs read the updated playbook, so behavior changes take effect immediately. Every change is a readable, revertible diff:</p>
+<pre><code><span class="c-prefix">journal:</span> 2026-08-22 — grey at 22:30, failsafe fired (streak 12)
+<span class="c-prefix">learn:</span>   shift nudge 18:00 → 17:00 — 3 of 4 failsafe days had
+         no activity after 18:00                    <span class="c-dim">(tag: v3)</span>
+<span class="c-prefix">config:</span>  add tompulsarlabs/sybil to watchlist
+<span class="c-prefix">scout:</span>   2026-08-23 — 3 candidates, top: sybil #12 needs review</code></pre>
+  <p>Commit-message prefixes plus a version tag on every playbook revision satisfy the clear-history and version-tracking requirements with no extra machinery.</p>
+  <p><strong>Guardrail:</strong> the retro may tune timing, wording, and ranking. It may not touch the counting rules (§1), the verification step, or the no-synthetic-commits stance — those sections of the playbook are marked immutable, and changing them requires a human commit.</p>
+</section>
+
+<section>
+  <p class="eyebrow">§4 · Prerequisites</p>
+  <h2>Current blockers</h2>
+  <div class="blocker">
+    <span class="tag">Blocking</span>
+    <p>The <code>gh</code> token for <code>tompulsarlabs</code> on this Mac is expired. Run <code>! gh auth login</code> in the session — it's interactive, so it needs you. Everything in Phase 0 hangs off this.</p>
+  </div>
+  <ol class="prereqs">
+    <li><strong>Re-authenticate <code>gh</code></strong> (above).</li>
+    <li><strong>Verify the commit email.</strong> After auth: <code>gh api user/emails</code>, then set the state repo's <code>user.email</code> to a connected address. The session default <code>tom@tomgreen.ai</code> may not be on the <code>tompulsarlabs</code> account — this would silently zero the graph.</li>
+    <li><strong>Give the cloud agents GitHub access.</strong> The routines run in Claude's cloud: either the Claude GitHub connector covering <code>evergreen</code> (plus read on watchlist repos), or a fine-grained PAT (contents: write on <code>evergreen</code> only).</li>
+    <li><strong>Decide repo visibility.</strong> Public <code>evergreen</code> (recommended), or private + "Private contributions" toggle.</li>
+    <li><strong>Confirm the timezone anchor.</strong> The Mac says <code>Europe/Berlin</code>.</li>
+  </ol>
+</section>
+
+<section>
+  <p class="eyebrow">§5 · Build phases</p>
+  <h2>Prove counting before scheduling anything</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Phase</th><th>Scope</th><th>Exit criterion</th></tr></thead>
+      <tbody>
+        <tr><td><span class="phase-tag">0 · unblock</span></td><td>Prerequisites 1–5 (~15 min)</td><td><code>gh auth status</code> clean; email confirmed connected</td></tr>
+        <tr><td><span class="phase-tag">1 · prove</span></td><td>Create the repo, journal template, and a <code>check</code> script wrapping the GraphQL query. Run the loop manually once.</td><td>A journal commit turns today green, verified via API within minutes</td></tr>
+        <tr><td><span class="phase-tag">2 · schedule</span></td><td>Three cloud routines + push notifications; 3-day soak. Must confirm notifications from <em>cloud</em> runs reach the phone — else pick a fallback channel first</td><td>Ladder observed end-to-end on a grey day; silent on a green day; nudge confirmed received</td></tr>
+        <tr><td><span class="phase-tag">3 · learn</span></td><td>Weekly retro; playbook + CHANGELOG + tags</td><td>First <code>learn:</code> commit produced from real outcome data; tag <code>v1</code></td></tr>
+        <tr><td><span class="phase-tag">4 · enrich</span></td><td>Optional: launchd job pushes local WIP status (dirty repos, unpushed branches in <code>~/Build</code>) into <code>state.json</code></td><td>Scout candidates include local uncommitted work when the Mac is awake</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Phase 4 is deliberately optional: the cloud-only core never depends on the Mac being awake, which is the whole reason the streak is safe.</p>
+</section>
+
+<section>
+  <p class="eyebrow">§6 · Failure modes</p>
+  <h2>How it degrades</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Failure</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>Mac asleep or off</td><td>Core loop is cloud-side by design.</td></tr>
+        <tr><td>Cloud auth expires</td><td>Every run alerts on auth failure; failsafe verification catches silent write failures.</td></tr>
+        <tr><td>Committed but still grey</td><td>Verification fails loudly the same night → playbook checklist: email? branch? fork? visibility?</td></tr>
+        <tr><td>Near-midnight timezone edge</td><td>Nothing scheduled after 22:30; timestamps pinned to Berlin.</td></tr>
+        <tr><td>Notification fatigue</td><td>Silent when green; the retro tunes time and wording from conversion data.</td></tr>
+        <tr><td>Journal rot (filler entries)</td><td>Entries are structured around real candidates and outcomes. The failsafe firing daily means the <em>nudging</em> is failing — exactly what the retro exists to fix.</td></tr>
+        <tr><td>Runaway self-modification</td><td>Immutable playbook sections; every change is a tagged, revertible commit.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>Evergreen · designed 2026-08-22 · target account <code>tompulsarlabs</code> · runs on Claude Code cloud routines</footer>
+</main>
+
+<script>
+  (function () {
+    var m = document.getElementById('matrix');
+    var weeks = 20, days = 7;
+    // deterministic pseudo-random: mostly green with a few grey gaps early,
+    // solid green in recent weeks (the system working)
+    var seed = 42;
+    function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+    for (var w = 0; w < weeks; w++) {
+      for (var d = 0; d < days; d++) {
+        var s = document.createElement('span');
+        var r = rnd();
+        var recent = w >= weeks - 6;
+        var level;
+        if (recent) level = r < 0.15 ? 4 : (r < 0.55 ? 3 : 2);
+        else if (r < 0.18) level = 0;
+        else if (r < 0.45) level = 1;
+        else if (r < 0.75) level = 2;
+        else if (r < 0.93) level = 3;
+        else level = 4;
+        if (level > 0) s.className = 'l' + level;
+        m.appendChild(s);
+      }
+    }
+  })();
+</script>
