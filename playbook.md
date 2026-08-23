@@ -59,8 +59,10 @@ for the retro to fix — not a license to automate noise.
   **bot-authored** (`scout: <date> — <n> candidates, top: <one-liner>`). Silent.
 - **Check (18:00)** — run `scripts/check.sh`. Green → record outcome in state
   (bot-authored commit), stay silent. Grey → nudge with the single most concrete
-  candidate. Nudge channel (provisional, validate in soak): a Google Calendar event
-  ~15 min out titled with the candidate, so it hits the phone natively.
+  candidate. Nudge channel: **PushNotification** (verified working from cloud runs
+  2026-08-23, "Mobile push requested"). Fallback if PushNotification reports
+  not-sent/unavailable: a Google Calendar event ~15 min out titled with the
+  candidate. Never both; never anything on a green day.
 - **Failsafe (22:30)** — still grey → finalize today's journal entry, commit it
   **Tom-authored** per the attribution rule, push, verify per the immutable rule.
   Record outcome either way — `state.json` gets `{date: {green_by, method,
