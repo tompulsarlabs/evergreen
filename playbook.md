@@ -67,6 +67,15 @@ for the retro to fix — not a license to automate noise.
   contributions: <final count from check>, nudge_sent, nudge_converted,
   failsafe_fired}}` (bot-authored); bump or reset `streak`.
 
+**Ops note (cloud environment, mapped live 2026-08-23):** the routine sandbox has
+no `gh` preinstalled and its GitHub REST/GraphQL egress is proxy-restricted (GraphQL
+fully blocked; REST answers "GitHub access is not enabled"). What works: (1) git
+push/pull to this repo via the credential proxy; (2) the **built-in GitHub MCP tools**
+(`mcp__github__*`, load via ToolSearch) for profile/repo/PR/issue reads — the scout's
+API path; (3) `scripts/check.sh`, which automatically falls back to parsing the
+public contribution graph HTML when GraphQL is unavailable. Don't waste run time
+installing or authenticating `gh` in the cloud.
+
 **Ops note (DST):** cron schedules are pinned in UTC (07:00 / 16:00 / 20:30). When
 Berlin flips CEST→CET in late October, local fire times shift to 08:00 / 17:00 /
 21:30 — a safe direction (failsafe moves *earlier*). The retro nearest the flip
