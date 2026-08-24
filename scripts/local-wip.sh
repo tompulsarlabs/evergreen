@@ -10,11 +10,11 @@
 set -uo pipefail
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 
-EVERGREEN="${EVERGREEN_DIR:-$HOME/Build/evergreen}"
-OUT="$EVERGREEN/local-wip.json"
+IVY="${IVY_DIR:-$HOME/Build/ivy}"
+OUT="$IVY/local-wip.json"
 
 # Roots from config.yml (local_wip: roots: [...]), fallback ~/Build
-ROOTS=$(awk '/^local_wip:/{f=1;next} f&&/^[^ ]/{f=0} f&&/^  roots:/{r=1;next} f&&r&&/^    - /{print $2} f&&r&&!/^    - /{r=0}' "$EVERGREEN/config.yml" 2>/dev/null)
+ROOTS=$(awk '/^local_wip:/{f=1;next} f&&/^[^ ]/{f=0} f&&/^  roots:/{r=1;next} f&&r&&/^    - /{print $2} f&&r&&!/^    - /{r=0}' "$IVY/config.yml" 2>/dev/null)
 [ -z "$ROOTS" ] && ROOTS="$HOME/Build"
 
 TMP=$(mktemp)
@@ -57,9 +57,9 @@ if [ -f "$OUT" ] && diff -q <(grep -v generated_at "$OUT") <(grep -v generated_a
 fi
 
 mv "$TMP" "$OUT"
-cd "$EVERGREEN" || exit 0
+cd "$IVY" || exit 0
 git add local-wip.json
-git -c user.name=evergreen-bot -c user.email=bot@evergreen.invalid \
+git -c user.name=ivy-bot -c user.email=bot@ivy.invalid \
   commit -q -m "wip: local scan — $(grep -c '"path"' local-wip.json) repos" || exit 0
 git pull --rebase -q 2>/dev/null || { git rebase --abort 2>/dev/null; exit 0; }
 git push -q 2>/dev/null || exit 0

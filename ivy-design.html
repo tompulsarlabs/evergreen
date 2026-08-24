@@ -1,4 +1,4 @@
-<title>Evergreen</title>
+<title>Ivy</title>
 <style>
   :root {
     --bg: #f9faf8;
@@ -258,9 +258,9 @@
 <main>
 <header>
   <div class="matrix" id="matrix" aria-hidden="true"></div>
-  <h1>Evergreen</h1>
+  <h1>Ivy</h1>
   <p class="subtitle">Agentic DevOps for a working portfolio: a self-learning daily loop that keeps projects moving and the backlog clearing — scout, nudge, ship, learn — with the <code>tompulsarlabs</code> contribution graph as the heartbeat metric.</p>
-  <p class="meta">Design doc · 2026-08-22 · source at <code>~/Build/evergreen/DESIGN.md</code></p>
+  <p class="meta">Design doc · 2026-08-22 · source at <code>~/Build/ivy/DESIGN.md</code></p>
 </header>
 
 <section>
@@ -289,8 +289,8 @@
 <section>
   <p class="eyebrow">§2 · Architecture</p>
   <h2>One repo is the system</h2>
-  <p>A public repo, <code>tompulsarlabs/evergreen</code>, is simultaneously the config, the memory, the guaranteed-green floor, and the version history:</p>
-<pre><code>evergreen/
+  <p>A public repo, <code>tompulsarlabs/ivy</code>, is simultaneously the config, the memory, the guaranteed-green floor, and the version history:</p>
+<pre><code>ivy/
 ├── config.yml        <span class="c-dim"># watchlist repos, cutoffs, timezone, notification prefs</span>
 ├── playbook.md       <span class="c-dim"># the agent's own instructions — the learning loop edits THIS</span>
 ├── state.json        <span class="c-dim"># streak, last-green date, per-day outcome log</span>
@@ -365,8 +365,8 @@
   <ol class="prereqs">
     <li><strong>Re-authenticate <code>gh</code></strong> (above).</li>
     <li><strong>Verify the commit email.</strong> After auth: <code>gh api user/emails</code>, then set the state repo's <code>user.email</code> to a connected address. The session default <code>tom@tomgreen.ai</code> may not be on the <code>tompulsarlabs</code> account — this would silently zero the graph.</li>
-    <li><strong>Give the cloud agents GitHub access.</strong> The routines run in Claude's cloud: either the Claude GitHub connector covering <code>evergreen</code> (plus read on watchlist repos), or a fine-grained PAT (contents: write on <code>evergreen</code> only).</li>
-    <li><strong>Decide repo visibility.</strong> Public <code>evergreen</code> (recommended), or private + "Private contributions" toggle.</li>
+    <li><strong>Give the cloud agents GitHub access.</strong> The routines run in Claude's cloud: either the Claude GitHub connector covering <code>ivy</code> (plus read on watchlist repos), or a fine-grained PAT (contents: write on <code>ivy</code> only).</li>
+    <li><strong>Decide repo visibility.</strong> Public <code>ivy</code> (recommended), or private + "Private contributions" toggle.</li>
     <li><strong>Confirm the timezone anchor.</strong> The Mac says <code>Europe/Berlin</code>.</li>
   </ol>
 </section>
@@ -392,14 +392,14 @@
 <section>
   <p class="eyebrow">§6 · As built</p>
   <h2>What three live cloud tests changed</h2>
-  <p>The system is live: repo at <code>tompulsarlabs/evergreen</code>, four routines scheduled, day 1 green, tag <code>v1</code>. Forced test runs surfaced four deviations from the plan above:</p>
+  <p>The system is live: repo at <code>tompulsarlabs/ivy</code>, four routines scheduled, day 1 green, tag <code>v1</code>. Forced test runs surfaced four deviations from the plan above:</p>
   <div class="scroll">
     <table>
       <thead><tr><th>Discovery</th><th>Consequence</th></tr></thead>
       <tbody>
         <tr><td>Cloud github.com egress is<br>entirely repo-scoped</td><td>GraphQL, REST, and even the public contributions HTML 403 in the sandbox. Verification is a ladder: GraphQL (local) → contributions-HTML <code>data-level</code> parse (<code>check.sh</code> handles both) → <strong>built-in GitHub MCP tools</strong> in cloud runs (user-scoped; verified working).</td></tr>
         <tr><td>PushNotification works<br>from cloud runs</td><td>It's the nudge channel — verified reaching mobile. The calendar event demoted to fallback.</td></tr>
-        <tr><td>Cloud runs are ephemeral</td><td>Scout drafts and state must be committed to survive between runs — so <strong>attribution encodes intent</strong>: bookkeeping commits are authored <code>evergreen-bot &lt;bot@evergreen.invalid&gt;</code> (unconnected, never lights the graph); only journal entries and real work carry the connected author. Validated live.</td></tr>
+        <tr><td>Cloud runs are ephemeral</td><td>Scout drafts and state must be committed to survive between runs — so <strong>attribution encodes intent</strong>: bookkeeping commits are authored <code>ivy-bot &lt;bot@ivy.invalid&gt;</code> (unconnected, never lights the graph); only journal entries and real work carry the connected author. Validated live.</td></tr>
         <tr><td>The contributions API flaps<br>(0/2/3/5 within minutes)</td><td>Grey is only trusted after retries; a fresh push can transiently read as 0.</td></tr>
       </tbody>
     </table>
@@ -425,7 +425,7 @@
   </div>
 </section>
 
-<footer>Evergreen · designed 2026-08-22 · target account <code>tompulsarlabs</code> · runs on Claude Code cloud routines</footer>
+<footer>Ivy · designed 2026-08-22 · target account <code>tompulsarlabs</code> · runs on Claude Code cloud routines</footer>
 </main>
 
 <script>

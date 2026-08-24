@@ -1,5 +1,14 @@
 # Changelog
 
+## v2 — 2026-08-24
+
+The agent has a name: **Ivy** (repo renamed evergreen → ivy; bot identity now
+`ivy-bot <bot@ivy.invalid>`, historical `bot@evergreen.invalid` commits remain
+valid non-counting bookkeeping). Same system, same rules. Also in v2: Phase 4
+local-WIP pipeline (launchd scanner → local-wip.json, 36h staleness rule),
+narrative reframe (agentic DevOps daily-shipping), tomgreen.ai now public and
+tracked.
+
 ## v1 — 2026-08-23
 
 Ladder live: four cloud routines (scout 09:00 / check 18:00 / failsafe 22:30 daily,

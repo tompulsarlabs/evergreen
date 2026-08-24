@@ -1,4 +1,4 @@
-# Evergreen — Agentic Daily Shipping
+# Ivy — Agentic Daily Shipping
 
 **Goal:** projects move forward every day — backlog scouted each morning, one real thing shipped before the day closes, outcomes logged and learned from. The `tompulsarlabs` contribution graph is the heartbeat metric (≥1 genuine contribution per day): the system nudges toward shipping real project work first, closes the day with a real engineering journal entry when needed, learns from its own outcome history, and tracks its entire evolution in git.
 
@@ -23,10 +23,10 @@ Rules 1–5 verified against GitHub's docs on 2026-08-22. Rule 6 (timezone) is n
 
 ## 2. Architecture
 
-One source of truth: a public repo **`tompulsarlabs/evergreen`**. It is simultaneously the system's config, its memory, its guaranteed-green floor, and its version history.
+One source of truth: a public repo **`tompulsarlabs/ivy`**. It is simultaneously the system's config, its memory, its guaranteed-green floor, and its version history.
 
 ```
-evergreen/
+ivy/
 ├── config.yml        # watchlist repos, cutoff times, timezone, notification prefs
 ├── playbook.md       # the agent's own operating instructions — the learning loop edits THIS
 ├── state.json        # machine-readable: streak, last-green date, per-day outcome log
@@ -96,8 +96,8 @@ Commit-message prefixes (`journal:` `learn:` `config:` `scout:`) plus tags on ev
 
 1. **`gh` re-auth** — the token for `tompulsarlabs` on this Mac is expired. Run `! gh auth login` in this session (interactive, so it needs you).
 2. **Email verification** — after auth: `gh api user/emails`, then set the state repo's `user.email` to a connected address (rule #2). This is the single most common silent-grey cause; the session's default email `tom@tomgreen.ai` may not be on the `tompulsarlabs` account.
-3. **Cloud agent GitHub access** — the routines run in Claude's cloud, so they need their own path to GitHub: the Claude GitHub connector covering `evergreen` (and read access to watchlist repos), or a fine-grained PAT (contents: write on `evergreen` only) stored for the routine.
-4. **Repo visibility decision** — public `evergreen` (recommended) or private + "Private contributions" toggle on.
+3. **Cloud agent GitHub access** — the routines run in Claude's cloud, so they need their own path to GitHub: the Claude GitHub connector covering `ivy` (and read access to watchlist repos), or a fine-grained PAT (contents: write on `ivy` only) stored for the routine.
+4. **Repo visibility decision** — public `ivy` (recommended) or private + "Private contributions" toggle on.
 5. **Timezone confirmation** — Mac says `Europe/Berlin`; confirm that's the intended anchor for "today."
 
 ---
@@ -107,7 +107,7 @@ Commit-message prefixes (`journal:` `learn:` `config:` `scout:`) plus tags on ev
 | Phase | Scope | Exit criterion |
 |-------|-------|----------------|
 | **0 — Unblock** (~15 min) | Prereqs 1–5 above | `gh auth status` clean; email confirmed connected |
-| **1 — Prove counting** | Create `evergreen` repo, journal template, `check` script wrapping the GraphQL query. Run the loop **manually once**: journal commit → API shows today ≥ 1 | Green verified via API minutes after a journal commit |
+| **1 — Prove counting** | Create `ivy` repo, journal template, `check` script wrapping the GraphQL query. Run the loop **manually once**: journal commit → API shows today ≥ 1 | Green verified via API minutes after a journal commit |
 | **2 — Schedule** | Three cloud routines (scout / check / failsafe) + push notifications; 3-day soak. Soak must also confirm notifications from *cloud* runs actually reach the phone — if they don't, pick a fallback channel (email/Slack) before relying on the nudge | Ladder observed end-to-end on a real grey day; silent on a green day; nudge confirmed received |
 | **3 — Learn** | Weekly retro run; playbook + CHANGELOG + tags; tag `v1` | First `learn:` commit produced from real outcome data |
 | **4 — Local enrichment** (optional) | launchd job on the Mac pushes local WIP status (dirty repos, unpushed branches in `~/Build`) into `state.json` so the scout sees local truth | Scout candidates include local uncommitted work when the Mac is awake |
@@ -124,13 +124,13 @@ Deviations from the plan above, discovered via three forced cloud test runs:
   and even the public contributions HTML all 403 there. Verification is now a ladder:
   GraphQL `contributionsCollection` (local/gh) → public contributions-HTML `data-level`
   parse (anywhere unproxied; `scripts/check.sh` does both) → **built-in GitHub MCP
-  tools** in cloud runs (`list_commits` on evergreen + `search_commits`/`search_issues`/
+  tools** in cloud runs (`list_commits` on ivy + `search_commits`/`search_issues`/
   `search_pull_requests` cross-repo; user-scoped, verified working).
 - **Nudge channel is PushNotification** — verified reaching mobile from cloud runs;
   the Google Calendar event is the fallback, not the primary.
 - **Attribution encodes intent**: cloud runs are ephemeral, so scout drafts and state
   must be committed to survive between runs; those bookkeeping commits are authored
-  `evergreen-bot <bot@evergreen.invalid>` (unconnected → never lights the graph), and
+  `ivy-bot <bot@ivy.invalid>` (unconnected → never lights the graph), and
   only failsafe journal entries + real work carry the connected author. Validated
   live: bot-authored state commit pushed from cloud, graph unaffected.
 - **The contributions API flaps** (0/2/3/5 across replicas within minutes) — grey is

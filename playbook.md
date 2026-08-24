@@ -1,6 +1,6 @@
-# Evergreen Playbook
+# Ivy Playbook
 
-Operating instructions for the Evergreen routines. The weekly retro may edit the
+Operating instructions for Ivy's routines. The weekly retro may edit the
 **Tunable** sections (commit as `learn:`, tag a new version). The **Immutable**
 sections may only be changed by a human commit.
 
@@ -34,7 +34,7 @@ watchlist changes) must be committed to `main` to survive between runs. To keep
 system bookkeeping from lighting the graph as noise:
 
 - **System commits** (scout drafts, state recording, watchlist sync) are authored as
-  `evergreen-bot <bot@evergreen.invalid>` — an unconnected address that never counts.
+  `ivy-bot <bot@ivy.invalid>` — an unconnected address that never counts.
 - **Contribution commits** (the failsafe journal entry, and only that) are authored as
   `commit_name <commit_email>` from `config.yml` — the connected address.
 
@@ -94,8 +94,8 @@ cross-repo activity. Don't waste run time installing or authenticating `gh`.
 forks);
 (c) `search_issues` / `search_pull_requests` show an issue or PR opened by
 `tompulsarlabs` today.
-Bot-authored commits (`bot@evergreen.invalid`) NEVER count as green — they don't
-light the graph. If the MCP tools are also unavailable, ALERT; never guess.
+Bot-authored commits (`bot@ivy.invalid`; historical `bot@evergreen.invalid`) NEVER
+count as green — they don't light the graph. If the MCP tools are also unavailable, ALERT; never guess.
 Note search indexing can lag a fresh push by a minute — prefer (a) for verifying a
 failsafe commit you just made.
 

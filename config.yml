@@ -1,4 +1,4 @@
-# Evergreen configuration — tunable by the weekly retro (learn: commits)
+# Ivy configuration — tunable by the weekly retro (learn: commits)
 login: tompulsarlabs
 timezone: Europe/Berlin
 
@@ -27,7 +27,7 @@ watchlist:
     - tompulsarlabs/interview-ace
     - tompulsarlabs/ai-interview-coach
     - tompulsarlabs/bd-lead-comp-dashboard
-    - tompulsarlabs/evergreen
+    - tompulsarlabs/ivy
 
 notifications:
   quiet_when_green: true
