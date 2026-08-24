@@ -1,11 +1,29 @@
 {
-  "generated_at": "2026-08-24T19:04:59Z",
-  "host": "Toms-MacBook-Air",
+  "generated_at": "2026-08-24T19:31:02Z",
   "repos": [
-    {"path": "~/Build/tomgreen.ai", "remote": "tompulsarlabs/tomgreen.ai", "branch": "main", "dirty_files": 0, "unpushed_commits": 0, "last_commit": "2026-08-24"}
-    ,
-    {"path": "~/Build/ivy", "remote": "tompulsarlabs/ivy", "branch": "main", "dirty_files": 8, "unpushed_commits": 0, "last_commit": "2026-08-24"}
-    ,
-    {"path": "~/Build/sybil", "remote": "tompulsarlabs/ai-capability-app", "branch": "main", "dirty_files": 0, "unpushed_commits": 0, "last_commit": "2026-06-23"}
+    {
+      "name": "ivy",
+      "remote": "tompulsarlabs/ivy",
+      "branch": "main",
+      "dirty_files": 1,
+      "unpushed_commits": 1,
+      "last_commit": "2026-08-24"
+    },
+    {
+      "name": "sybil",
+      "remote": "tompulsarlabs/ai-capability-app",
+      "branch": "main",
+      "dirty_files": 0,
+      "unpushed_commits": 0,
+      "last_commit": "2026-06-23"
+    },
+    {
+      "name": "tomgreen.ai",
+      "remote": "tompulsarlabs/tomgreen.ai",
+      "branch": "main",
+      "dirty_files": 0,
+      "unpushed_commits": 0,
+      "last_commit": "2026-08-24"
+    }
   ]
 }
