@@ -2,6 +2,18 @@
   "streak": 1,
   "last_green": "2026-08-23",
   "days": {
+    "2026-08-24": {
+      "green_by": null,
+      "method": null,
+      "contributions": 0,
+      "signal_source": "check@18:00 CEST — check.sh exit 2 (no signal, cloud egress repo-scoped as expected); github-mcp cloud verification path: list_commits on evergreen shows only today's bot-authored scout commit (bot@evergreen.invalid, never counts); search_commits org:tompulsarlabs author-date:2026-08-24 finds only that same bot commit; search_issues/search_pull_requests author:tompulsarlabs created:2026-08-24 and reviewed-by:tompulsarlabs updated:2026-08-24 all zero results — no real contribution found today",
+      "nudge_sent": true,
+      "nudge_sent_at": "2026-08-24T18:00:00+02:00",
+      "nudge_channel": "push",
+      "nudge_candidate": "c2-client-matrix #1 — review and merge",
+      "nudge_converted": null,
+      "failsafe_fired": false
+    },
     "2026-08-23": {
       "green_by": "manual-build",
       "method": "real-work",
