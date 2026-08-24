@@ -5,8 +5,8 @@
     "2026-08-24": {
       "green_by": "tompulsarlabs/ivy",
       "method": "real-work",
-      "contributions": 7,
-      "signal_source": "failsafe@22:30 CEST — check.sh exit 2 (no signal, cloud egress repo-scoped as expected); github-mcp cloud verification path: list_commits on tompulsarlabs/ivy main shows 2 non-bot commits today (13e5693, efc4a18) authored tompulsarlabs <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email — landed after the 18:00 grey check, so real work overtook the nudge; search_commits org:tompulsarlabs author-date:2026-08-24 confirms 7 non-bot commits total on default branches (2 on ivy, 5 on tomgreen.ai, same connected author) vs 3 bot-authored (never count); ivy alone (public repo) is sufficient to confirm green independent of the private-contributions toggle on tomgreen.ai; search_issues/search_pull_requests author:tompulsarlabs created:2026-08-24 both zero, not needed given commit signal",
+      "contributions": 19,
+      "signal_source": "failsafe@22:30 CEST final confirmation — check.sh exit 2 (no signal, cloud egress repo-scoped as expected); github-mcp cloud verification path: list_commits on tompulsarlabs/ivy main shows 7 non-bot commits today (b15ad7e, 5f41f0a, ee0d4ac, 169427e, b84c537, efc4a18, 13e5693) authored tompulsarlabs <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email, continuing well past the 18:00 grey check and the earlier check-recorded green; search_commits org:tompulsarlabs author-date:2026-08-24 confirms 19 non-bot commits total on default branches (7 on ivy, 12 on tomgreen.ai, same connected author) vs 6 bot-authored (ivy-bot/evergreen-bot, never count); ivy alone (public repo) is sufficient to confirm green independent of the private-contributions toggle on tomgreen.ai; real work already covered the day well before failsafe, so no journal entry fired",
       "nudge_sent": true,
       "nudge_sent_at": "2026-08-24T18:00:00+02:00",
       "nudge_channel": "push",
