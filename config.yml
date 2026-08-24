@@ -16,6 +16,18 @@ schedule:            # local times in `timezone`; nothing after 22:30 (midnight 
 watchlist:
   source: auto       # scout syncs from `gh api user/repos`; forks + archived excluded
   exclude: []        # manual opt-outs by full name, e.g. tompulsarlabs/scratch
+  repos:             # synced 2026-08-24 — 11 repos, 0 forks, 0 archived, 0 excluded
+    - tompulsarlabs/talent-scout
+    - tompulsarlabs/margaux-en-tutor
+    - tompulsarlabs/c2-client-matrix
+    - tompulsarlabs/ai-capability-app
+    - tompulsarlabs/writing-voice-skill
+    - tompulsarlabs/aris-ote-benchmarking
+    - tompulsarlabs/Dex
+    - tompulsarlabs/interview-ace
+    - tompulsarlabs/ai-interview-coach
+    - tompulsarlabs/bd-lead-comp-dashboard
+    - tompulsarlabs/evergreen
 
 notifications:
   quiet_when_green: true
