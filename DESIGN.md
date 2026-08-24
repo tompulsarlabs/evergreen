@@ -1,6 +1,6 @@
-# Evergreen — Daily Ship System
+# Evergreen — Agentic Daily Shipping
 
-**Goal:** every day, the `tompulsarlabs` contribution graph shows at least one real contribution. The system nudges toward shipping genuine project work first, guarantees the floor with a real daily journal commit, learns from its own outcome history, and tracks its entire evolution in git.
+**Goal:** projects move forward every day — backlog scouted each morning, one real thing shipped before the day closes, outcomes logged and learned from. The `tompulsarlabs` contribution graph is the heartbeat metric (≥1 genuine contribution per day): the system nudges toward shipping real project work first, closes the day with a real engineering journal entry when needed, learns from its own outcome history, and tracks its entire evolution in git.
 
 **Stance:** no empty commits, no backdating, no synthetic noise. The failsafe commit is a genuine daily engineering journal — the system makes you ship, it doesn't fake it.
 
