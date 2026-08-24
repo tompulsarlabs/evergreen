@@ -1,0 +1,11 @@
+{
+  "generated_at": "2026-08-24T18:36:05Z",
+  "host": "Toms-MacBook-Air",
+  "repos": [
+    {"path": "~/Build/tomgreen.ai", "remote": "tompulsarlabs/tomgreen.ai", "branch": "main", "dirty_files": 0, "unpushed_commits": 0, "last_commit": "2026-08-24"}
+    ,
+    {"path": "~/Build/sybil", "remote": "tompulsarlabs/ai-capability-app", "branch": "main", "dirty_files": 0, "unpushed_commits": 0, "last_commit": "2026-06-23"}
+    ,
+    {"path": "~/Build/evergreen", "remote": "tompulsarlabs/evergreen", "branch": "main", "dirty_files": 3, "unpushed_commits": 0, "last_commit": "2026-08-24"}
+  ]
+}
