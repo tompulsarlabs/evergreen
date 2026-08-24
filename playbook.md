@@ -55,8 +55,14 @@ for the retro to fix — not a license to automate noise.
 
 - **Scout (09:00)** — sync watchlist (`gh api user/repos`, minus forks/archived/excludes).
   Gather candidates: open PRs close to merge, assigned issues, branches with recent
-  pushes but no PR, yesterday's carry-over. Draft `journal/<today>.md` and commit it
-  **bot-authored** (`scout: <date> — <n> candidates, top: <one-liner>`). Silent.
+  pushes but no PR, yesterday's carry-over. **Also read `local-wip.json`** (pushed by
+  the Mac's launchd scanner at 08:45/17:45): repos with `unpushed_commits > 0` or
+  `remote: none` are first-class candidates — "push X (N unpushed commits)" is often
+  the cheapest real ship of the day. Staleness rule: if its `generated_at` is older
+  than 36h, treat local WIP as *unknown* (say so in the journal), never as "nothing
+  pending" — a sleeping Mac must not lie to the scout. Draft `journal/<today>.md`
+  and commit it **bot-authored** (`scout: <date> — <n> candidates, top:
+  <one-liner>`). Silent.
 - **Check (18:00)** — run `scripts/check.sh`. Green → record outcome in state
   (bot-authored commit), stay silent. Grey → nudge with the single most concrete
   candidate. Nudge channel: **PushNotification** (verified working from cloud runs
