@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-24T19:31:02Z",
+  "generated_at": "2026-08-25T06:54:12Z",
   "repos": [
     {
       "name": "ivy",
       "remote": "tompulsarlabs/ivy",
       "branch": "main",
       "dirty_files": 1,
-      "unpushed_commits": 1,
+      "unpushed_commits": 0,
       "last_commit": "2026-08-24"
     },
     {
@@ -21,7 +21,7 @@
       "name": "tomgreen.ai",
       "remote": "tompulsarlabs/tomgreen.ai",
       "branch": "main",
-      "dirty_files": 0,
+      "dirty_files": 1,
       "unpushed_commits": 0,
       "last_commit": "2026-08-24"
     }
