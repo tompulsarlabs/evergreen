@@ -1,13 +1,21 @@
 {
-  "generated_at": "2026-08-25T06:54:12Z",
+  "generated_at": "2026-08-25T15:45:05Z",
   "repos": [
+    {
+      "name": "Talent Radar",
+      "remote": "tompulsarlabs/talent-radar",
+      "branch": "main",
+      "dirty_files": 0,
+      "unpushed_commits": 0,
+      "last_commit": "2026-08-25"
+    },
     {
       "name": "ivy",
       "remote": "tompulsarlabs/ivy",
       "branch": "main",
       "dirty_files": 1,
-      "unpushed_commits": 0,
-      "last_commit": "2026-08-24"
+      "unpushed_commits": 1,
+      "last_commit": "2026-08-25"
     },
     {
       "name": "sybil",
@@ -23,7 +31,7 @@
       "branch": "main",
       "dirty_files": 1,
       "unpushed_commits": 0,
-      "last_commit": "2026-08-24"
+      "last_commit": "2026-08-25"
     }
   ]
 }
