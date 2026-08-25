@@ -2,6 +2,15 @@
   "streak": 2,
   "last_green": "2026-08-24",
   "days": {
+    "2026-08-25": {
+      "green_by": "tompulsarlabs/tomgreen.ai",
+      "method": "real-work",
+      "contributions": 2,
+      "signal_source": "check@18:00 CEST — check.sh exit 2 (no signal, cloud egress repo-scoped as expected); github-mcp cloud verification path: search_commits org:tompulsarlabs author-date:2026-08-25 shows 2 non-bot commits today — tomgreen.ai f88d03d 'feat(building): Obsidian-style knowledge graph' at 14:19:48+01:00 (15:19 CEST) and talent-radar (private) 4633ba0 'chore: scaffold Talent Radar repo' at 14:05:57+01:00 (15:05 CEST) — both authored Tom Green <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email; tomgreen.ai is public so confirms green independent of the private-contributions toggle; ivy's own commits today (scout, wip local-scan) are all bot@ivy.invalid, never count; so-far outcome only, failsafe at 22:30 will finalize",
+      "nudge_sent": false,
+      "nudge_converted": null,
+      "failsafe_fired": false
+    },
     "2026-08-24": {
       "green_by": "tompulsarlabs/ivy",
       "method": "real-work",
