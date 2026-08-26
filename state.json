@@ -2,6 +2,15 @@
   "streak": 3,
   "last_green": "2026-08-25",
   "days": {
+    "2026-08-26": {
+      "green_by": "tompulsarlabs/tomgreen.ai",
+      "method": "real-work",
+      "contributions": 24,
+      "signal_source": "check@18:00 CEST — check.sh exit 2 (no signal, cloud egress repo-scoped as expected); github-mcp cloud verification path: search_commits org:tompulsarlabs author-date:2026-08-26 shows 24 non-bot commits today — 20 on tomgreen.ai (11:17–16:22 CEST, a full design-system round: 3D/planetary knowledge-graph map, career corridor walkthrough, white-ground/twilight-sky rework, black hole entrance with real-physics inspiral, CI wiring) plus 1 on countersign (private, 07:33 CEST, 'Countersign prototype: PO core loop with mock signatures') plus 3 on ivy itself (journal entries), all authored Tom Green <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email; tomgreen.ai is public so confirms green independent of the private-contributions toggle; ivy's own scout/wip commits today (69cb20c, bc11dd6, 7b7c479) are bot@ivy.invalid, never count; so-far outcome only, failsafe at 22:30 will finalize",
+      "nudge_sent": false,
+      "nudge_converted": null,
+      "failsafe_fired": false
+    },
     "2026-08-25": {
       "green_by": "tompulsarlabs/tomgreen.ai",
       "method": "real-work",
