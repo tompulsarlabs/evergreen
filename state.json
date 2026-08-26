@@ -1,12 +1,12 @@
 {
-  "streak": 3,
-  "last_green": "2026-08-25",
+  "streak": 4,
+  "last_green": "2026-08-26",
   "days": {
     "2026-08-26": {
       "green_by": "tompulsarlabs/tomgreen.ai",
       "method": "real-work",
-      "contributions": 24,
-      "signal_source": "check@18:00 CEST — check.sh exit 2 (no signal, cloud egress repo-scoped as expected); github-mcp cloud verification path: search_commits org:tompulsarlabs author-date:2026-08-26 shows 24 non-bot commits today — 20 on tomgreen.ai (11:17–16:22 CEST, a full design-system round: 3D/planetary knowledge-graph map, career corridor walkthrough, white-ground/twilight-sky rework, black hole entrance with real-physics inspiral, CI wiring) plus 1 on countersign (private, 07:33 CEST, 'Countersign prototype: PO core loop with mock signatures') plus 3 on ivy itself (journal entries), all authored Tom Green <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email; tomgreen.ai is public so confirms green independent of the private-contributions toggle; ivy's own scout/wip commits today (69cb20c, bc11dd6, 7b7c479) are bot@ivy.invalid, never count; so-far outcome only, failsafe at 22:30 will finalize",
+      "contributions": 31,
+      "signal_source": "failsafe@22:30 CEST final confirmation — check.sh exit 2 (no signal, cloud egress repo-scoped as expected); github-mcp cloud verification path: search_commits org:tompulsarlabs author-date:2026-08-26 (35 total, paginated) shows 31 non-bot commits today, all authored Tom Green / tompulsarlabs <249609836+tompulsarlabs@users.noreply.github.com>, matching config.yml commit_email — 26 on tomgreen.ai (11:17–20:52 local, continuing well past the 18:00 check: 3D/planetary knowledge-graph map, career corridor walkthrough, white-ground/twilight-sky rework, black hole entrance with real-physics inspiral rebuilt as a WebGL raymarched Schwarzschild render, portfolio rebuild around systems and proof, CI/accessibility hardening), 1 on countersign (private, 07:33 local, PO core loop prototype), 4 on ivy itself (journal ship notes); 4 bot-authored commits excluded (4dae7b2/69cb20c/7b7c479/bc11dd6, all bot@ivy.invalid, never count — bc11dd6's committer field was later amended to the connected address but its author field stays bot@ivy.invalid so it still doesn't count); tomgreen.ai is public so confirms green independent of the private-contributions toggle; real work covered the whole day through to just before failsafe, so no journal entry fired",
       "nudge_sent": false,
       "nudge_converted": null,
       "failsafe_fired": false
