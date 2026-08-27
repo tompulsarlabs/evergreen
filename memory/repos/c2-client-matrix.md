@@ -26,9 +26,11 @@ available today" pick [cite:2026-08-24][cite:2026-08-25][cite:2026-08-26]
 |------|-------------|---------|
 | 2026-08-24 | `state.json` (push channel) | not converted [cite:2026-08-24] |
 
-Journals additionally describe a second and third nudge cycle
-[cite:2026-08-26][cite:2026-08-27]; `state.json` records neither. See the
-discrepancy note in [[patterns]] — the recorded count is n=1.
+Resolved 2026-08-27 (contract 2026-08-27-ivy-nudge-audit-01): the second
+and third "nudge cycles" the journals describe [cite:2026-08-26]
+[cite:2026-08-27] were scout picks and carry-overs, not sends — the recorded
+count of **1 nudge, 0 conversions** is confirmed. Full reconciliation in
+[[patterns]].
 
 ## Reading
 
@@ -40,4 +42,6 @@ is a retro decision, not a scout one.
 
 ## Changelog
 
+- 2026-08-27 — nudge history corrected: 1 recorded nudge confirmed; journal
+  "cycles" were scout picks (contract 2026-08-27-ivy-nudge-audit-01).
 - 2026-08-27 — page created from journals 2026-08-23→27 and `state.json`.

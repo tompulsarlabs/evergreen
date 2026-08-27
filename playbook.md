@@ -86,6 +86,32 @@ be inspected from a routine. Treat the schema as **append-only**: add keys and
 shorten values freely, never rename or remove one. Anything that needs room to
 breathe goes in the journal and gets cited from here.
 
+## Immutable: dispatch guardrails
+
+Dispatch contracts (`dispatch/`, designed in `dispatch/DESIGN.md`) route work
+to execution lanes. Non-negotiables:
+
+1. **The daily ladder is senior.** The failsafe secures the day (green,
+   journal, streak) before touching contract verification; a hung dispatch
+   step can cost routing evidence, never the streak.
+2. **Workers are untrusted.** A contract is *verified done* only when the
+   failsafe's external check of its Verification section passes — worker
+   self-reports and exit codes are claims, not outcomes. Workers push
+   branches and open draft PRs; they never write to `main` of any repo.
+3. **Contracts are lint-gated.** `scripts/dispatch-lint.sh` must pass before
+   any dispatch commit; the runner executes only lint-clean contracts from
+   scout/Tom commits.
+4. **Provider auth never enters the cloud sandbox.** Subscription logins live
+   on the Mac; the repo carries contracts and outcomes, never credentials.
+5. **Routing policy is retro-only** (within the existing ≤2 changes/week,
+   evidence-cited), and Ivy never changes its own routines' models.
+6. **No synthetic work.** A contract exists because a candidate is real;
+   `experiment` duplicates are capped and marked. Verified-done is the goal,
+   never dispatch volume.
+7. **Attribution gate.** A `build` contract targeting a repo whose
+   `author_email_ok` is false fails immediately rather than authoring
+   uncountable commits.
+
 ---
 
 ## Tunable: the daily ladder
@@ -116,6 +142,12 @@ breathe goes in the journal and gets cited from here.
   Draft `journal/<today>.md`
   and commit it **bot-authored** (`scout: <date> — <n> candidates, top:
   <one-liner>`). Silent.
+  **Emit dispatch contracts** for the top candidates: up to
+  `dispatch.daily_cap` minus contracts already created today, using the
+  contract format in `dispatch/DESIGN.md` §2. Review contracts pin the
+  family that did not author the PR. Run `scripts/dispatch-lint.sh`, commit
+  bot-authored (`dispatch: open <id>`). Execution is the runner's job (or
+  manual until D2) — the scout only queues.
   Anything learned along the way — a repo that has gone quiet, a new access
   limit, a candidate that keeps resurfacing — goes in the journal entry, not
   into `memory/`. The failsafe folds it in tonight; the scout never edits
@@ -126,6 +158,8 @@ breathe goes in the journal and gets cited from here.
   `memory/repos/<name>.md`** — nudge history and conversion record live there.
   A candidate carrying recorded unconverted nudges is a weaker pick than a
   fresh one of similar cost; say so in the journal when you pick it anyway.
+  Note open/claimed contract states (`dispatch/queue/`) when recording the
+  check — a claimed contract may land before failsafe.
   Nudge channel: **PushNotification** (verified working from cloud runs
   2026-08-23, "Mobile push requested"). Fallback if PushNotification reports
   not-sent/unavailable: a Google Calendar event ~15 min out titled with the
@@ -138,6 +172,14 @@ breathe goes in the journal and gets cited from here.
   Keep `signal_source` to a short source label and put the verification
   narrative in the journal entry under `## Verification`, with `cite` pointing
   at that file.
+
+  **Then verify dispatch contracts** — after the day is secured, never
+  before: for each contract in `dispatch/done/` without a `verified:` stamp,
+  run its Verification section via cloud-checkable means and stamp
+  `verified: true|false`; move contracts past `expires` to `dispatch/failed/`
+  with `state: expired`. Run `scripts/dispatch-lint.sh`; commit bot-authored
+  (`dispatch: verify <ids>`). Verified outcomes feed `memory/models.md` in
+  the synthesis pass below.
 
   **Then synthesize memory** — always *after* the day is green and recorded,
   never before: a memory problem must never eat the failsafe window. This is
@@ -223,5 +265,5 @@ removes, and the only one allowed to rewrite a page wholesale:
 
 `journal:` daily entries · `learn:` retro adjustments · `config:` config/scaffold
 changes · `scout:` candidate updates worth committing · `memory:` knowledge-wiki
-synthesis (failsafe daily, retro weekly). One-line messages, evidence in the body
+synthesis (failsafe daily, retro weekly) · `dispatch:` contract state changes. One-line messages, evidence in the body
 when it matters.

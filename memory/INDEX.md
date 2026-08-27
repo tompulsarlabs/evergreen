@@ -20,6 +20,7 @@ behavior lives in `playbook.md` and only the retro changes it.
 - [[repos/ai-capability-app]] — local alias `sybil`; PR #4 draft, stale
 - [[repos/countersign]] — private; PO core loop prototype
 - [[repos/talent-radar]] — private; scaffolded 2026-08-25
+- [[models]] — lane routing evidence, one row per verified dispatch contract
 
 **No page yet**, because nothing has been observed to synthesize
 (no commit activity 2026-08-23→27) [cite:2026-08-26]: talent-scout,
