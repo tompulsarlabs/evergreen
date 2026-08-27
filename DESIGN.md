@@ -214,3 +214,16 @@ no retrieval subagent. The whole corpus is a small git repo every routine
 already clones, so `grep` over `memory/` *is* the retrieval layer. Those
 components exist to work around a corpus that will not fit in a sandbox; Ivy
 does not have that problem, and adding them would buy nothing at this size.
+
+---
+
+## 9. Dispatch: the executive layer (designed 2026-08-27)
+
+Ivy's next stage turns scouted candidates into **dispatch contracts** —
+self-contained, verifiable units of work routed across execution lanes on two
+flat-rate frontier pools (Anthropic + OpenAI), executed by a split topology
+(cloud for Anthropic lanes, a Mac launchd runner for everything else, the repo
+as the message bus), and verified externally before any outcome becomes
+routing evidence. Full design, decision records, guardrails, and build phases:
+`dispatch/DESIGN.md`. Status: D0 (design) — awaiting sign-off on its §1
+decisions and §10 open questions.
