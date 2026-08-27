@@ -1,13 +1,13 @@
 {
-  "streak": 4,
-  "last_green": "2026-08-26",
+  "streak": 5,
+  "last_green": "2026-08-27",
   "memory_last_synthesized": "2026-08-27",
   "days": {
     "2026-08-27": {
       "green_by": "tompulsarlabs/ivy",
       "method": "real-work",
       "contributions": 6,
-      "signal_source": "github-mcp:search_commits + search_pull_requests (check 18:00; check.sh exit 2)",
+      "signal_source": "github-mcp:list_commits + search_pull_requests (failsafe 22:30; check.sh exit 2)",
       "cite": "journal/2026-08-27.md",
       "nudge_sent": false,
       "nudge_converted": null,
