@@ -116,8 +116,8 @@ prefer the other pool for non-pinned contracts that day.
    ── may spawn Anthropic-lane sessions              09:15–21:00: claim next
       directly (create_session)                      open contract, execute via
    ── check 18:00: + contract states in nudge        the lane's CLI, commit
-   ── failsafe 22:30: verify DoDs, stamp             outcome, push
-      verified:, synthesize memory                ── holds ALL provider auth
+   ── failsafe 22:30: green first; then             outcome, push
+      verify DoDs, synthesize memory             ── holds ALL provider auth
    ── retro Sun: tune lane policy (≤2 changes)    ── enforces budgets/timeouts
 ```
 
@@ -166,7 +166,13 @@ verification, and evidence with the lowest blast radius.
    the bus carries contracts and outcomes, never credentials.
 5. **Ivy's own four routines keep their human-set model** (platform contract).
    The executive routes workers, never itself.
-6. **No synthetic work.** A contract exists because a candidate is real;
+6. **The daily ladder is senior.** Dispatch never delays or replaces a
+   ladder duty: the failsafe secures the day (green determination, journal,
+   streak) *before* touching contract verification, exactly as it already
+   does for memory synthesis — a hung or failing dispatch step can cost that
+   day's routing evidence, never the streak. The scout's candidate list and
+   nudge remain complete and correct even when every lane is down.
+7. **No synthetic work.** A contract exists because a candidate is real;
    `experiment` duplicates are capped and marked. Dispatch volume is never a
    goal — verified-done is.
 
