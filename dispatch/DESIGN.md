@@ -86,15 +86,19 @@ attribution` outcome — the 2026-08-27 incident class, made structural.
 lanes:
   frontier:
     anthropic: { harness: claude-code, model: claude-opus-5, effort: xhigh }
-    openai:    { harness: codex, model: VERIFY }   # pin after checking the tier's CLI lineup
+    openai:    { harness: codex, model: VERIFY }   # pin during D2: codex login + model list
   workhorse:
     anthropic: { harness: claude-code, model: claude-opus-5, effort: medium }
     openai:    { harness: codex, model: VERIFY }
   fast-cheap:
     anthropic: { harness: claude-code, model: claude-haiku-4-5, effort: low }
 pools:
-  anthropic: { auth: mac-local }    # keys/logins live on the Mac only,
-  openai:    { auth: mac-local }    # never in the cloud sandbox
+  anthropic: { auth: mac-local }    # subscription logins live on the Mac only,
+  openai:    { auth: mac-local }    # never in the cloud sandbox (Codex CLI, flat-rate)
+dispatch:
+  daily_cap: 6                      # contracts/day across all lanes; retro-tunable
+  runner_window: "09:15-21:00"      # every 30 min; clear of failsafe + midnight margin
+  worker_pr: draft                  # workers open draft PRs; promotion is human
 ```
 
 Model IDs here are **config data, not design**: the retro updates them with
@@ -193,19 +197,28 @@ verification, and evidence with the lowest blast radius.
 
 | Phase | Scope | Exit criterion |
 |-------|-------|----------------|
-| **D0 — Design** (this doc) | Decisions recorded, open questions listed | Tom signs off on §1 + §10 |
+| **D0 — Design** (this doc) | Decisions recorded, open questions resolved | ✅ Closed 2026-08-27 — §1 decisions stand, §10 questions answered |
 | **D1 — Contract plumbing** | `dispatch/` scaffolding, `dispatch-lint.sh`, lane config, scout emits contracts; execution still manual | A hand-run contract flows open → done → verified and lands as evidence in `memory/models.md` |
 | **D2 — Mac runner + review lane** | launchd runner, Codex CLI wired, cross-family review on open PRs | A PR review report produced end-to-end by the OpenAI lane, verified by the failsafe, with zero cloud-side credentials |
 | **D3 — Cloud dispatch + experiments** | Anthropic lanes via `create_session`; `experiment` contracts; retro policy loop | First `learn:` commit that changes a lane rule citing contract-outcome evidence |
 
-## 10. Open decisions (Tom)
+## 10. Decisions taken (Tom, 2026-08-27)
 
-1. **OpenAI lane concretes:** confirm what the Max-tier subscription exposes to
-   CLI/agentic use (Codex CLI auth mode + which models) — fills the `VERIFY`
-   entries in §3. Blocking for D2, not D1.
-2. **Runner window and cadence:** proposed 09:15–21:00 every 30 min (clear of
-   the 22:30 failsafe and midnight margin). Confirm or adjust.
-3. **Auto-PR authority:** may `build`-contract workers open PRs themselves
-   (proposed: yes, as drafts), or only push branches for Tom to PR?
-4. **Daily contract cap:** proposed 6/day to start (quota safety margin on
-   both pools).
+The four open questions from D0 review, resolved:
+
+1. **OpenAI lane: Codex CLI on the Max subscription** — the runner shells out
+   to Codex CLI authenticated against the subscription (flat-rate, no metered
+   key). Remaining `VERIFY` item narrows to one fact: which models the tier
+   exposes to Codex CLI — checked on the Mac during D2 setup (`codex` login +
+   model list), then pinned in `config.yml`.
+2. **Runner window: 09:15–21:00, every 30 minutes** — starts after the scout
+   has emitted contracts, ends 90 minutes before the 22:30 failsafe so a
+   running worker never collides with day-close.
+3. **Worker authority: draft PRs** — workers push a branch and open a draft PR
+   themselves. Drafts can't merge accidentally and are clearly machine-opened;
+   promotion to ready-for-review is a human act.
+4. **Daily cap: 6 contracts/day** across all lanes, in `config.yml`
+   (`dispatch.daily_cap`), retro-tunable with evidence.
+
+D0 is closed; D1 (contract plumbing) is unblocked, and D2's only remaining
+prerequisite is the Codex CLI model check above.
