@@ -16,4 +16,10 @@
 > and verify per the cloud verification path. Record the day's outcome in
 > `state.json` (bot-authored) either way; bump or reset the streak.
 
+The daily `memory/` synthesis pass is part of the failsafe's job and is
+specified in `playbook.md`: it runs *after* the day is green and recorded, so a
+memory problem can never eat the failsafe window. The prompt above is unchanged
+for it — `playbook.md` is the single source of operating truth, so a new
+responsibility lands without touching cloud configuration.
+
 If you edit this file, update the cloud routine to match.

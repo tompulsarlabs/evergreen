@@ -16,4 +16,8 @@
 > summarize in `CHANGELOG.md`. Near the October DST flip, re-pin the UTC
 > crons per the playbook's DST note.
 
+The retro is also the only pass allowed to curate `memory/` — verify claims
+against their citations, prune what has gone stale, log deletions. Specified in
+`playbook.md`; the prompt above is unchanged for it.
+
 If you edit this file, update the cloud routine to match.

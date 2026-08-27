@@ -16,4 +16,7 @@
 
 The prompt is deliberately thin: `playbook.md` is the single source of
 operating truth, so the retro can tune behavior without touching the cloud
-configuration. If you edit this file, update the cloud routine to match.
+configuration. The scout now orients from `memory/INDEX.md` before gathering
+candidates, and records what it learns in the journal rather than editing
+`memory/` — both specified in `playbook.md`, so the prompt above is unchanged.
+If you edit this file, update the cloud routine to match.

@@ -1,5 +1,36 @@
 # Changelog
 
+## v3 — 2026-08-27
+
+**Memory: the knowledge wiki.** Added `memory/` — Markdown pages, one per
+durable subject, synthesized over the two layers that already existed
+(`journal/` raw sessions, `state.json` outcomes). Pages carry two kinds of
+link: `[[page]]` for lateral context, `[cite:<date>]` / `[cite:<sha>]` for
+evidence resolving to a journal entry or a commit in this repo. Every run now
+orients from `memory/INDEX.md` rather than re-deriving subject context from
+day-keyed entries — the gap that let `c2-client-matrix` #1 be re-picked as
+"cheapest candidate" four runs running while its unconverted nudge history sat
+smeared across four files.
+
+Written on two cadences: the failsafe attaches the day's facts (always *after*
+the day is green, so memory can never eat the failsafe window), and the retro
+is the only pass that verifies claims, prunes stale context, and logs
+deletions. Marked immutable — pages hold observations, never instructions;
+behavior stays in `playbook.md`, which only the retro edits. A memory the agent
+writes and then obeys is a prompt-injection channel with extra steps.
+
+Also in v3: `scripts/memory-lint.sh` gates every memory commit (frontmatter,
+link and citation resolution, orphan pages, index line budget), verified
+against each failure mode. `state.json` slimmed 64% by moving verification
+narratives into `## Verification` sections of the journal entries they
+describe, with a new `cite` key pointing back — schema kept append-only, since
+`tomgreen.ai`'s live proof strip consumes this file. Routine prompts unchanged:
+the thin-prompt design meant a whole new responsibility needed no cloud
+reconfiguration.
+
+Seeded with 10 pages from journals 2026-08-23→27. Design influence:
+Perplexity's Brain.
+
 ## v2 — 2026-08-24
 
 The agent has a name: **Ivy** (repo renamed evergreen → ivy; bot identity now
