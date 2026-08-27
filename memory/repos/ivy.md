@@ -36,10 +36,13 @@ check — it depends entirely on `local-wip.json` being fresh [[ops]].
 ## Activity
 
 7 non-bot commits on 2026-08-24 (the ladder build) [cite:2026-08-24]; 4 on
-2026-08-26 [cite:2026-08-26]. Bot-authored bookkeeping commits are excluded
-everywhere and never count [[ops]].
+2026-08-26 [cite:2026-08-26]; 3 on 2026-08-27 (memory-wiki build +
+state-schema refactor), plus 2 PRs opened same day [cite:2026-08-27]. Bot-authored
+bookkeeping commits are excluded everywhere and never count [[ops]].
 
 ## Changelog
 
 - 2026-08-27 — page created from journals 2026-08-23→27, `state.json`, and
   `CHANGELOG.md`.
+- 2026-08-27 (failsafe) — added 2026-08-27 activity row: the memory system
+  documented on this page shipped the same day, on this repo, by real work.

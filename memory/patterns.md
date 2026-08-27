@@ -12,10 +12,10 @@ change the ladder, and `playbook.md` is the only place behavior lives.
 
 ## Real work carries every day so far; the failsafe has never fired
 
-Four recorded days (2026-08-23→26), all green by real work, streak 4. The
-failsafe journal entry has not once been needed [cite:2026-08-26]. The system
-is currently a *nudge* system in practice, not a floor system — the floor has
-never been tested in anger.
+Five recorded days (2026-08-23→27), all green by real work, streak 5. The
+failsafe journal entry has not once been needed [cite:2026-08-26]
+[cite:2026-08-27]. The system is currently a *nudge* system in practice, not
+a floor system — the floor has never been tested in anger.
 
 ## Volume is bursty, not steady
 
@@ -69,3 +69,5 @@ earns its keep; a hand-curated list would already be wrong.
 
 - 2026-08-27 — page created from `state.json` outcome history and journals
   2026-08-23→27.
+- 2026-08-27 (failsafe) — extended the never-fired streak note to 5 recorded
+  days; no other pattern changed today.
