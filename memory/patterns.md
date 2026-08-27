@@ -45,18 +45,22 @@ This matters for candidate ranking: `c2-client-matrix` #1 has been the scout's
 "cheapest real contribution" pick repeatedly and has never been taken
 [[repos/c2-client-matrix]].
 
-## Nudge conversion is 0 for 1 recorded
+## Nudge conversion is 0 for 1 — resolved count
 
-`state.json` records exactly one nudge sent — 2026-08-24, push channel,
-candidate `c2-client-matrix #1`, `nudge_converted: false` [cite:2026-08-24].
-Every other day was green before the check, so no nudge fired.
+Exactly one nudge has ever been sent: 2026-08-24, push channel, candidate
+`c2-client-matrix #1`, `nudge_converted: false` [cite:2026-08-24]. Every
+other day was green before the check, so no nudge fired.
 
-**Known discrepancy:** journal entries describe this PR as having been through
-two and then three nudge cycles [cite:2026-08-26][cite:2026-08-27], but
-`state.json` records only the one. Either nudges fired without being recorded,
-or the journals counted scout *picks* as nudges. Until it is resolved, the
-recorded count is the trustworthy one, and conversion data is too thin (n=1)
-to tune on.
+**Discrepancy resolved (2026-08-27, contract 2026-08-27-ivy-nudge-audit-01):**
+journals described two, then three "nudge cycles" [cite:2026-08-26]
+[cite:2026-08-27], but the inflation came from counting scout *top-picks and
+carry-overs* as nudges. The "earlier" nudge claimed on 2026-08-26 is
+impossible — the system did not exist before 2026-08-23 [cite:2026-08-23],
+and 2026-08-23 sent none. The 2026-08-25 journal is consistent with the
+single recorded nudge [cite:2026-08-25]. True count: **1 nudge, 0
+conversions** — real but n=1; still too thin to tune on alone. Journals'
+"nudge cycle" language should be read as "scout pick" unless `state.json`
+records a send [cite:2026-08-27].
 
 ## The watchlist grows fast
 
@@ -67,6 +71,9 @@ earns its keep; a hand-curated list would already be wrong.
 
 ## Changelog
 
+- 2026-08-27 — nudge-count discrepancy resolved: journals had counted scout
+  picks as nudge cycles; recorded count (1 nudge, 0 conversions) confirmed
+  against primary sources (contract 2026-08-27-ivy-nudge-audit-01).
 - 2026-08-27 — page created from `state.json` outcome history and journals
   2026-08-23→27.
 - 2026-08-27 (failsafe) — extended the never-fired streak note to 5 recorded

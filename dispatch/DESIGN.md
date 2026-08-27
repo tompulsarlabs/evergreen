@@ -198,7 +198,7 @@ verification, and evidence with the lowest blast radius.
 | Phase | Scope | Exit criterion |
 |-------|-------|----------------|
 | **D0 — Design** (this doc) | Decisions recorded, open questions resolved | ✅ Closed 2026-08-27 — §1 decisions stand, §10 questions answered |
-| **D1 — Contract plumbing** | `dispatch/` scaffolding, `dispatch-lint.sh`, lane config, scout emits contracts; execution still manual | A hand-run contract flows open → done → verified and lands as evidence in `memory/models.md` |
+| **D1 — Contract plumbing** | `dispatch/` scaffolding, `dispatch-lint.sh`, lane config, scout emits contracts; execution still manual | ✅ Closed 2026-08-27 — contract `2026-08-27-ivy-nudge-audit-01` ran open → done → verified, evidence in `memory/models.md` |
 | **D2 — Mac runner + review lane** | launchd runner, Codex CLI wired, cross-family review on open PRs | A PR review report produced end-to-end by the OpenAI lane, verified by the failsafe, with zero cloud-side credentials |
 | **D3 — Cloud dispatch + experiments** | Anthropic lanes via `create_session`; `experiment` contracts; retro policy loop | First `learn:` commit that changes a lane rule citing contract-outcome evidence |
 

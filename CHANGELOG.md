@@ -1,5 +1,22 @@
 # Changelog
 
+## v4 — 2026-08-27
+
+**Dispatch D0+D1: the executive layer.** Designed (`dispatch/DESIGN.md`) and
+plumbed: scouted candidates become dispatch contracts — markdown+frontmatter
+files under `dispatch/`, lint-gated (`scripts/dispatch-lint.sh`), routed
+across coarse lanes (frontier/workhorse/fast-cheap) mapped in `config.yml`
+onto two flat-rate pools (Anthropic; OpenAI via Codex CLI, models pinned
+during D2). Repo is the message bus; execution splits cloud (Anthropic
+lanes) / Mac runner (everything else, 09:15–21:00 every 30 min); workers are
+untrusted, push draft PRs only, and a contract is done only when the
+failsafe's external check verifies it. Guardrails adopted as a new immutable
+playbook section — the daily ladder stays senior. Cap 6 contracts/day.
+D1 exit criterion met with a real contract (nudge-count reconciliation:
+journals had counted scout picks as nudges; confirmed 1 nudge, 0
+conversions) run open → done → verified, first evidence row in
+`memory/models.md`. D2 next: Mac runner + cross-family review lane.
+
 ## v3 — 2026-08-27
 
 **Memory: the knowledge wiki.** Added `memory/` — Markdown pages, one per
