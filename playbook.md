@@ -60,7 +60,16 @@ for the retro to fix — not a license to automate noise.
   `remote: none` are first-class candidates — "push X (N unpushed commits)" is often
   the cheapest real ship of the day. Staleness rule: if its `generated_at` is older
   than 36h, treat local WIP as *unknown* (say so in the journal), never as "nothing
-  pending" — a sleeping Mac must not lie to the scout. Draft `journal/<today>.md`
+  pending" — a sleeping Mac must not lie to the scout.
+  **Attribution check (outranks every other candidate):** any repo with
+  `author_email_ok: false` will author its next commit as an address that is not
+  connected to the account, so that work cannot count (rule 2) no matter how real
+  it is. `last_commit_email_ok: false` means it has already happened. Lead the
+  journal with it and nudge immediately rather than waiting for the 18:00 check —
+  the fix is one `git config` line while it's cheap, and a history rewrite once
+  the commits are pushed. This is the one scout finding that breaks the "silent"
+  rule, because by 18:00 a whole day of real work may already be uncountable.
+  Draft `journal/<today>.md`
   and commit it **bot-authored** (`scout: <date> — <n> candidates, top:
   <one-liner>`). Silent.
 - **Check (18:00)** — run `scripts/check.sh`. Green → record outcome in state

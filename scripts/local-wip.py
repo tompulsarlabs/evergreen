@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Scan local project roots for git repos and publish their WIP state to
 local-wip.json so the cloud scout sees local truth (dirty trees, unpushed
-commits, repos with no remote at all).
+commits, repos with no remote at all, misconfigured commit attribution).
 
 Privacy: the published file identifies repos by directory basename and
 remote slug only — no hostname, no filesystem paths. Those are public
 identifiers already (or at worst a folder name); the machine itself stays
-out of the public repo.
+out of the public repo. Commit identity is therefore published as a
+verdict (`author_email_ok`) rather than an address: git's invented
+fallback identity is literally `user@hostname.local`, so echoing it would
+leak the machine name this file is careful never to carry.
 
 Robustness (replaces the original shell version):
 - JSON is generated with the json module, never string interpolation.
@@ -81,7 +84,34 @@ def read_roots(config_path):
     return roots or [Path.home() / "Build"]
 
 
-def scan_repo(repo):
+def next_author_email(repo):
+    """The email the *next* commit in `repo` would actually be authored with.
+
+    `git config user.email` is not enough: when no identity is configured git
+    silently invents `user@host.local` at commit time, which reads as "unset"
+    in config but lands in the commit object — and never counts on the graph,
+    because that address can't be verified against a GitHub account. `git var`
+    resolves the same fallback git itself would use, so what's reported here
+    is what would really be committed.
+    """
+    ident = git(repo, "var", "GIT_AUTHOR_IDENT") or ""
+    m = re.search(r"<([^>]*)>", ident)
+    return m.group(1) if m else ""
+
+
+def read_commit_email(config_path):
+    """The connected address from config.yml — the only one that counts."""
+    try:
+        for line in config_path.read_text().splitlines():
+            m = re.match(r"^commit_email:\s*(\S+)", line)
+            if m:
+                return m.group(1)
+    except OSError:
+        pass
+    return ""
+
+
+def scan_repo(repo, connected_email):
     branch = git(repo, "branch", "--show-current") or "(detached)"
     status = git(repo, "status", "--porcelain")
     dirty = len(status.splitlines()) if status else 0
@@ -103,6 +133,12 @@ def scan_repo(repo):
         "dirty_files": dirty,
         "unpushed_commits": unpushed,
         "last_commit": git(repo, "log", "-1", "--format=%cs") or "",
+        # Verdicts, not addresses: git's invented fallback embeds the machine
+        # hostname, and this file is published to a public repo (see Privacy).
+        "author_email_ok": next_author_email(repo) == connected_email,
+        "last_commit_email_ok": (
+            (git(repo, "log", "-1", "--format=%ae") or "") == connected_email
+        ),
     }
 
 
@@ -139,13 +175,14 @@ def main():
     if not acquire_lock():
         return 0
     try:
+        connected_email = read_commit_email(IVY / "config.yml")
         repos = []
         for root in read_roots(IVY / "config.yml"):
             if not root.is_dir():
                 continue
             for gitdir in sorted(root.glob("*/.git")) + sorted(root.glob("*/*/.git")):
                 if gitdir.is_dir():
-                    repos.append(scan_repo(gitdir.parent))
+                    repos.append(scan_repo(gitdir.parent, connected_email))
 
         payload = {
             "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
