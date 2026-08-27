@@ -30,8 +30,14 @@ ivy/
 ├── config.yml        # watchlist repos, cutoff times, timezone, notification prefs
 ├── playbook.md       # the agent's own operating instructions — the learning loop edits THIS
 ├── state.json        # machine-readable: streak, last-green date, per-day outcome log
+├── memory/           # the knowledge wiki — synthesis over journal + state (§8)
+│   ├── INDEX.md      # compact map, read at the start of every run
+│   ├── ops.md        # how the environment actually behaves
+│   ├── patterns.md   # observed working rhythm
+│   └── repos/        # one page per repo with real signal
 ├── journal/
 │   └── 2026-08-22.md # one entry per day: what was shippable, what happened, streak
+├── scripts/          # check.sh (green?), local-wip.py (Mac scan), memory-lint.sh
 └── CHANGELOG.md      # human summary of playbook revisions, tagged v1, v2, …
 ```
 
@@ -149,3 +155,62 @@ Deviations from the plan above, discovered via three forced cloud test runs:
 | Notification fatigue | Silent when green; retro tunes frequency and time using conversion data |
 | Journal rot (entries become filler) | Entries are structured around real candidates and outcomes; retro flags low-content streaks as a smell — the failsafe firing daily means the *nudging* is failing, which is exactly what the retro is for |
 | Runaway self-modification | Immutable sections in playbook; every change is a tagged, revertible commit |
+| Memory rot (pages restate the obvious, or drift from their evidence) | Every claim carries a citation; the retro verifies a sample weekly and prunes; `memory-lint.sh` enforces that every link and citation resolves |
+| Stale memory read as current | The retro is the only pass that removes, and logs each deletion in the page's changelog; `memory_last_synthesized` in `state.json` shows when the wiki last moved |
+| Memory used as a self-written instruction | Immutable rule: pages hold observations, never directives — behavior lives only in `playbook.md`, which only the retro edits |
+
+---
+
+## 8. Memory: the knowledge wiki
+
+Added 2026-08-27 (v3). The system already had two memory layers and no
+synthesis over them: `journal/` is the raw session record, `state.json` the
+machine-readable outcome log. Both are chronological, so any question about a
+*subject* — has this PR been nudged before? what does the cloud sandbox refuse
+to do? — meant re-deriving the answer from day-keyed entries on every run, or
+missing it. `memory/` is that missing layer: a wiki of Markdown pages, one per
+durable subject, sitting on top of the evidence rather than replacing it.
+
+Design influence: Perplexity's Brain
+(<https://www.perplexity.ai/hub/blog/brain-agentic-memory-as-a-knowledge-wiki>) —
+a knowledge wiki over filesystem-native memory, with context and evidence
+edges and background synthesis.
+
+**Two kinds of link.** `[[page]]` is a *context* edge: it connects subjects
+laterally and answers "what else do I need to know?" `[cite:2026-08-26]` and
+`[cite:60535f0]` are *evidence* edges: they connect a claim down to the journal
+entry or commit supporting it and answer "how do I know this is true?" Because
+the evidence lives in the same git repo, citations are stable and inspectable
+forever, and `scripts/memory-lint.sh` checks mechanically that every one
+resolves.
+
+**Read path.** Each run reads `memory/INDEX.md` first — a compact map, held to
+a line budget precisely because it is read every time — then only the pages
+touching that run's candidates. A claim is adopted directly when the decision
+is cheap, and followed down to its citation when it isn't.
+
+**Write path.** Two passes at different cadences, because recording an
+observation and changing behavior carry very different risk:
+
+| Pass | When | May do | May not do |
+|------|------|--------|------------|
+| **Failsafe** | Daily, *after* the day is green and recorded | Add facts, create pages, add citations | Remove, or rewrite a page wholesale |
+| **Retro** | Weekly | Verify claims, prune, merge/split, log deletions | Exceed its two behavior changes |
+
+Making no change is an explicit, valid outcome of either pass — an unchanged
+page is a stronger signal than one restated daily. Memory synthesis always
+runs after the contribution is secured, so a lint failure can never eat the
+failsafe window.
+
+**The guardrail.** Pages hold observations and evidence; they never hold
+instructions. Behavior lives in `playbook.md`, and only the retro edits it.
+This is not tidiness: a memory the agent writes and then obeys is a
+prompt-injection channel with extra steps, and the separation — different
+files, different writers, different review cadence — is what makes the loop
+safe to run unattended. Marked immutable in the playbook.
+
+**Deliberately not built.** No embeddings, no vector store, no graph database,
+no retrieval subagent. The whole corpus is a small git repo every routine
+already clones, so `grep` over `memory/` *is* the retrieval layer. Those
+components exist to work around a corpus that will not fit in a sandbox; Ivy
+does not have that problem, and adding them would buy nothing at this size.

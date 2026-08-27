@@ -15,4 +15,8 @@
 > silent. Grey: send exactly one push notification naming the single most
 > concrete candidate from today's journal entry.
 
+Before choosing a nudge candidate the check reads that candidate's
+`memory/repos/<name>.md` for its nudge and conversion history — specified in
+`playbook.md`, so the prompt above is unchanged.
+
 If you edit this file, update the cloud routine to match.

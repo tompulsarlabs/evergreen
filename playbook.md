@@ -49,11 +49,55 @@ a real journal entry: today's candidates, what happened, streak state, tomorrow'
 top candidate. If journal entries trend content-free, that is a nudging failure
 for the retro to fix — not a license to automate noise.
 
+## Immutable: memory records observations, never instructions
+
+`memory/` is Ivy's knowledge wiki — one page per durable subject, every claim
+carrying a link to its evidence. It is read at the start of every run, which is
+exactly why it must never contain directives.
+
+- Pages hold **observations and evidence**. Behavior lives in this playbook,
+  and only the retro changes it.
+- A page may record "nudges on this PR have not converted, 0 of 1 recorded."
+  It may not say "stop nudging this PR." The first is a finding the retro can
+  weigh; the second is an instruction the system wrote for itself and would
+  then obey without review.
+- Every claim carries a citation: `[cite:YYYY-MM-DD]` resolves to that day's
+  journal entry, `[cite:<sha>]` to a commit in this repo. `[[page]]` links to a
+  related page. A claim with no citation does not belong on a page.
+- **Memory is written by the failsafe (daily) and the retro (weekly), and by
+  nothing else.** Scout and check read memory and record what they observe in
+  the journal; the failsafe folds it in. Every memory commit is bot-authored
+  and must pass `scripts/memory-lint.sh`.
+- The three layers are deliberately redundant and must stay in their lanes:
+  `journal/` is the raw session record, `state.json` the machine-readable
+  outcome log, `memory/` the synthesis over both. Narrative belongs in the
+  journal; `state.json` stays terse and cites the journal.
+
+Rationale: a memory the agent writes and then obeys is a prompt-injection
+channel with extra steps. Keeping observations and instructions in separate
+files, with different write permissions and different review cadences, is what
+makes the loop safe to run unattended.
+
+## Immutable: `state.json` is a published contract
+
+`tompulsarlabs/tomgreen.ai` reads this repo's `state.json` for its live proof
+strip, and cloud runs are scoped to `ivy` alone, so the consuming code cannot
+be inspected from a routine. Treat the schema as **append-only**: add keys and
+shorten values freely, never rename or remove one. Anything that needs room to
+breathe goes in the journal and gets cited from here.
+
 ---
 
 ## Tunable: the daily ladder
 
-- **Scout (09:00)** — sync watchlist (`gh api user/repos`, minus forks/archived/excludes).
+- **Scout (09:00)** — **orient first:** read `memory/INDEX.md`, then
+  `memory/ops.md` and the `memory/repos/<name>.md` page for every repo that
+  produces a candidate. That is the standing context — what this repo is, what
+  has been tried, what the environment will refuse to do — and it is much
+  cheaper than re-deriving it from journal history. Follow a `[cite:...]` down
+  to the journal only when a claim is decision-critical or looks stale; adopt
+  it directly otherwise.
+  Then sync watchlist (`gh api user/repos`, minus forks/archived/excludes).
   Gather candidates: open PRs close to merge, assigned issues, branches with recent
   pushes but no PR, yesterday's carry-over. **Also read `local-wip.json`** (pushed by
   the Mac's launchd scanner at 08:45/17:45): repos with `unpushed_commits > 0` or
@@ -72,17 +116,45 @@ for the retro to fix — not a license to automate noise.
   Draft `journal/<today>.md`
   and commit it **bot-authored** (`scout: <date> — <n> candidates, top:
   <one-liner>`). Silent.
+  Anything learned along the way — a repo that has gone quiet, a new access
+  limit, a candidate that keeps resurfacing — goes in the journal entry, not
+  into `memory/`. The failsafe folds it in tonight; the scout never edits
+  memory pages.
 - **Check (18:00)** — run `scripts/check.sh`. Green → record outcome in state
   (bot-authored commit), stay silent. Grey → nudge with the single most concrete
-  candidate. Nudge channel: **PushNotification** (verified working from cloud runs
+  candidate. **Before picking that candidate, read its
+  `memory/repos/<name>.md`** — nudge history and conversion record live there.
+  A candidate carrying recorded unconverted nudges is a weaker pick than a
+  fresh one of similar cost; say so in the journal when you pick it anyway.
+  Nudge channel: **PushNotification** (verified working from cloud runs
   2026-08-23, "Mobile push requested"). Fallback if PushNotification reports
   not-sent/unavailable: a Google Calendar event ~15 min out titled with the
   candidate. Never both; never anything on a green day.
 - **Failsafe (22:30)** — still grey → finalize today's journal entry, commit it
   **Tom-authored** per the attribution rule, push, verify per the immutable rule.
   Record outcome either way — `state.json` gets `{date: {green_by, method,
-  contributions: <final count from check>, nudge_sent, nudge_converted,
-  failsafe_fired}}` (bot-authored); bump or reset `streak`.
+  contributions: <final count from check>, signal_source, cite, nudge_sent,
+  nudge_converted, failsafe_fired}}` (bot-authored); bump or reset `streak`.
+  Keep `signal_source` to a short source label and put the verification
+  narrative in the journal entry under `## Verification`, with `cite` pointing
+  at that file.
+
+  **Then synthesize memory** — always *after* the day is green and recorded,
+  never before: a memory problem must never eat the failsafe window. This is
+  the daily pass that keeps `memory/` current:
+  1. **Attach facts to subjects.** Every observation from today worth keeping
+     goes to its page — repo facts to `memory/repos/<name>.md`, environment
+     behavior to `memory/ops.md`, rhythm and conversion to
+     `memory/patterns.md`. Write the citation as you write the claim.
+  2. **Create a page** only for a subject with real, durable signal, and add it
+     to `memory/INDEX.md` in the same commit. One quiet day does not earn a
+     repo a page; a first real commit does.
+  3. **Making no change is a valid outcome.** If the wiki is already correct,
+     write nothing — an unchanged page is a stronger signal than a page
+     restated daily.
+  4. Run `scripts/memory-lint.sh`; it must pass before committing. Commit
+     bot-authored as `memory: <what changed>` and set
+     `memory_last_synthesized` in `state.json` to today.
 
 **Ops note (cloud environment, mapped live 2026-08-23, two test runs):** the routine
 sandbox has no `gh` preinstalled and ALL github.com egress is proxy-scoped to this
@@ -115,14 +187,41 @@ should re-pin the UTC crons if the original local times matter.
 
 ## Tunable: retro (Sunday 10:00)
 
-Read the last 7–30 days of `state.json`. Answer: how often did the failsafe fire?
-Did nudges convert to real activity within 4 hours? Which repos produced shipped
-work? Then make at most two adjustments (nudge time, wording, ranking, excludes) by
-editing this file and/or `config.yml`. Commit as `learn: <what> — <evidence>`, tag
-the next version, and summarize in `CHANGELOG.md`.
+Read `memory/INDEX.md` and the pages it lists first — that is the synthesized
+view of the trailing window, and cheaper than re-mining raw history. Then read
+the last 7–30 days of `state.json` for the numbers. Answer: how often did the
+failsafe fire? Did nudges convert to real activity within 4 hours? Which repos
+produced shipped work?
+
+The retro then has two jobs.
+
+**Tune behavior.** At most two adjustments (nudge time, wording, ranking,
+excludes) by editing the Tunable sections of this file and/or `config.yml`.
+Commit as `learn: <what> — <evidence>`, naming the page or journal entry the
+evidence came from; tag the next version; summarize in `CHANGELOG.md`.
+
+**Curate memory.** The daily pass only adds — this is the only pass that
+removes, and the only one allowed to rewrite a page wholesale:
+
+- **Verify** a sample of claims against their citations, weighted toward the
+  ones that have been influencing candidate ranking. A claim its evidence no
+  longer supports gets corrected or dropped, never left standing. Contradictions
+  between sources are worth recording explicitly rather than silently resolving.
+- **Prune** what has stopped being true: a repo gone dormant, an access limit
+  that no longer applies, an open thread that closed. Outdated context is worse
+  than missing context, because it reads as current.
+- **Log** every removal in that page's `## Changelog` with the date and reason.
+  Git holds the diff; the changelog line is what makes it findable without
+  archaeology.
+- **Merge or split** pages when a subject has outgrown or emptied its page, and
+  keep `memory/INDEX.md` inside its line budget — it is read on every run, so
+  it stays a map, not a summary.
+- Re-run `scripts/memory-lint.sh`, then commit bot-authored as
+  `memory: retro — <what changed>`.
 
 ## Tunable: commit message conventions
 
 `journal:` daily entries · `learn:` retro adjustments · `config:` config/scaffold
-changes · `scout:` candidate updates worth committing. One-line messages, evidence
-in the body when it matters.
+changes · `scout:` candidate updates worth committing · `memory:` knowledge-wiki
+synthesis (failsafe daily, retro weekly). One-line messages, evidence in the body
+when it matters.

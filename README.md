@@ -22,8 +22,10 @@ Experimental. Running since August 2026.
 - `config.yml` — schedule and repository watchlist
 - `playbook.md` — routine instructions and guardrails
 - `state.json` — daily outcomes
+- `memory/` — the knowledge wiki: one page per subject, every claim cited
 - `journal/` — engineering notes
 - `scripts/check.sh` — contribution check
 - `scripts/local-wip.sh` — local repository scanner
+- `scripts/memory-lint.sh` — validates the memory wiki's links and citations
 
 See `DESIGN.md` for architecture and known limitations.
