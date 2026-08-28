@@ -261,6 +261,31 @@ removes, and the only one allowed to rewrite a page wholesale:
 - Re-run `scripts/memory-lint.sh`, then commit bot-authored as
   `memory: retro — <what changed>`.
 
+**Run the fleet, not the sessions.** The retro optimizes lane *policy* against
+per-class targets, never individual runs (adapted from Uber's software-factory
+findings, 2026-08-28):
+
+- **Per-class target metrics** — review: share of findings that survive
+  triage; build: first-pass verified-done rate; chore: wall-minutes per
+  verified-done; every class: zero waste. Judge lanes on these, not vibes.
+- **Waste is the first lever, model choice the last.** Waste = wall-minutes
+  on `dispatch/failed/` contracts + contracts that expired unexecuted +
+  repeated unresolvable-lane skips. Compute it weekly before touching lane
+  assignments — eliminating zero-value consumption beats downgrading a lane
+  and losing quality.
+- **Pareto rule for lane moves.** Step a task class down to a cheaper lane
+  only when its target metric held there (experiment evidence or ≥3 verified
+  outcomes); step it up when failures show quality is the binding
+  constraint. Never trade a target metric for cost — flat-rate pools make
+  that a bad trade by definition.
+- **Experiments are the benchmark instrument.** When a lane decision is
+  pending and the evidence is thin, spend that week's one `experiment`
+  contract on exactly that comparison rather than waiting for organic
+  volume.
+- **Record fleet metrics weekly** in `memory/models.md` (verified-done
+  count, waste minutes, per-class rates, throttles) so trends are one page,
+  not an archaeology dig.
+
 ## Tunable: commit message conventions
 
 `journal:` daily entries · `learn:` retro adjustments · `config:` config/scaffold

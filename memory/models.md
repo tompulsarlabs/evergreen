@@ -21,6 +21,12 @@ policy lives in `playbook.md` and `config.yml`, never here). One row per
 
 No throttle or refusal events recorded on either pool yet [cite:2026-08-27].
 
+## Fleet metrics (weekly, retro-computed)
+
+| Week ending | Verified done | Failed / waste min | Expired | Throttles | Note |
+|-------------|--------------|--------------------|---------|-----------|------|
+| 2026-08-28 (partial) | 1 | 0 / 0 | 0 | 0 | D1-D2 bring-up week; first contract 8 wall-min first-pass [cite:2026-08-27] |
+
 ## Reading
 
 n=1 — no routing signal yet. The first comparative evidence arrives when the

@@ -144,6 +144,15 @@ itself (same principle as local-wip's 36h rule).
   one per week — deliberately manufactured evidence, not noise.
 - The retro reads the evidence page and moves policy — never the scout, never
   a worker, never a memory page.
+- **Fleet over sessions** (validated externally 2026-08-28 by Uber's
+  software-factory results: 7x usage at falling unit cost by optimizing a
+  fleet of specialized agents with per-agent benchmarks and Pareto-optimal
+  models, and by eliminating zero-value token consumption rather than
+  downgrading capability): Ivy optimizes lane policy against per-class
+  target metrics, treats waste — failed-contract minutes, expired
+  contracts — as the first lever and model choice as the last, and uses its
+  capped `experiment` contracts as the benchmark instrument. The playbook's
+  retro section carries the operating rules.
 
 ## 6. The first lane: cross-family review
 
