@@ -43,10 +43,10 @@ local_wip:            # scanned by scripts/local-wip.sh (launchd, 08:45 + 17:45)
 lanes:               # coarse tiers -> concrete (harness, model, settings); data, retro-tunable
   frontier:
     anthropic: { harness: claude-code, model: claude-opus-5, effort: xhigh }
-    openai:    { harness: codex, model: VERIFY }   # pin during D2: codex login + model list
+    openai:    { harness: codex, model: gpt-5.6-sol }    # pinned 2026-08-28: quality-first flagship tier
   workhorse:
     anthropic: { harness: claude-code, model: claude-opus-5, effort: medium }
-    openai:    { harness: codex, model: VERIFY }
+    openai:    { harness: codex, model: gpt-5.6-terra }  # pinned 2026-08-28: balanced tier (luna = high-throughput, unused)
   fast-cheap:
     anthropic: { harness: claude-code, model: claude-haiku-4-5, effort: low }
 
