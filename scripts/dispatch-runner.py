@@ -69,7 +69,7 @@ def load_config():
     cfg = (IVY / "config.yml").read_text()
     commit_email = re.search(r"^commit_email:\s*(\S+)", cfg, re.M).group(1)
     lanes = {}
-    lane_block = re.search(r"^lanes:\n((?:[ \t]+.*\n?)*)", cfg, re.M).group(1)
+    lane_block = re.search(r"^lanes:[^\n]*\n((?:[ \t]+.*\n?)*)", cfg, re.M).group(1)
     current = None
     for line in lane_block.splitlines():
         m = re.match(r"^  ([a-z-]+):\s*$", line)
@@ -104,10 +104,15 @@ def harness_argv(entry, prompt, ctype):
     if h == "claude-code":
         argv = ["claude", "-p", prompt, "--model", model]
         if ctype in ("build", "chore"):
-            argv += ["--permission-mode", "acceptEdits"]
+            # acceptEdits alone denies git push / gh pr create in -p mode
+            # (verified 2026-08-28); the worker needs the shell for its DoD.
+            argv += ["--permission-mode", "acceptEdits", "--allowedTools", "Bash"]
         return argv
     if h == "codex":
-        return ["codex", "exec", "--model", model, prompt]
+        argv = ["codex", "exec", "--model", model]
+        if ctype in ("build", "chore"):
+            argv += ["-s", "workspace-write"]  # exec defaults to read-only sandbox
+        return argv + [prompt]
     raise RuntimeError(f"unknown harness {h}")
 
 def build_prompt(cid, repo, ctype, body):
