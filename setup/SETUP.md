@@ -56,3 +56,23 @@ the phone.
   use the MCP verification path instead).
 - After the first failsafe commit, confirm the contribution square lit;
   if not, walk the misconfig checklist in `playbook.md`.
+
+## 4. Dispatch runner (D2)
+
+The runner executes queued dispatch contracts (`dispatch/queue/`) on the
+Mac — the only place with provider CLI auth (`claude`, `codex`). It keeps
+its own clone under `~/.ivy-dispatch/` so your working checkout is never
+touched, claims and finishes contracts as bot-authored commits, and leaves
+`verified:` stamping to the cloud failsafe.
+
+```
+./setup/install-dispatch-runner.sh install     # launchd, every 30 min
+python3 scripts/dispatch-runner.py --once --dry-run   # plan only
+python3 scripts/dispatch-runner.py --once      # single real pass
+./setup/install-dispatch-runner.sh status|uninstall
+```
+
+Prereqs: `claude` and `codex` CLIs authenticated on the Mac; git push auth
+for github.com over https (e.g. `gh auth setup-git`). OpenAI-lane contracts
+stay queued until the `VERIFY` model pins in `config.yml` are replaced with
+real Codex model ids.
