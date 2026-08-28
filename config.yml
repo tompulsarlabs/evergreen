@@ -16,7 +16,7 @@ schedule:            # local times in `timezone`; nothing after 22:30 (midnight 
 watchlist:
   source: auto       # scout syncs from `gh api user/repos`; forks + archived excluded
   exclude: []        # manual opt-outs by full name, e.g. tompulsarlabs/scratch
-  repos:             # synced 2026-08-27 — 14 repos, 0 forks, 0 archived, 0 excluded
+  repos:             # synced 2026-08-28 — 14 repos, 0 forks, 0 archived, 0 excluded (unchanged)
     - tompulsarlabs/talent-scout
     - tompulsarlabs/talent-radar
     - tompulsarlabs/BrightPaws
