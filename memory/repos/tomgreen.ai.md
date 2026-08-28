@@ -34,12 +34,16 @@ change, not a local refactor. Ivy's cloud runs are scoped to `ivy` alone
 [[ops]], so the consuming code cannot be inspected from a routine — treat
 `state.json` keys as a public contract and add rather than rename.
 
-## Attribution incident, 2026-08-27
+## Attribution incident, 2026-08-27 (recovered 2026-08-28)
 
 Six real commits landed on `main` authored `Tom Green
 <tom@Toms-MacBook-Air.local>` — an address not connected to the account, so
-none of them count [cite:2026-08-27]. Cause and detection are in [[ops]]. The
-fix is Mac-side `git config` and was not resolvable from a cloud run.
+none of them counted [cite:2026-08-27]. Cause and detection are in [[ops]].
+**Recovered 2026-08-28**: history rewritten on the Mac (author dates
+preserved, new SHAs `4cc1d9f`→`bd3274a`), force-pushed, verified — all six
+now carry the connected author and count on 2026-08-27, their real day
+[cite:2026-08-28]. Note: `main` history before that point was rewritten, so
+any stale clone needs `git fetch && git reset --hard origin/main`.
 
 ## Open threads
 
@@ -49,4 +53,6 @@ fix is Mac-side `git config` and was not resolvable from a cloud run.
 
 ## Changelog
 
+- 2026-08-28 — attribution incident resolved: six 08-27 commits recovered
+  via history rewrite, verified counting.
 - 2026-08-27 — page created from journals 2026-08-24→27 and `state.json`.

@@ -50,6 +50,13 @@ Two distinct failure modes, both silent:
    `local-wip.json` is public [cite:5f41f0a].
    Observed live — six real `tomgreen.ai` commits on 2026-08-27 authored
    `tom@Toms-MacBook-Air.local`, none of them countable [cite:2026-08-27].
+   **Recovered 2026-08-28**: identity fixed on the Mac, history rewritten
+   (`filter-branch --env-filter`, author dates preserved), force-pushed;
+   all six now carry the connected author with a resolved GitHub login, and
+   zero commits org-wide remain on the invented address [cite:2026-08-28].
+   Cost of the day's delay: a one-line config fix became a public-main
+   history rewrite — the escalation curve the scout's same-morning nudge
+   exists to prevent.
 2. **Committer is not author.** Only the *author* field decides whether a
    commit counts. Amending the committer of a bot-authored commit to the
    connected address does not make it count — `bc11dd6` was amended that way
@@ -77,5 +84,7 @@ explicitly [cite:b85b8af].
 
 ## Changelog
 
+- 2026-08-28 — attribution incident marked recovered: Mac identity fixed,
+  tomgreen.ai history rewritten and verified clean org-wide.
 - 2026-08-27 — page created, synthesized from `playbook.md` ops notes,
   `DESIGN.md` §6, and journals 2026-08-23→27.
