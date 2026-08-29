@@ -1,13 +1,13 @@
 {
-  "streak": 6,
-  "last_green": "2026-08-28",
+  "streak": 7,
+  "last_green": "2026-08-29",
   "memory_last_synthesized": "2026-08-27",
   "days": {
     "2026-08-29": {
-      "green_by": "tompulsarlabs/countersign",
+      "green_by": "tompulsarlabs/countersign + tompulsarlabs/talent-scout",
       "method": "real-work",
-      "contributions": 1,
-      "signal_source": "github-mcp:search_pull_requests org:tompulsarlabs created:2026-08-29 (check 18:00; check.sh exit 2) — PR #1 opened by tompulsarlabs (OWNER), not a fork",
+      "contributions": 2,
+      "signal_source": "github-mcp:search_pull_requests + search_commits org:tompulsarlabs (failsafe 22:30; check.sh exit 2) — countersign PR #1 (17:08 CEST) + talent-scout commit 061f5243 (22:33 CEST, resolved author.login)",
       "cite": "journal/2026-08-29.md",
       "nudge_sent": false,
       "nudge_converted": null,
