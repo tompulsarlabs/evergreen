@@ -4,10 +4,10 @@
   "memory_last_synthesized": "2026-08-30",
   "days": {
     "2026-08-30": {
-      "green_by": "tompulsarlabs/ivy PR #6 + tompulsarlabs/tomgreen.ai PR #7 + PR #8",
+      "green_by": "tompulsarlabs/ivy PR #6 + tompulsarlabs/tomgreen.ai PR #7 + PR #8 + PR #9 (merged) + PR #10 (opened)",
       "method": "real-work",
-      "contributions": 3,
-      "signal_source": "github-mcp:search_commits + search_pull_requests org:tompulsarlabs (check 18:00; check.sh exit 2) — ivy 020cb0c5 (tompulsarlabs, connected email, 14:30 CEST, PR #6 merged) + tomgreen.ai 6b4a8b6 (Tom, 14:11 CEST, PR #7 merged) + tomgreen.ai 51a0c06f (Tom, 14:34 CEST, PR #8 merged); dispatch/queue unchanged — 3 contracts still unclaimed, none expired",
+      "contributions": 5,
+      "signal_source": "github-mcp:search_commits + search_pull_requests org:tompulsarlabs (failsafe 22:30 re-check; check.sh exit 2) — check.sh 18:00 pass only saw PR #6/#7/#8; failsafe found two more real events after that: tomgreen.ai 96285cfa (Tom, 18:09 CEST, PR #9 merged) + tomgreen.ai PR #10 opened 20:33 CEST (still open, not yet merged); no commits after 20:33 CEST; see journal ## Verification",
       "cite": "journal/2026-08-30.md",
       "nudge_sent": false,
       "nudge_converted": null,
