@@ -1,7 +1,7 @@
 ---
 subject: memory index
 type: index
-updated: 2026-08-27
+updated: 2026-08-30
 ---
 
 # Memory index
@@ -17,16 +17,16 @@ behavior lives in `playbook.md` and only the retro changes it.
 - [[repos/tomgreen.ai]] — highest-volume repo; ships most days
 - [[repos/c2-client-matrix]] — PR #1 open since April, nudged, unconverted
 - [[repos/BrightPaws]] — ex-`margaux-en-tutor`; alive, but PR #1 is stale
-- [[repos/ai-capability-app]] — local alias `sybil`; PR #4 draft, stale
+- [[repos/ai-capability-app]] — local alias `sybil`; PR #7 shipped 08-28
 - [[repos/countersign]] — private; PO core loop prototype
 - [[repos/talent-radar]] — private; scaffolded 2026-08-25
+- [[repos/talent-scout]] — first signal 2026-08-29, one data point
 - [[models]] — lane routing evidence, one row per verified dispatch contract
 
-**No page yet**, because nothing has been observed to synthesize
-(no commit activity 2026-08-23→27) [cite:2026-08-26]: talent-scout,
-writing-voice-skill, aris-ote-benchmarking, Dex, interview-ace,
-ai-interview-coach, bd-lead-comp-dashboard. The failsafe creates a page on
-first real signal.
+**No page yet** (no observed commit activity through 08-30): writing-voice-skill,
+aris-ote-benchmarking, Dex, interview-ace, ai-interview-coach,
+bd-lead-comp-dashboard, yeva (added to watchlist 08-28, no activity yet).
+The failsafe creates a page on first real signal.
 
 ## Link syntax
 

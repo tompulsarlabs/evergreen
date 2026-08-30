@@ -1,7 +1,7 @@
 ---
 subject: observed working rhythm
 type: patterns
-updated: 2026-08-27
+updated: 2026-08-30
 ---
 
 # Patterns: how the work actually happens
@@ -12,10 +12,13 @@ change the ladder, and `playbook.md` is the only place behavior lives.
 
 ## Real work carries every day so far; the failsafe has never fired
 
-Five recorded days (2026-08-23→27), all green by real work, streak 5. The
-failsafe journal entry has not once been needed [cite:2026-08-26]
-[cite:2026-08-27]. The system is currently a *nudge* system in practice, not
-a floor system — the floor has never been tested in anger.
+Seven recorded days (2026-08-23→29), all green by real work, streak 7. The
+failsafe journal entry has not once been needed [cite:2026-08-28]
+[cite:2026-08-29]. The system is currently a *nudge* system in practice, not
+a floor system — the floor has never been tested in anger. Retro reading
+(2026-08-30): 0/7 fire rate is not evidence of a problem to tune — it is the
+floor doing its job by never being needed. No ladder-timing change follows
+from this.
 
 ## Volume is bursty, not steady
 
@@ -47,9 +50,24 @@ This matters for candidate ranking: `c2-client-matrix` #1 has been the scout's
 
 ## Nudge conversion is 0 for 1 — resolved count
 
-Exactly one nudge has ever been sent: 2026-08-24, push channel, candidate
-`c2-client-matrix #1`, `nudge_converted: false` [cite:2026-08-24]. Every
-other day was green before the check, so no nudge fired.
+Exactly one *grey-check* nudge has ever been sent: 2026-08-24, push channel,
+candidate `c2-client-matrix #1`, `nudge_converted: false` [cite:2026-08-24].
+Every other day through 08-29 was green before the 18:00 check, so no
+grey-check nudge fired. Retro reading (2026-08-30): n=1 is still too thin to
+safely tune nudge timing, wording, or channel — the existing "no change"
+discipline holds this week too.
+
+## A second nudge type earned its keep: same-morning attribution nudges
+
+2026-08-30 saw the scout fire a nudge *before* the 09:00 candidate list was
+even drafted — an unpushed `ivy` commit on the Mac carried a disconnected
+author identity, and the playbook's attribution rule outranks every other
+candidate for exactly this reason [cite:2026-08-30]. This is a different
+nudge class from the 18:00 grey-check nudge above (different trigger, same
+channel): it exists to catch a misconfig while it is still a one-line
+`git config` fix, before it becomes a public history rewrite like the
+2026-08-27 `tomgreen.ai` incident [[ops]] [[repos/tomgreen.ai]]. First
+observed use of the class the scout section was written to prevent.
 
 **Discrepancy resolved (2026-08-27, contract 2026-08-27-ivy-nudge-audit-01):**
 journals described two, then three "nudge cycles" [cite:2026-08-26]
@@ -69,8 +87,22 @@ records a send [cite:2026-08-27].
 that arrived as a simultaneous add and drop [cite:2026-08-27]. Auto-sync
 earns its keep; a hand-curated list would already be wrong.
 
+## Dispatch queue has stalled since D1
+
+Three contracts (`2026-08-27-c2cm-review-01`, two 08-28 `tomgreen.ai` build
+contracts) have sat unclaimed in `dispatch/queue/` since 2026-08-27→28 —
+none expired, none claimed — because the D2 Mac runner is not live yet
+[cite:2026-08-29][cite:2026-08-30]. Not a policy problem (routing config is
+untouched and correct); it is an infrastructure gap outside what a
+config/playbook tune can fix. Worth tracking so it doesn't read as "no
+demand" when it is actually "no runner."
+
 ## Changelog
 
+- 2026-08-30 (retro) — extended never-fired-failsafe note to 7 days;
+  recorded the first same-morning attribution nudge as a distinct pattern;
+  logged the stalled dispatch queue; no ladder change made this week (n=1
+  nudge, 0/7 failsafe fires — both read as healthy, not undertuned).
 - 2026-08-27 — nudge-count discrepancy resolved: journals had counted scout
   picks as nudge cycles; recorded count (1 nudge, 0 conversions) confirmed
   against primary sources (contract 2026-08-27-ivy-nudge-audit-01).

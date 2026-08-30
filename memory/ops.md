@@ -1,7 +1,7 @@
 ---
 subject: Ivy's runtime environment
 type: ops
-updated: 2026-08-27
+updated: 2026-08-30
 ---
 
 # Ops: how the environment actually behaves
@@ -57,6 +57,17 @@ Two distinct failure modes, both silent:
    Cost of the day's delay: a one-line config fix became a public-main
    history rewrite — the escalation curve the scout's same-morning nudge
    exists to prevent.
+   **Caught pre-push, 2026-08-30:** `ivy`'s own Mac checkout showed 1
+   unpushed commit with `last_commit_email_ok: false` — the scout nudged
+   same-morning per the playbook's outranking rule, before the commit ever
+   reached `main` [cite:2026-08-30]. First observed case of the nudge
+   working as designed rather than after the fact [[patterns]].
+   **Below the bar, 2026-08-29:** `ai-capability-app` (local `sybil`) has
+   `last_commit_email_ok: false` on its one commit from 2026-06-23, but the
+   repo is dormant with nothing queued behind it — no same-day work at risk,
+   so the "nudge immediately" bar correctly does not fire
+   [cite:2026-08-29] [[repos/ai-capability-app]]. Stays uncountable until a
+   history rewrite runs, same recipe as the `tomgreen.ai` recovery.
 2. **Committer is not author.** Only the *author* field decides whether a
    commit counts. Amending the committer of a bot-authored commit to the
    connected address does not make it count — `bc11dd6` was amended that way
@@ -84,6 +95,9 @@ explicitly [cite:b85b8af].
 
 ## Changelog
 
+- 2026-08-30 (retro) — recorded the pre-push attribution catch on `ivy`
+  itself and the below-the-bar `sybil` finding; both confirm the attribution
+  rule's severity ordering is calibrated correctly, no change made.
 - 2026-08-28 — attribution incident marked recovered: Mac identity fixed,
   tomgreen.ai history rewritten and verified clean org-wide.
 - 2026-08-27 — page created, synthesized from `playbook.md` ops notes,

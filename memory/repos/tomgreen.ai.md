@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/tomgreen.ai
 type: repo
-updated: 2026-08-27
+updated: 2026-08-30
 ---
 
 # tomgreen.ai
@@ -18,6 +18,8 @@ the usual reason a day is green.
 | 2026-08-25 | 1 | `f88d03d` Obsidian-style knowledge graph, 14:19 local [cite:2026-08-25] |
 | 2026-08-26 | 26 | 11:17–20:52 local; design system round + WebGL rebuild [cite:2026-08-26] |
 | 2026-08-27 | 6 | 06:42–07:55 local — **none countable**, see below [cite:2026-08-27] |
+| 2026-08-28 | 46 (org total) | 3 merged PRs (#3/#4/#5) + direct pushes; largest day recorded so far [cite:2026-08-28] |
+| 2026-08-29→30 | — | PR #6 ("solar system becomes the site") opened 08-28, drafted through 08-29, merged 2026-08-30T00:10 CEST after an 18:09→00:10 run [cite:2026-08-29][cite:2026-08-30] |
 
 The 2026-08-26 run covered a full design-system round trip (white primary
 ground, twilight planetary map, career corridor walkthrough, per-stop company
@@ -53,6 +55,8 @@ any stale clone needs `git fetch && git reset --hard origin/main`.
 
 ## Changelog
 
+- 2026-08-30 (retro) — added 08-28 (46-commit day) and 08-29→30 (PR #6
+  merge) activity rows.
 - 2026-08-28 — attribution incident resolved: six 08-27 commits recovered
   via history rewrite, verified counting.
 - 2026-08-27 — page created from journals 2026-08-24→27 and `state.json`.

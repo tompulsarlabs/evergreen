@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/ivy
 type: repo
-updated: 2026-08-27
+updated: 2026-08-30
 ---
 
 # ivy
@@ -33,6 +33,11 @@ The pattern is worth remembering: "push the Mac's unpushed commit" is the
 cheapest real ship available, it recurs, and it is invisible to any cloud-only
 check — it depends entirely on `local-wip.json` being fresh [[ops]].
 
+The same channel caught an attribution problem on 2026-08-30: 1 unpushed
+commit dated 08-29 with `last_commit_email_ok: false` — the scout nudged
+same-morning per the outranking rule, before it reached `main`
+[cite:2026-08-30] [[ops]] [[patterns]].
+
 ## Activity
 
 7 non-bot commits on 2026-08-24 (the ladder build) [cite:2026-08-24]; 4 on
@@ -42,6 +47,8 @@ bookkeeping commits are excluded everywhere and never count [[ops]].
 
 ## Changelog
 
+- 2026-08-30 (retro) — added the pre-push attribution catch on this repo's
+  own Mac checkout.
 - 2026-08-27 — page created from journals 2026-08-23→27, `state.json`, and
   `CHANGELOG.md`.
 - 2026-08-27 (failsafe) — added 2026-08-27 activity row: the memory system
