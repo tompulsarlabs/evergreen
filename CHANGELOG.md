@@ -1,5 +1,33 @@
 # Changelog
 
+## v5 — 2026-08-30
+
+**First retro: no change — evidence still too thin to tune.** Reviewed
+2026-08-23→29 (`state.json`, 7 recorded days) plus the in-progress 08-30
+journal. Failsafe fire rate: 0/7 — every day went green by real work before
+22:30, so the floor has never been tested in anger; that's the floor doing
+its job, not a timing problem to fix. Nudge→conversion: exactly one
+grey-check nudge has ever been sent (2026-08-24, `c2-client-matrix` #1,
+unconverted) — n=1 is too thin to safely retune nudge timing, wording, or
+channel without overfitting to a single data point. Shipped work concentrated
+in `tomgreen.ai` (highest volume by a wide margin), `ivy`, and one-off
+revivals (`ai-capability-app` #7 after two months dormant, `talent-scout`'s
+first commit); `c2-client-matrix` #1 has been the scout's fallback pick for
+7 straight runs with zero conversion, but the same n=1 problem blocks a
+confident ranking demotion — reviewed explicitly this retro
+(`memory/repos/c2-client-matrix.md`) and left unchanged. Dispatch fleet
+metrics: still 1 verified contract, 0 waste, Pareto bar (≥3 verified
+outcomes) unmet, so no lane move; the binding constraint there is D2 runner
+capacity, not routing policy, which a config tune can't fix anyway.
+`playbook.md` and `config.yml` are unchanged this week.
+
+Also did the retro's memory-curation pass: folded in 08-28→30 facts that
+two green days' failsafe runs hadn't synthesized yet (`ai-capability-app`
+dormancy note pruned — PR #7 shipped; new `talent-scout` page on first
+signal; attribution-nudge working pre-push, first observed case), and
+logged the stalled dispatch queue as an infra gap rather than a policy one.
+`scripts/memory-lint.sh` clean, 12 pages.
+
 ## v4 — 2026-08-27
 
 **Dispatch D0+D1: the executive layer.** Designed (`dispatch/DESIGN.md`) and
