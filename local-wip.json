@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-29T15:45:05Z",
+  "generated_at": "2026-08-30T06:45:42Z",
   "repos": [
     {
       "name": "Talent Radar",
@@ -36,7 +36,7 @@
       "remote": "tompulsarlabs/ivy",
       "branch": "main",
       "dirty_files": 1,
-      "unpushed_commits": 1,
+      "unpushed_commits": 0,
       "last_commit": "2026-08-29",
       "author_email_ok": true,
       "last_commit_email_ok": false
@@ -48,18 +48,28 @@
       "dirty_files": 0,
       "unpushed_commits": 0,
       "last_commit": "2026-06-23",
-      "author_email_ok": true,
+      "author_email_ok": false,
+      "last_commit_email_ok": false
+    },
+    {
+      "name": "talent-scout",
+      "remote": "tompulsarlabs/talent-scout",
+      "branch": "main",
+      "dirty_files": 0,
+      "unpushed_commits": 0,
+      "last_commit": "2026-08-29",
+      "author_email_ok": false,
       "last_commit_email_ok": false
     },
     {
       "name": "tomgreen.ai",
       "remote": "tompulsarlabs/tomgreen.ai",
-      "branch": "main",
+      "branch": "claude/fable-system-design-retro-qrvdfy",
       "dirty_files": 0,
       "unpushed_commits": 0,
-      "last_commit": "2026-08-27",
-      "author_email_ok": true,
-      "last_commit_email_ok": true
+      "last_commit": "2026-08-29",
+      "author_email_ok": false,
+      "last_commit_email_ok": false
     }
   ]
 }
