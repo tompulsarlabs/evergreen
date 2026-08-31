@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/talent-scout
 type: repo
-updated: 2026-08-30
+updated: 2026-08-31
 ---
 
 # talent-scout
@@ -26,7 +26,19 @@ One data point — not enough yet to say whether this repo is active or this
 was a one-off unblock. Watch for a second commit before treating it as a
 going concern.
 
+## Attribution: same-morning nudge, not yet converted
+
+2026-08-31 scout flagged `author_email_ok: false` on 2 dirty files and
+nudged immediately per the playbook's outranking rule [cite:2026-08-31]. By
+the 17:45 CEST local-wip scan the identity was still unfixed and
+`dirty_files` had grown from 1 to 2 — more uncommitted work sitting behind
+the bad address, still unpushed so nothing uncountable has landed yet
+[cite:2026-08-31]. Unlike the `ivy` catch on 2026-08-30 [[ops]], this nudge
+had not converted by end of day.
+
 ## Changelog
 
+- 2026-08-31 (failsafe) — recorded the attribution nudge and its
+  non-conversion by day's end.
 - 2026-08-30 (retro) — page created on first real signal (08-29 commit),
   per the playbook's "first real commit earns a page" rule.

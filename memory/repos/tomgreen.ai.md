@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/tomgreen.ai
 type: repo
-updated: 2026-08-30
+updated: 2026-08-31
 ---
 
 # tomgreen.ai
@@ -52,9 +52,18 @@ any stale clone needs `git fetch && git reset --hard origin/main`.
 - Launch waits on DNS cutover and the `SITE_LAUNCHED` flag [cite:2026-08-26].
 - Vercel hookup pending — the integration lacks project-create permission
   [cite:2026-08-24].
+- **Attribution risk recurring, 2026-08-31.** Local checkout still shows
+  `author_email_ok: false` / `last_commit_email_ok: false`, sitting on
+  `claude/fable-system-design-retro-qrvdfy` rather than `main`
+  [cite:2026-08-31]. Scout nudged same-morning despite `dirty_files: 0` /
+  `unpushed_commits: 0` (nothing queued at that instant) because this is the
+  exact repo and failure mode behind the 2026-08-27 rewrite
+  [cite:2026-08-31]. Unfixed as of the 17:45 CEST scan — not yet converted.
 
 ## Changelog
 
+- 2026-08-31 (failsafe) — recorded the recurring attribution-risk nudge and
+  its non-conversion by day's end.
 - 2026-08-30 (retro) — added 08-28 (46-commit day) and 08-29→30 (PR #6
   merge) activity rows.
 - 2026-08-28 — attribution incident resolved: six 08-27 commits recovered
