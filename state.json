@@ -1,13 +1,13 @@
 {
-  "streak": 8,
-  "last_green": "2026-08-30",
-  "memory_last_synthesized": "2026-08-30",
+  "streak": 9,
+  "last_green": "2026-08-31",
+  "memory_last_synthesized": "2026-08-31",
   "days": {
     "2026-08-31": {
       "green_by": "tompulsarlabs/ivy PR #7 (merged)",
       "method": "real-work",
       "contributions": 1,
-      "signal_source": "github-mcp:list_commits + search_commits + search_pull_requests org:tompulsarlabs (check 18:00; check.sh exit 2)",
+      "signal_source": "github-mcp:list_commits + search_commits + search_pull_requests org:tompulsarlabs (failsafe 22:30 re-check confirms 18:00 read, no new activity since; check.sh exit 2)",
       "cite": "journal/2026-08-31.md",
       "nudge_sent": false,
       "nudge_converted": null,
