@@ -125,7 +125,17 @@ to execution lanes. Non-negotiables:
   it directly otherwise.
   Then sync watchlist (`gh api user/repos`, minus forks/archived/excludes).
   Gather candidates: open PRs close to merge, assigned issues, branches with recent
-  pushes but no PR, yesterday's carry-over. **Also read `local-wip.json`** (pushed by
+  pushes but no PR, yesterday's carry-over.
+  **Also hunt blockers, not just candidates.** A candidate produces a
+  contribution today; a blocker stops future work from happening at all —
+  a dead runner, an expired credential, a queue nothing is draining, a
+  broken local scan, an unmerged fix everything else waits on. Blockers are
+  invisible to a "cheapest ship today" ranking because their contribution
+  count is zero, which is exactly why they rot. Name any blocker in the
+  journal under `## Blockers` with what it stops and the smallest next
+  action; carry it forward every day until it clears or is explicitly
+  declined. A blocker that has persisted three days outranks the day's
+  cheapest ship in the nudge. **Also read `local-wip.json`** (pushed by
   the Mac's launchd scanner at 08:45/17:45): repos with `unpushed_commits > 0` or
   `remote: none` are first-class candidates — "push X (N unpushed commits)" is often
   the cheapest real ship of the day. Staleness rule: if its `generated_at` is older
@@ -191,6 +201,10 @@ to execution lanes. Non-negotiables:
   2. **Create a page** only for a subject with real, durable signal, and add it
      to `memory/INDEX.md` in the same commit. One quiet day does not earn a
      repo a page; a first real commit does.
+     If the day involved a non-obvious operational sequence that will recur,
+     write the recipe to `procedures/` while the details are exact — a
+     memory page saying "someone should run the same recipe we used for X"
+     means that recipe should have been written down.
   3. **Making no change is a valid outcome.** If the wiki is already correct,
      write nothing — an unchanged page is a stronger signal than a page
      restated daily.
