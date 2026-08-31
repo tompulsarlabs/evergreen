@@ -38,6 +38,8 @@ Each layer answers a different question, and they stay in their own lanes.
   than run number one.
 - **`dispatch/`** — work contracts. A scouted candidate becomes a file
   stating the task, the definition of done, and a check that proves it.
+- **`procedures/`** — recipes. A task done well once, written down with
+  exact commands so it never has to be re-derived from journal history.
 
 ## How memory works
 
@@ -138,6 +140,7 @@ state.json       machine-readable daily outcomes
 memory/          the knowledge wiki (INDEX, ops, patterns, models, repos/)
 journal/         one engineering note per day
 dispatch/        work contracts (DESIGN.md, queue/, done/, failed/, reports/)
+procedures/      recipes for recurring operational work
 routines/        the four cloud routine definitions
 scripts/         check.sh, local-wip.py, memory-lint.sh, dispatch-lint.sh,
                  dispatch-runner.py
