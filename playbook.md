@@ -11,8 +11,12 @@ sections may only be changed by a human commit.
 A contribution counts on the `tompulsarlabs` graph only if (DESIGN.md §1):
 
 1. Commit lands on the **default branch** (or `gh-pages`).
-2. Commit **author email is connected to the account** — use `commit_email` from
-   `config.yml`, set explicitly per commit, never inherited from environment git config.
+2. Commit **author email is connected to the account** — any address listed in
+   `connected_emails` in `config.yml` counts, not only `commit_email` (which is
+   just the identity Ivy's own commits use). Set the author explicitly per
+   commit, never inherited from environment git config. An address is added to
+   that list only after a real commit using it resolves an `author.login` on
+   GitHub.
 3. The repo is **not a fork**.
 4. Private-repo activity shows only if the profile's "Private contributions"
    toggle is on. This repo stays public.

@@ -99,19 +99,41 @@ def next_author_email(repo):
     return m.group(1) if m else ""
 
 
-def read_commit_email(config_path):
-    """The connected address from config.yml — the only one that counts."""
+def read_connected_emails(config_path):
+    """Every address verified on the account — a commit counts if its author
+    is any of them.
+
+    Ivy checked exact equality against `commit_email` alone until 2026-09-01,
+    which reported `author_email_ok: false` for repos correctly configured
+    with another verified address and cost several mornings of false-alarm
+    nudges. Falls back to `commit_email` if `connected_emails` is absent.
+    """
+    emails, in_list = [], False
     try:
-        for line in config_path.read_text().splitlines():
+        lines = config_path.read_text().splitlines()
+    except OSError:
+        return []
+    for line in lines:
+        if re.match(r"^connected_emails:\s*$", line):
+            in_list = True
+            continue
+        if in_list:
+            m = re.match(r"^\s+-\s*(\S+)", line)
+            if m:
+                emails.append(m.group(1))
+                continue
+            if line.strip() and not line.startswith((" ", "\t", "#")):
+                in_list = False
+    if not emails:
+        for line in lines:
             m = re.match(r"^commit_email:\s*(\S+)", line)
             if m:
-                return m.group(1)
-    except OSError:
-        pass
-    return ""
+                emails.append(m.group(1))
+                break
+    return emails
 
 
-def scan_repo(repo, connected_email):
+def scan_repo(repo, connected_emails):
     branch = git(repo, "branch", "--show-current") or "(detached)"
     status = git(repo, "status", "--porcelain")
     dirty = len(status.splitlines()) if status else 0
@@ -135,9 +157,9 @@ def scan_repo(repo, connected_email):
         "last_commit": git(repo, "log", "-1", "--format=%cs") or "",
         # Verdicts, not addresses: git's invented fallback embeds the machine
         # hostname, and this file is published to a public repo (see Privacy).
-        "author_email_ok": next_author_email(repo) == connected_email,
+        "author_email_ok": next_author_email(repo) in connected_emails,
         "last_commit_email_ok": (
-            (git(repo, "log", "-1", "--format=%ae") or "") == connected_email
+            (git(repo, "log", "-1", "--format=%ae") or "") in connected_emails
         ),
     }
 
@@ -175,14 +197,14 @@ def main():
     if not acquire_lock():
         return 0
     try:
-        connected_email = read_commit_email(IVY / "config.yml")
+        connected_emails = read_connected_emails(IVY / "config.yml")
         repos = []
         for root in read_roots(IVY / "config.yml"):
             if not root.is_dir():
                 continue
             for gitdir in sorted(root.glob("*/.git")) + sorted(root.glob("*/*/.git")):
                 if gitdir.is_dir():
-                    repos.append(scan_repo(gitdir.parent, connected_email))
+                    repos.append(scan_repo(gitdir.parent, connected_emails))
 
         payload = {
             "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),

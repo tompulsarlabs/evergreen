@@ -42,7 +42,11 @@ interactive rebase, with no force-push and no recovery risk.
 ```bash
 git fetch origin && git checkout main && git pull --ff-only origin main
 git status --porcelain        # must be empty; commit or stash first
-BAD="tom@Toms-MacBook-Air.local"
+# The invented address embeds the machine hostname, so it differs per
+# machine — Toms-MacBook-Air.local and C2-LAP32-TomGreen.local both exist.
+# Read the real one off the offending commit rather than assuming:
+git log -1 --format='%ae' <BAD_COMMIT_SHA>
+BAD="<paste that address>"
 git log --author="$BAD" --format='%h %ad %s' --date=format:'%m-%d %H:%M' main
 ```
 
