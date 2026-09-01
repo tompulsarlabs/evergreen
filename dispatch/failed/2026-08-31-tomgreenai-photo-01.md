@@ -1,7 +1,7 @@
 ---
 id: 2026-08-31-tomgreenai-photo-01
 type: build
-state: open
+state: failed
 repo: tompulsarlabs/tomgreen.ai
 lane: workhorse
 pool: anthropic
@@ -62,3 +62,8 @@ open tomgreen.ai contracts. No push to the default branch.
 
 A draft PR opened by tompulsarlabs exists on tompulsarlabs/tomgreen.ai
 referencing this contract id, created on or after 2026-08-31.
+
+outcome:
+  claimed_at: 2026-09-01T17:01:18+02:00
+  exit: attribution
+  note: next commit would author 'tompulsarlabs <tom@pulsarlabsai.com>' — not the connected address
