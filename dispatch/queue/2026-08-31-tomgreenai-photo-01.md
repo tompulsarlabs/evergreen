@@ -16,13 +16,22 @@ budget: { wall_minutes: 25 }
 Remove Tom's profile photo from the site. His face belongs on LinkedIn; the
 site should carry proof of work instead.
 
-Find every place the photo appears and remove it properly — a deleted
-`<img>` alone will leave orphaned assets and broken metadata. Cover at
-least:
+**Start by establishing what actually exists.** PR #10 (merged
+2026-09-01 12:17 CEST, "One object, two layers") describes PersonalHero as
+carrying "a portrait slot that holds its own aspect box so adding the
+photograph later shifts nothing" — so the site may hold a reserved *empty
+slot* rather than a rendered photo, and some items below may not apply.
+Remove the slot and its reserved space too: the intent is that no portrait
+is coming, so nothing should be held open for one.
 
-1. **Rendered instances** — hero, about page, footer, any bio block or
-   author card. Remove the element and any wrapper that exists only to hold
-   it.
+Then find every place a photo or its slot appears and remove it properly —
+a deleted `<img>` alone leaves orphaned assets and broken metadata. Cover
+whichever of these exist:
+
+1. **Rendered instances and reserved slots** — hero, about page, footer,
+   any bio block or author card. Remove the element, its aspect box, and
+   any wrapper that exists only to hold it. A slot left holding empty space
+   is the same problem in a different form.
 2. **The asset files** — delete the source image and any generated
    variants, srcset entries, or preload hints pointing at them.
 3. **Layout that assumed an image** — grid columns, flex rows, or fixed
