@@ -50,6 +50,12 @@ Two distinct failure modes, both silent:
    `local-wip.json` is public [cite:5f41f0a].
    Observed live — six real `tomgreen.ai` commits on 2026-08-27 authored
    `tom@Toms-MacBook-Air.local`, none of them countable [cite:2026-08-27].
+   A second invented identity exists from another machine:
+   `tom@C2-LAP32-TomGreen.local`, on `ai-capability-app` `24cda31`
+   (2026-06-19) — no resolved `author.login`, still uncounted
+   [cite:2026-09-01]. The hostname varies by machine, so the check must ask
+   "is the author one of the verified addresses", never "is it not this one
+   known-bad string".
    **Recovered 2026-08-28**: identity fixed on the Mac, history rewritten
    (`filter-branch --env-filter`, author dates preserved), force-pushed;
    all six now carry the connected author with a resolved GitHub login, and
@@ -68,7 +74,17 @@ Two distinct failure modes, both silent:
    so the "nudge immediately" bar correctly does not fire
    [cite:2026-08-29] [[repos/ai-capability-app]]. Stays uncountable until a
    history rewrite runs, same recipe as the `tomgreen.ai` recovery.
-2. **Committer is not author.** Only the *author* field decides whether a
+2. **More than one address is connected, and checking against one produced
+   false alarms.** `tom@pulsarlabsai.com` is verified on the account — 72
+   commits carry it and every one resolves `author.login` [cite:2026-09-01].
+   The scanner compared `git var GIT_AUTHOR_IDENT` against `commit_email`
+   alone, so repos correctly configured with that address reported
+   `author_email_ok: false` and drew same-morning nudges on 2026-08-30 and
+   08-31 with nothing to fix [cite:2026-08-30][cite:2026-08-31]. Fixed
+   2026-09-01: `config.yml` gained `connected_emails` and the check became
+   membership. The cost was not the wasted nudges but the noise — a real
+   alarm and a false one looked identical.
+3. **Committer is not author.** Only the *author* field decides whether a
    commit counts. Amending the committer of a bot-authored commit to the
    connected address does not make it count — `bc11dd6` was amended that way
    and still does not [cite:2026-08-26].
@@ -95,6 +111,9 @@ explicitly [cite:b85b8af].
 
 ## Changelog
 
+- 2026-09-01 — recorded that `tom@pulsarlabsai.com` is also connected, that
+  the single-address check produced false-alarm nudges (now fixed), and that
+  a second invented hostname identity exists on `ai-capability-app`.
 - 2026-08-30 (retro) — recorded the pre-push attribution catch on `ivy`
   itself and the below-the-bar `sybil` finding; both confirm the attribution
   rule's severity ordering is calibrated correctly, no change made.

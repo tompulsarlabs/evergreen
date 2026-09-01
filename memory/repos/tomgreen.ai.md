@@ -52,7 +52,11 @@ any stale clone needs `git fetch && git reset --hard origin/main`.
 - Launch waits on DNS cutover and the `SITE_LAUNCHED` flag [cite:2026-08-26].
 - Vercel hookup pending — the integration lacks project-create permission
   [cite:2026-08-24].
-- **Attribution risk recurring, 2026-08-31.** Local checkout still shows
+- ~~**Attribution risk recurring, 2026-08-31.**~~ **False alarm, corrected
+  2026-09-01** — the checkout is configured with `tom@pulsarlabsai.com`,
+  which is verified on the account and counts; the scanner was comparing
+  against `commit_email` alone [[ops]] [cite:2026-09-01]. Original entry
+  kept below for the record: Local checkout still shows
   `author_email_ok: false` / `last_commit_email_ok: false`, sitting on
   `claude/fable-system-design-retro-qrvdfy` rather than `main`
   [cite:2026-08-31]. Scout nudged same-morning despite `dirty_files: 0` /
@@ -62,6 +66,8 @@ any stale clone needs `git fetch && git reset --hard origin/main`.
 
 ## Changelog
 
+- 2026-09-01 — 08-31 attribution risk marked a false alarm: the address is
+  connected, the scanner's check was too narrow.
 - 2026-08-31 (failsafe) — recorded the recurring attribution-risk nudge and
   its non-conversion by day's end.
 - 2026-08-30 (retro) — added 08-28 (46-commit day) and 08-29→30 (PR #6

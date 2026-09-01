@@ -29,12 +29,16 @@ dormant since the 06-23 commit despite the merge landing via PR
 
 ## Attribution: one uncounted commit, below the nudge bar
 
-The repo's last local commit (2026-06-23) carries `last_commit_email_ok:
-false` — same failure class as the `tomgreen.ai` 2026-08-27 incident — but
+The repo carries a genuinely uncounted commit — `24cda31` (2026-06-19),
+authored `tom@C2-LAP32-TomGreen.local`, an invented identity from a second
+machine with no resolved `author.login` [cite:2026-09-01]. Same failure
+class as the `tomgreen.ai` 2026-08-27 incident (this one survived the
+2026-09-01 false-alarm review, unlike the `tomgreen.ai` and `talent-scout`
+flags [[ops]]) — but
 with nothing queued behind it, so it sits below the "nudge immediately" bar
 (that bar is for live misconfigurations about to eat *today's* work)
-[cite:2026-08-29] [[ops]]. Stays uncountable until someone runs the same
-history-rewrite recipe used for `tomgreen.ai`.
+[cite:2026-08-29] [[ops]]. Stays uncountable until someone runs
+`procedures/recover-attribution.md` against it.
 
 ## PR #4 — a planning artifact, not shipped work
 
@@ -49,6 +53,8 @@ The scout has consistently ranked it third of three open PRs for that reason
 
 ## Changelog
 
+- 2026-09-01 — named the actual uncounted commit (`24cda31`,
+  `tom@C2-LAP32-TomGreen.local`); confirmed real, not a false alarm.
 - 2026-08-30 (retro) — dormancy note pruned (superseded by the PR #7 merge);
   added the shipped-PR and below-the-bar attribution facts from 08-28→29.
 - 2026-08-27 — page created from journals 2026-08-24→27.

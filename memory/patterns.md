@@ -57,7 +57,7 @@ grey-check nudge fired. Retro reading (2026-08-30): n=1 is still too thin to
 safely tune nudge timing, wording, or channel — the existing "no change"
 discipline holds this week too.
 
-## A second nudge type earned its keep: same-morning attribution nudges
+## A second nudge type fired early, then fired false: attribution nudges
 
 2026-08-30 saw the scout fire a nudge *before* the 09:00 candidate list was
 even drafted — an unpushed `ivy` commit on the Mac carried a disconnected
@@ -68,6 +68,19 @@ channel): it exists to catch a misconfig while it is still a one-line
 `git config` fix, before it becomes a public history rewrite like the
 2026-08-27 `tomgreen.ai` incident [[ops]] [[repos/tomgreen.ai]]. First
 observed use of the class the scout section was written to prevent.
+
+**Correction, 2026-09-01.** Most of those nudges were false positives. The
+scanner tested the author address for equality against `commit_email`
+alone, so repos correctly configured with `tom@pulsarlabsai.com` — verified
+on the account, 72 commits, every one resolving `author.login` — reported
+`author_email_ok: false` [cite:2026-09-01]. The 08-30 and 08-31 nudges on
+`tomgreen.ai` and `talent-scout` had nothing to fix, which is why they
+never converted; non-conversion was the correct response to a false alarm,
+not a nudging failure. Fixed by making the check membership over
+`connected_emails` [[ops]]. Genuine cases do remain — `ai-capability-app`
+`24cda31` carries an invented `tom@C2-LAP32-TomGreen.local` and is still
+uncounted — so the class keeps its severity ordering; it was the test that
+was wrong, not the rule.
 
 **Discrepancy resolved (2026-08-27, contract 2026-08-27-ivy-nudge-audit-01):**
 journals described two, then three "nudge cycles" [cite:2026-08-26]
@@ -99,6 +112,9 @@ demand" when it is actually "no runner."
 
 ## Changelog
 
+- 2026-09-01 — attribution-nudge pattern corrected: the 08-30/08-31 nudges
+  were false positives from a too-narrow address check; non-conversion was
+  the right response. Rule kept, test fixed.
 - 2026-08-30 (retro) — extended never-fired-failsafe note to 7 days;
   recorded the first same-morning attribution nudge as a distinct pattern;
   logged the stalled dispatch queue; no ladder change made this week (n=1

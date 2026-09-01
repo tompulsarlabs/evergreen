@@ -7,6 +7,15 @@ timezone: Europe/Berlin
 commit_email: 249609836+tompulsarlabs@users.noreply.github.com
 commit_name: tompulsarlabs
 
+# Every address verified on the GitHub account. A commit counts if its AUTHOR
+# is any of these — not just commit_email, which is only the identity Ivy's
+# own failsafe commits use. Verified 2026-09-01: both resolve author.login
+# on real commits (tom@pulsarlabsai.com across 72). Add here when a new
+# address is verified; the local scanner and the counting rule both read it.
+connected_emails:
+  - 249609836+tompulsarlabs@users.noreply.github.com
+  - tom@pulsarlabsai.com
+
 schedule:            # local times in `timezone`; nothing after 22:30 (midnight margin)
   scout: "09:00"
   check: "18:00"
