@@ -202,9 +202,10 @@ Live numbers are in `state.json`; this block is a snapshot.
   retro has correctly declined to.
 - Dispatch: the Mac runner **went live on 1 September**. Its first contract
   — a cross-family review, executed by the OpenAI lane (Codex, `gpt-5.6-sol`,
-  9.7 minutes) — produced a findings report and awaits the failsafe's
-  verification stamp. One contract is verified (the manual D1 proof); one is
-  queued. Routing evidence is still n=1, so no lane policy has been touched.
+  9.7 minutes) — produced a findings report; a second review followed on
+  2 September. Both await the failsafe's verification stamp. One contract
+  is verified (the manual D1 proof); the queue is empty. Routing evidence
+  is still n=1, so no lane policy has been touched.
 - Next known chore: the late-October DST flip moves the fixed UTC crons an
   hour earlier in local time; the nearest retro re-pins them.
 
