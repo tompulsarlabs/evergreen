@@ -1,13 +1,13 @@
 {
-  "streak": 10,
-  "last_green": "2026-09-01",
+  "streak": 11,
+  "last_green": "2026-09-02",
   "memory_last_synthesized": "2026-08-31",
   "days": {
     "2026-09-02": {
-      "green_by": "tompulsarlabs/tomgreen.ai PR #12 (merged, 15:58 CEST) + 6 commits to tompulsarlabs/tompulsarlabs + 3 commits to tompulsarlabs/ivy (docs) + tompulsarlabs/yeva (1 commit)",
+      "green_by": "tompulsarlabs/ivy PR #11 + PR #12 (merged) + 2 dispatch-runner fixes (fb4ac9e, 3fd6151) + tompulsarlabs/tomgreen.ai PR #12 (merged, 15:58 CEST) + PR #13 (opened) + 6 commits to tompulsarlabs/tompulsarlabs + tompulsarlabs/yeva (1 commit)",
       "method": "real-work",
-      "contributions": 11,
-      "signal_source": "github-mcp:search_commits org:tompulsarlabs author-date:2026-09-02 (check 18:00; check.sh exit 2, no github.com egress in cloud sandbox) — so-far read, failsafe re-checks at 22:30",
+      "contributions": 16,
+      "signal_source": "github-mcp:search_commits + search_pull_requests org:tompulsarlabs author-date:2026-09-02 (failsafe 22:30 re-check; check.sh exit 2, no github.com egress in cloud sandbox) — 18:00 check saw 11 events; failsafe found continued real activity through 21:29 CEST (ivy dispatch-runner fixes) plus a new draft PR opened 20:35 CEST (tomgreen.ai #13), see journal ## Verification",
       "cite": "journal/2026-09-02.md",
       "nudge_sent": false,
       "nudge_converted": null,
