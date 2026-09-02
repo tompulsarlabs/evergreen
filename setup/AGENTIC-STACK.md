@@ -188,6 +188,32 @@ Don't do both for the same tool: you'd get every skill twice.
 
 Then, in each repo you work on, run `/setup-matt-pocock-skills` once inside a session. It asks where issues live and where docs go, and writes three small files under `docs/agents/`. From then on, start each feature with `/grill-with-docs`; the glossary and decision records build themselves.
 
+### Which one for what
+
+gstack and Matt's skills overlap in three places, and gstack fights Ivy in two. Checked against gstack `0d1bd56` (2026-09-01, 55 skills) and mattpocock/skills v1.2.3. No skill *names* clash; some *trigger phrases* do, so name the skill you mean.
+
+| Situation | Use | Not |
+|---|---|---|
+| Sharpening an idea | `/grill-with-docs` first (your vocabulary lands in `CONTEXT.md`), then gstack `/autoplan` for the CEO/eng/design critique | `/autoplan` alone: it decides for you and writes no glossary |
+| Reviewing a PR at the keyboard | gstack `/review` (production bugs), then `/code-review` (does it match the spec), then `/codex` for a second model | saying "review this" and letting Claude pick |
+| Reviewing a PR while you're away | an Ivy review contract (cross-family, verified by the failsafe) | gstack `/codex` (needs you present) |
+| Debugging | `/diagnosing-bugs` when there is no repro yet (it refuses to theorise until one goes red); gstack `/investigate` when there is one and you want scoped edits | both at once |
+| Turning a plan into work Ivy runs | `/to-tickets` → `dispatch/queue/` (attribution gate, draft PRs only, daily cap, external verification) | gstack `/spec --execute`, a second executor with none of those guardrails |
+| Design and QA on a site | gstack `/design-review` (the AI-slop catcher), `/qa`, `/browse` | nothing on Matt's side covers this |
+| Headless workers (`claude -p`, `codex exec`) | Matt's only: plain text, no preamble | gstack: its preamble script, onboarding gates, and `AskUserQuestion` stall a worker |
+| Weekly look back | Ivy's Sunday retro for what shipped and what to tune; gstack `/retro global` for how you worked across Claude, Codex, and Gemini sessions | gstack `/retro` inside the ivy repo: it writes `.context/retros/*.json` there |
+| Shipping in the ivy repo | commit and PR by hand or `/implement` | gstack `/ship`: it bumps a `VERSION` file and rewrites `CHANGELOG.md`, which Ivy's retro owns |
+| Memory | Ivy's `memory/` wiki for Ivy; gstack `/learn` and gbrain for other repos if you want session-level history | gbrain or `/learn` pointed at ivy: a memory the agent writes and then obeys is exactly what Ivy's immutable rule forbids |
+
+**Where the gstack section goes.** gstack asks for a `## gstack` block (35 skill names plus "use `/browse` for all browsing") in each project's `CLAUDE.md`. Put it in `~/.claude/CLAUDE.md` instead, once. It then applies to every repo on the Mac and never loads into Ivy's cloud routines, which cannot run gstack anyway. To move an existing one:
+
+```bash
+# append gstack's own snippet to your global file, then delete the block from any repo CLAUDE.md
+sed -n '/^## gstack$/,/^$/p' ~/.claude/skills/gstack/README.md >> ~/.claude/CLAUDE.md
+```
+
+**Duplicates.** If Matt's plugin is installed on the Mac, sessions inside `ivy` also see the vendored copy under `.claude/skills/`. Claude Code should resolve same-name skills with project precedence; check with gstack's `gstack-context-bill` (it measures the always-on cost of an installed skill tree). If it shows each twice, drop the plugin and use `npx skills@latest add mattpocock/skills -g` instead, which puts the same files where gstack lives.
+
 ## 8. Instructions — one file every tool reads
 
 **[AGENTS.md](https://agents.md)** is the open standard (stewarded by the Linux Foundation's Agentic AI Foundation) for telling coding agents about a project: how to build it, how to test it, house conventions. It's read by Codex, Cursor, Factory, OpenCode, Zed, Warp, VS Code, GitHub Copilot, Gemini CLI, Windsurf, Jules, Aider, Goose, Devin, Junie, Amp and more.

@@ -18,7 +18,10 @@ only as far as the task needs:
 The promoted set from `mattpocock/skills` is vendored under `.claude/skills/`
 (pinned in `skills-lock.json`; `npx skills update` pulls newer). `/ask-matt`
 routes between them. `writing-for-agents` is the reference for editing this
-file, `playbook.md`, `routines/*.md`, and `procedures/`.
+file, `playbook.md`, `routines/*.md`, and `procedures/`. gstack is Mac-only
+and its section lives in `~/.claude/CLAUDE.md`, never here: cloud routines
+cannot run it, and its `/ship`, `/retro`, and `/learn` write state this repo
+does not want (`setup/AGENTIC-STACK.md`, "Which one for what").
 
 ### Issue tracker
 
