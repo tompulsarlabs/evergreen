@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-copy-02
 type: build
-state: open
+state: failed
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
 pool: anthropic
@@ -77,3 +77,8 @@ naming the headers checked.
 First `build` contract to reach a worker on the Mac runner; the three
 2026-08-28/31 builds never executed. Whatever this run shows about
 `claude -p` opening draft PRs from the Mac is routing evidence in itself.
+
+outcome:
+  claimed_at: 2026-09-02T19:06:50+02:00
+  exit: attribution
+  note: next commit would author 'tompulsarlabs <tom@pulsarlabsai.com>' — not the connected address
