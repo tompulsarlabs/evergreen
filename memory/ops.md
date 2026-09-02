@@ -1,7 +1,7 @@
 ---
 subject: Ivy's runtime environment
 type: ops
-updated: 2026-08-30
+updated: 2026-09-02
 ---
 
 # Ops: how the environment actually behaves
@@ -14,7 +14,7 @@ run to discover; none of it is re-derivable cheaply.
 Routines run in Claude Code cloud sandboxes whose github.com egress is scoped
 to `tompulsarlabs/ivy` alone. GraphQL is blocked, unscoped REST is blocked,
 and even the *public* contributions HTML 403s ("sessions are bound to their
-configured repositories") [cite:b85b8af]. `scripts/check.sh` therefore exits 2
+configured repositories") [cite:ada1982]. `scripts/check.sh` therefore exits 2
 (no signal) in every cloud run — expected, never a reason to guess.
 
 Repo-scoped MCP tools (`list_branches`, `get_file_contents`) are likewise
@@ -32,9 +32,9 @@ built-in `mcp__github__*` tools, which are user-scoped rather than repo-scoped
 ## The contributions signal is not stable
 
 The contributions API flaps — 0/2/3/5 across replicas within minutes — so a
-grey reading is only trusted after retries [cite:d96eeef]. Separately, commit
+grey reading is only trusted after retries [cite:ada1982]. Separately, commit
 *search* indexing lags a fresh push by around a minute: to verify a commit
-just made, prefer `list_commits` over `search_commits` [cite:b85b8af].
+just made, prefer `list_commits` over `search_commits` [cite:ada1982].
 
 ## Attribution traps
 
@@ -47,7 +47,7 @@ Two distinct failure modes, both silent:
    actually use, which is why the scanner reports `author_email_ok` /
    `last_commit_email_ok` as booleans derived from it [cite:60535f0]. Booleans,
    not addresses: the invented identity embeds the machine hostname and
-   `local-wip.json` is public [cite:5f41f0a].
+   `local-wip.json` is public [cite:2026-08-27].
    Observed live — six real `tomgreen.ai` commits on 2026-08-27 authored
    `tom@Toms-MacBook-Air.local`, none of them countable [cite:2026-08-27].
    A second invented identity exists from another machine:
@@ -103,14 +103,52 @@ failsafe moves *earlier* and away from the midnight margin.
 local. Past 36h old it means *unknown*, never "nothing pending" — a sleeping
 Mac must not read as a clean tree.
 
+## Dispatch runner: launchd env is not a login shell
+
+Two same-day bugs on the Mac D2 runner, both from environment assumptions
+that held in an interactive terminal and silently broke under launchd
+[cite:2026-09-02]:
+
+1. **Two working copies.** `launchd` ran the plist's script from
+   `~/Build/ivy` (moves only when a human pulls), while the runner synced
+   and executed from `~/.ivy-dispatch/ivy`. A fix landed in the synced copy
+   but launchd kept running the stale one — new contracts, old gate — until
+   `main()` was changed to exec the synced checkout after `ensure_clone`.
+2. **No PATH.** `claude` lives in `~/.local/bin`, which only `~/.zshrc`
+   puts on PATH; launchd starts from the bare system PATH and runs no shell
+   profile, so the `bash -lc` wrapper resolved nothing. Fixed by dropping
+   the shell wrapper and setting PATH explicitly in the plist over every
+   binary the runner and its workers need.
+
+Both cost claimed contracts before being caught: four `tomgreen.ai` build
+contracts failed the attribution gate on stale code, two more claimed then
+crashed with `FileNotFoundError` on `claude`. All were released back to
+`queue/` under their existing ids rather than counted as waste, since no
+worker had actually claimed or spent budget on the current code path
+[[models]].
+
 ## Routine configuration
 
 Routines created without explicit MCP connections inherit **all** of the
 account's connectors by default; least privilege requires clearing them
-explicitly [cite:b85b8af].
+explicitly [cite:ada1982].
 
 ## Changelog
 
+- 2026-09-02 — repaired three citations broken since the repo's bootstrap
+  import (`ada1982`, 2026-08-29): `[cite:b85b8af]`, `[cite:d96eeef]` and
+  `[cite:5f41f0a]` referenced no commit reachable in this checkout (likely
+  orphaned by a pre-import history rewrite), which had made
+  `memory-lint.sh` fail unconditionally for any memory commit since that
+  import — an undetected blocker, not caught by any run that touched
+  memory/ in between. No claim content changed: the two sandbox/API facts
+  now cite the bootstrap import itself (`ada1982`), since they trace to
+  `DESIGN.md` rather than a journal observation; the attribution-hostname
+  claim now cites `2026-08-27`, where the matching journal entry actually
+  exists.
+- 2026-09-02 — recorded the two same-day launchd runner bugs (stale synced
+  checkout, missing PATH) and how the four affected contracts were
+  released rather than counted as waste.
 - 2026-09-01 — recorded that `tom@pulsarlabsai.com` is also connected, that
   the single-address check produced false-alarm nudges (now fixed), and that
   a second invented hostname identity exists on `ai-capability-app`.

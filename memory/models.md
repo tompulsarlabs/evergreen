@@ -1,7 +1,7 @@
 ---
 subject: execution-lane routing evidence
 type: evidence
-updated: 2026-08-30
+updated: 2026-09-02
 ---
 
 # Models: lane × task-class outcomes
@@ -16,6 +16,8 @@ policy lives in `playbook.md` and `config.yml`, never here). One row per
 | Contract | Type | Lane / pool | First-pass | Wall min | Note |
 |----------|------|-------------|------------|----------|------|
 | 2026-08-27-ivy-nudge-audit-01 | chore | workhorse / anthropic | yes | 8 | Memory reconciliation; interactive D1 manual run [cite:2026-08-27] |
+| 2026-08-27-c2cm-review-01 | review | frontier / openai | yes | 9.7 | D2 runner's first live execution (2026-09-01); six real findings, request-changes verdict [cite:2026-09-02] |
+| 2026-09-02-countersign-review-01 | review | frontier / openai | yes | 9.6 | Second D2 execution; keep-in-draft verdict, late-webhook race as top finding [cite:2026-09-02] |
 
 ## Pool health
 
@@ -30,16 +32,22 @@ No throttle or refusal events recorded on either pool yet [cite:2026-08-27].
 
 ## Reading
 
-n=1 still — no routing signal yet, and no waste to eliminate either (0
-failed, 0 expired). Per the Pareto rule, no lane move is warranted: nothing
-has reached the ≥3-verified-outcomes bar. The binding constraint is
-execution capacity (D2 runner), not lane policy — a config change here
-would not move the number. Comparative evidence still arrives only once the
-D2 runner executes the queued openai-pinned review contract
-(`2026-08-27-c2cm-review-01`) [cite:2026-08-27].
+n=3 now (1 chore, 2 review), all first-pass, all frontier/openai or
+workhorse/anthropic — still short of the ≥3-verified-outcomes-per-class bar
+the Pareto rule requires before any lane move, since the two new outcomes
+are both `review`/frontier/openai rather than adding depth to a different
+class. Zero waste so far (0 failed, 0 expired) among *verified* contracts;
+today's four tomgreen.ai build contracts that failed at the attribution
+gate and were returned to `queue/` (not `failed/`, no worker claimed, no
+budget spent) are a runner-reliability incident, not routing waste — see
+[[ops]] for the stale-checkout/PATH root causes, fixed same day
+[cite:2026-09-02].
 
 ## Changelog
 
+- 2026-09-02 — both queued review contracts verified done (request-changes
+  on c2-client-matrix, keep-in-draft on countersign); n=1→3, still under
+  the per-class Pareto bar.
 - 2026-08-30 (retro) — weekly fleet-metrics row added; still n=1, still no
   lane move (Pareto bar unmet); flagged runner capacity, not policy, as the
   binding constraint.

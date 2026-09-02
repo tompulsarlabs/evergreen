@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/c2-client-matrix
 type: repo
-updated: 2026-08-30
+updated: 2026-09-02
 ---
 
 # c2-client-matrix
@@ -19,9 +19,29 @@ For seven consecutive scout runs it has been the only long-stale non-draft
 open PR org-wide, and the scout's fallback "cheapest real contribution
 available today" pick whenever fresher work isn't [cite:2026-08-24]
 [cite:2026-08-25][cite:2026-08-26][cite:2026-08-27][cite:2026-08-28]
-[cite:2026-08-29][cite:2026-08-30]. It has never been taken. Also has a
-queued-but-unclaimed review contract (`2026-08-27-c2cm-review-01`), stalled
-on the dispatch runner rather than on the candidate itself [[patterns]].
+[cite:2026-08-29][cite:2026-08-30]. It has never been taken.
+
+## Review contract `2026-08-27-c2cm-review-01` — request changes
+
+Executed by the frontier/openai lane 2026-09-01 (the D2 runner's first live
+run), 9.7 wall-minutes, against PR head `685c1cd`. Verdict: **request
+changes**, all six of the PR's own decisions found partial, incomplete, or
+broken against the code. Top finding: visibility is metadata, not
+enforcement — `visibility` is optional on `src/types.ts:14,40`, so every
+legacy record publishes by default, and the card/drawer/chat/bundle paths
+all skip the check regardless (`src/components/ClientCard.tsx:181-271`,
+`src/components/DetailDrawer.tsx:85-132`, `api/chat.ts:7-24`,
+`src/App.tsx:3-11`). A second finding: filter-choice Sets are captured
+before React batches the reset, so European country selection silently
+drops all 14 UK clients. Full findings in
+`dispatch/reports/2026-08-27-c2cm-review-01.md`. Verified true on the
+checkable portion 2026-09-02 (report exists, non-empty, file:line-specific);
+the PR-head spot-check itself could not run from this cloud session —
+c2-client-matrix is outside its repo scope [[ops]] — a confirmed
+environment constraint, not a gap in the review.
+
+The review landed, unread by a human, without moving the PR: still open,
+still not converted [[patterns]].
 
 ## Nudge history
 
@@ -48,12 +68,15 @@ still 1 nudge / 0 conversions — too thin to act on without risking a
 false-negative call on a PR that has simply never had to compete for a
 *grey* day. The scout's revealed-preference ranking already deprioritizes it
 behind fresh work on its own, which is the behavior a demotion rule would
-try to encode. Revisit if it accumulates further nudges without conversion,
-or if the queued review contract (`2026-08-27-c2cm-review-01`) executes and
-still doesn't move it.
+try to encode. Revisit if it accumulates further nudges without conversion.
+The queued review contract has now executed (request changes, six real
+defects) and still hasn't moved it — one more data point toward "nudging
+isn't converting this PR," still short of the bar to act on [[patterns]].
 
 ## Changelog
 
+- 2026-09-02 — review contract `2026-08-27-c2cm-review-01` outcome recorded
+  (request changes, six findings); PR still unconverted after the review.
 - 2026-08-30 (retro) — reviewed the close/decline question raised
   2026-08-27; decided not to act (n=1 nudge, insufficient signal); logged
   two more fallback-pick exposures (08-29, 08-30) with the same outcome.
