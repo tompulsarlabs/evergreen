@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-context-01
 type: build
-state: open
+state: failed
 repo: tompulsarlabs/tomgreen.ai
 lane: workhorse
 pool: anthropic
@@ -53,3 +53,8 @@ list is exactly `CONTEXT.md`.
 Motivated by adopting mattpocock/skills on 2026-09-02: a shared language is
 the cheapest fix for verbose, drifting agent output, and tomgreen.ai is the
 highest-volume repo on the account, so it pays back fastest there.
+
+outcome:
+  claimed_at: 2026-09-02T19:06:50+02:00
+  exit: attribution
+  note: next commit would author 'tompulsarlabs <tom@pulsarlabsai.com>' — not the connected address
