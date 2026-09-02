@@ -45,6 +45,7 @@ created: 2026-08-30T09:00:00+02:00
 created_by: scout         # scout | tom
 expires: 2026-09-01T09:00:00+02:00
 budget: { wall_minutes: 30 }
+blocked_by: []            # optional; ids that must sit in dispatch/done/ before this runs
 ---
 
 ## Task
@@ -74,9 +75,25 @@ sees the claim, picks the next contract. A claim older than `budget.wall_minutes
 × 3` with no outcome is re-opened by the failsafe (runner died mid-task).
 
 **Attribution gate:** before executing a `build` contract, the runner checks the
-target repo's `author_email_ok` (same `git var` check as local-wip). A repo that
-would author uncountable commits refuses the contract with a `failed:
-attribution` outcome — the 2026-08-27 incident class, made structural.
+target repo's `author_email_ok` (same `git var` check as local-wip): the next
+commit's author must be one of `config.yml` `connected_emails` — membership,
+never equality against a single address, which on 2026-09-01 failed three
+contracts on a correctly configured clone. A repo that would author
+uncountable commits refuses the contract with a `failed: attribution`
+outcome — the 2026-08-27 incident class, made structural.
+
+**Blocking edges:** `blocked_by: [id, id]` (inline list) names contracts that
+must be in `dispatch/done/` before this one is eligible; the runner skips it
+until then and the lint refuses unknown ids. This is what lets a spec broken
+into tracer-bullet tickets (`/to-tickets`) publish as a chain of contracts
+rather than one contract per day.
+
+**Skills in the worker prompt:** the runner names the discipline the worker
+should use — `code-review` for review contracts, `tdd` + `code-review` for
+build contracts — conditionally, so a harness without those skills still
+executes. The skills themselves are installed on the Mac (Claude Code plugin
+`mattpocock-skills`; `npx skills add mattpocock/skills -g` for Codex), never
+carried by the contract.
 
 ## 3. Lanes and pools
 

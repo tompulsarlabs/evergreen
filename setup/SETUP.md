@@ -61,7 +61,7 @@ the phone.
 - After the first failsafe commit, confirm the contribution square lit;
   if not, walk the misconfig checklist in `playbook.md`.
 
-## 4. Dispatch runner (D2)
+## 6. Dispatch runner (D2)
 
 The runner executes queued dispatch contracts (`dispatch/queue/`) on the
 Mac — the only place with provider CLI auth (`claude`, `codex`). It keeps
@@ -77,6 +77,20 @@ python3 scripts/dispatch-runner.py --once      # single real pass
 ```
 
 Prereqs: `claude` and `codex` CLIs authenticated on the Mac; git push auth
-for github.com over https (e.g. `gh auth setup-git`). OpenAI-lane contracts
-stay queued until the `VERIFY` model pins in `config.yml` are replaced with
-real Codex model ids.
+for github.com over https (e.g. `gh auth setup-git`); the global git
+identity set to one of `config.yml` `connected_emails`, or every `build`
+contract fails at the attribution gate. Models are pinned per lane in
+`config.yml`.
+
+**Updating the runner.** The launchd job runs
+`~/Build/ivy/scripts/dispatch-runner.py` — the human checkout, not the
+runner's own clone — so a merged change to the script takes effect only
+after `git pull` in `~/Build/ivy`. That is deliberate: the checkout is the
+gate between `main` and code that executes on the Mac. After pulling, run
+`python3 scripts/dispatch-runner-test.py` (the pure parts: config parsing,
+the attribution gate, `blocked_by`, the worker prompt) before the next tick.
+
+**Skills for workers.** The worker prompt names `code-review` / `tdd` when
+they are installed in the harness: `claude plugins install
+mattpocock-skills` for Claude Code, `npx skills@latest add mattpocock/skills
+-g` for Codex (see `AGENTIC-STACK.md`). Without them the worker still runs.

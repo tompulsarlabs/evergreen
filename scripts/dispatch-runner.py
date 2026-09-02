@@ -14,6 +14,12 @@ print the exact harness argv, change nothing).
 Harness notes: `claude -p` flags are stable; `codex exec` flags are
 confirmed during the D2 smoke test — if the argv printed by --dry-run is
 wrong for your codex version, fix HARNESS_ARGV below.
+
+The attribution gate tests membership in config.yml `connected_emails`
+(2026-09-01: equality against `commit_email` alone failed three build
+contracts on a clone correctly configured with the second connected
+address). A contract with `blocked_by: [id, ...]` is skipped until every id
+sits in dispatch/done/. Pure parts are covered by dispatch-runner-test.py.
 """
 import fcntl, os, re, shlex, signal, subprocess, sys
 from datetime import datetime, timedelta
@@ -63,11 +69,16 @@ def parse_frontmatter(text):
             fm[k.strip()] = v.strip()
     b = re.search(r"wall_minutes:\s*(\d+)", m.group(1))
     fm["wall_minutes"] = int(b.group(1)) if b else 30
+    raw = fm.get("blocked_by", "").strip().strip("[]")
+    fm["blocked_by"] = [x.strip() for x in raw.split(",") if x.strip()]
     return fm, m.group(2)
 
 def load_config():
     cfg = (IVY / "config.yml").read_text()
     commit_email = re.search(r"^commit_email:\s*(\S+)", cfg, re.M).group(1)
+    block = re.search(r"^connected_emails:[^\n]*\n((?:[ \t]+-[^\n]*\n?)*)", cfg, re.M)
+    connected = re.findall(r"-\s*(\S+)", block.group(1)) if block else []
+    connected = connected or [commit_email]
     lanes = {}
     lane_block = re.search(r"^lanes:[^\n]*\n((?:[ \t]+.*\n?)*)", cfg, re.M).group(1)
     current = None
@@ -80,7 +91,16 @@ def load_config():
             pool, inner = m.group(1), m.group(2)
             entry = dict(re.findall(r"([a-z_-]+):\s*([^,}\s]+)", inner))
             lanes[current][pool] = entry
-    return commit_email, lanes
+    return commit_email, connected, lanes
+
+def author_connected(ident, connected):
+    """True if `git var GIT_AUTHOR_IDENT` names any verified address — the
+    author field is what GitHub counts, and more than one address is verified."""
+    return any(f"<{e}>" in ident for e in connected)
+
+def open_blockers(fm, done_ids):
+    """Ids in blocked_by that are not yet in dispatch/done/ (order kept)."""
+    return [b for b in fm.get("blocked_by", []) if b not in done_ids]
 
 def bot_commit_push(msg, paths):
     run(["git", "add", "--"] + [str(p) for p in paths], cwd=IVY)
@@ -119,11 +139,16 @@ def build_prompt(cid, repo, ctype, body):
     head = (f"You are an Ivy dispatch worker executing contract {cid}. "
             f"Your working directory is a fresh checkout of {repo}.\n")
     if ctype == "review":
-        tail = ("\nRules: read-only — do not commit, push, or modify anything. "
+        tail = ("\nSkills: if a `code-review` skill is installed in this harness, drive the review "
+                "with it (the Task above is the spec axis); if it is not, review without it.\n"
+                "\nRules: read-only — do not commit, push, or modify anything. "
                 f"Produce your complete findings as markdown and print them between two lines "
                 f"containing exactly {MARK_BEGIN} and {MARK_END}. Print nothing after {MARK_END}.")
     else:
-        tail = ("\nRules: do the work on a new branch named dispatch/" + cid + ", commit with the "
+        tail = ("\nSkills: if `tdd` and `code-review` skills are installed in this harness, build "
+                "test-first at the seams the Task names and review the diff against the Task before "
+                "opening the PR; if they are not installed, proceed without them.\n"
+                "\nRules: do the work on a new branch named dispatch/" + cid + ", commit with the "
                 "repository's connected git identity, push the branch, and open a DRAFT pull "
                 "request. Never push to the default branch. When finished, print a short summary "
                 f"of what you did between two lines containing exactly {MARK_BEGIN} and {MARK_END}.")
@@ -158,7 +183,8 @@ def main():
     lint = run(["bash", "scripts/dispatch-lint.sh"], cwd=IVY, check=False)
     if lint.returncode != 0:
         log(f"queue not lint-clean, refusing to run: {lint.stderr or lint.stdout}"); return 1
-    commit_email, lanes = load_config()
+    commit_email, connected, lanes = load_config()
+    done_ids = {p.stem for p in (IVY / "dispatch" / "done").glob("*.md")}
 
     for qpath in sorted((IVY / "dispatch" / "queue").glob("*.md")):
         fm, body = parse_frontmatter(qpath.read_text())
@@ -167,6 +193,9 @@ def main():
         cid, repo, ctype = fm["id"], fm["repo"], fm["type"]
         if datetime.fromisoformat(fm["expires"]) <= now:
             log(f"{cid}: past expiry, leaving for the failsafe to expire"); continue
+        blockers = open_blockers(fm, done_ids)
+        if blockers:
+            log(f"{cid}: blocked by {', '.join(blockers)} (not in dispatch/done/) — skipping"); continue
         entry = lanes.get(fm["lane"], {}).get(fm.get("pool") or "anthropic")
         if not entry or entry.get("model") == "VERIFY":
             log(f"{cid}: lane {fm['lane']}/{fm.get('pool') or 'anthropic'} unresolved (VERIFY) — skipping"); continue
@@ -175,11 +204,11 @@ def main():
         ensure_clone(clone, f"https://github.com/{repo}.git")
         if ctype == "build":
             ident = run(["git", "var", "GIT_AUTHOR_IDENT"], cwd=clone).stdout
-            if commit_email not in ident:
+            if not author_connected(ident, connected):
                 finalize(qpath, cid, "failed", "failed",
                          [f"claimed_at: {now.isoformat(timespec='seconds')}",
                           "exit: attribution",
-                          f"note: next commit would author '{ident.split('>')[0].strip()}>' — not the connected address"],
+                          f"note: next commit would author '{ident.split('>')[0].strip()}>' — not a connected address (config.yml connected_emails)"],
                          f"dispatch: failed {cid} — attribution gate")
                 continue
 

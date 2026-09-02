@@ -160,8 +160,12 @@ to execution lanes. Non-negotiables:
   `dispatch.daily_cap` minus contracts already created today, using the
   contract format in `dispatch/DESIGN.md` §2. Review contracts pin the
   family that did not author the PR. Run `scripts/dispatch-lint.sh`, commit
-  bot-authored (`dispatch: open <id>`). Execution is the runner's job (or
-  manual until D2) — the scout only queues.
+  bot-authored (`dispatch: open <id>`). Execution is the runner's job — the
+  scout only queues. A contract is a ticket in the `to-tickets` sense: one
+  vertical slice, complete and verifiable on its own, sized for a single
+  worker session. Work that needs more than one slice is published as a
+  chain — later contracts carry `blocked_by` with the earlier ids — never as
+  one oversized contract. Write contracts in `CONTEXT.md` vocabulary.
   Anything learned along the way — a repo that has gone quiet, a new access
   limit, a candidate that keeps resurfacing — goes in the journal entry, not
   into `memory/`. The failsafe folds it in tonight; the scout never edits
@@ -212,6 +216,9 @@ to execution lanes. Non-negotiables:
   3. **Making no change is a valid outcome.** If the wiki is already correct,
      write nothing — an unchanged page is a stronger signal than a page
      restated daily.
+     A concept today's journal needed that `CONTEXT.md` lacks, or used
+     against its definition, goes in the journal under `## Vocabulary gaps`.
+     The failsafe never edits the glossary; the retro does.
   4. Run `scripts/memory-lint.sh`; it must pass before committing. Commit
      bot-authored as `memory: <what changed>` and set
      `memory_last_synthesized` in `state.json` to today.
@@ -278,6 +285,21 @@ removes, and the only one allowed to rewrite a page wholesale:
   it stays a map, not a summary.
 - Re-run `scripts/memory-lint.sh`, then commit bot-authored as
   `memory: retro — <what changed>`.
+
+**Prune the steering files.** `CLAUDE.md`, `playbook.md`, `routines/*.md`,
+and `procedures/` are read on every run, so every line costs on every run.
+Once a week, call the Skill tool with `writing-for-agents` and apply its
+tests to them: delete no-ops (instructions the agent already follows by
+default), collapse restatements into a leading word, state a target
+positively where a prohibition is not a hard guardrail, and push reference
+that only some runs need behind a pointer. A deletion that provably changes
+no behaviour does not count toward the two adjustments; a wording change
+that does, does. Immutable sections stay untouched. Then curate
+`CONTEXT.md`: call the Skill tool with `domain-modeling`, resolve the week's
+`## Vocabulary gaps` from the journals, correct any page or journal that used
+a term against its definition, and record in `docs/adr/` any decision that
+is hard to reverse, surprising without context, and the result of a real
+trade-off — all three, or no ADR.
 
 **Run the fleet, not the sessions.** The retro optimizes lane *policy* against
 per-class targets, never individual runs (adapted from Uber's software-factory

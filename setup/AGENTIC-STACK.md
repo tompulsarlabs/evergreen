@@ -168,6 +168,26 @@ cd ~/.claude/skills/gstack && ./setup --host auto
 
 Try it: run `claude`, then type `/review` or `/office-hours`. Useful ones to know: `/office-hours`, `/plan-ceo-review`, `/review`, `/qa`, `/ship`, `/investigate`, `/browse`, `/design-review`, `/learn`.
 
+### Matt Pocock's skills — the engineering discipline
+
+gstack gives you a team; **[Matt Pocock's skills](https://github.com/mattpocock/skills)** give you a way of working: interview before building (`/grill-with-docs`), break work into tracer-bullet tickets (`/to-tickets`), build test-first (`/tdd`), review on two axes (`/code-review`), and keep a `CONTEXT.md` glossary so the agent stops using twenty words where one will do. Ivy uses them in its routines and its workers.
+
+Two routes, one per tool. For Claude Code the plugin is in the official marketplace and updates itself:
+
+```bash
+claude plugins install mattpocock-skills
+```
+
+For Codex (and any other agent), the installer copies the skill files in. Run it once, globally, and pick the skills you want — make sure `setup-matt-pocock-skills` is one of them:
+
+```bash
+npx skills@latest add mattpocock/skills -g
+```
+
+Don't do both for the same tool: you'd get every skill twice.
+
+Then, in each repo you work on, run `/setup-matt-pocock-skills` once inside a session. It asks where issues live and where docs go, and writes three small files under `docs/agents/`. From then on, start each feature with `/grill-with-docs`; the glossary and decision records build themselves.
+
 ## 8. Instructions — one file every tool reads
 
 **[AGENTS.md](https://agents.md)** is the open standard (stewarded by the Linux Foundation's Agentic AI Foundation) for telling coding agents about a project: how to build it, how to test it, house conventions. It's read by Codex, Cursor, Factory, OpenCode, Zed, Warp, VS Code, GitHub Copilot, Gemini CLI, Windsurf, Jules, Aider, Goose, Devin, Junie, Amp and more.
@@ -233,6 +253,7 @@ Start by reading [`OVERVIEW.md`](../OVERVIEW.md) and [`playbook.md`](../playbook
 ```bash
 brew update && brew upgrade                       # languages and tools
 cd ~/.claude/skills/gstack && git pull && ./setup --host auto   # gstack, all hosts
+npx skills@latest update -g                       # Matt Pocock's skills for Codex (the Claude plugin updates itself)
 ```
 
 Claude Code updates itself in the background. Codex installed via Homebrew needs `brew upgrade --cask codex`.

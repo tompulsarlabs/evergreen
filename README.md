@@ -35,6 +35,11 @@ fakes it — no empty commits, no backdating, no filler.
   the morning scout sees truth that only exists on the laptop.
 - **The weekly retro** may change at most two things, must cite evidence for
   each, and is the only pass allowed to edit behaviour or prune memory.
+- **A shared vocabulary and a skill layer.** `CONTEXT.md` names each thing
+  once, and Matt Pocock's engineering skills are vendored under
+  `.claude/skills/` so routines, workers, and interactive sessions run the
+  same discipline: grill before building, tickets as vertical slices,
+  test-first, two-axis review.
 
 ## The daily loop
 
@@ -156,6 +161,39 @@ to any "cheapest ship today" ranking precisely because its contribution count
 is zero. Blockers are named in the journal, carried forward daily, and after
 three days outrank the cheapest ship in the nudge.
 
+## Vocabulary and skills
+
+`CONTEXT.md` is the glossary: one word per concept, and the words to stop
+using. It exists because the words drifted. Journals called scout picks
+"nudge cycles" until a dispatch contract had to reconcile the count; "done"
+meant two different states; "the connected address" implied one when two
+are verified. Journals, memory pages, contracts, and commit messages use its
+terms. The failsafe flags gaps in the day's journal; the retro resolves them.
+
+The skill layer is [Matt Pocock's skills](https://github.com/mattpocock/skills)
+(plugin v1.2.3, upstream `6654f6b`, hashes in `skills-lock.json`), vendored
+under `.claude/skills/` so the cloud routines load them from the checkout.
+`/ask-matt` routes between them. They hook in at four places:
+
+- **Designing the next phase.** `/grill-with-docs` interviews before
+  anything is built and writes what it settles into `CONTEXT.md` and
+  `docs/adr/`. `/to-spec` and `/to-tickets` publish the result as a spec
+  under `.scratch/` and a chain of dispatch contracts, later ones carrying
+  `blocked_by` (`docs/agents/issue-tracker.md` is the mapping).
+- **Workers.** The runner's prompt names `code-review` for review contracts
+  and `tdd` plus `code-review` for builds, conditionally, so a harness
+  without them still executes.
+- **The retro.** A weekly pass applies `writing-for-agents` to the steering
+  files, since every line of `playbook.md` costs on every run, and
+  `domain-modeling` to the glossary.
+- **The Mac.** `/handoff` replaces hand-written "drop this in the terminal"
+  prompts; `/wizard` is how the bring-up scripts under `setup/` get written.
+
+On the Mac the same set installs once for every repo: `claude plugins
+install mattpocock-skills` for Claude Code, `npx skills@latest add
+mattpocock/skills -g` for Codex. The vendored copy is for the cloud, which
+sees neither.
+
 ## The learning loop
 
 Every behaviour change is a readable, revertible diff. The retro may tune
@@ -204,8 +242,12 @@ Live numbers are in `state.json`; this block is a snapshot.
   — a cross-family review, executed by the OpenAI lane (Codex, `gpt-5.6-sol`,
   9.7 minutes) — produced a findings report; a second review followed on
   2 September. Both await the failsafe's verification stamp. One contract
-  is verified (the manual D1 proof); the queue is empty. Routing evidence
-  is still n=1, so no lane policy has been touched.
+  is verified (the manual D1 proof). On 2 September the runner's attribution
+  gate was found to carry the same single-address test the scanner had
+  already lost (it refused three `tomgreen.ai` builds on 1 September);
+  fixed to membership over `connected_emails`, unit-tested, and the three
+  re-queued with a fourth — the first `build` contracts to reach a worker.
+  Routing evidence is still n=1, so no lane policy has been touched.
 - Next known chore: the late-October DST flip moves the fixed UTC crons an
   hour earlier in local time; the nearest retro re-pins them.
 
@@ -228,7 +270,10 @@ contracts for the same reason. The nudges didn't convert because there was
 nothing to fix; the memory page records that non-conversion was the right
 response. `config.yml` now carries every verified address, and the check is
 membership, not equality. The severity ordering stayed — the test was wrong,
-not the rule.
+not the rule. The runner carried its own copy of the equality test; it went
+the same way on 2 September, with `scripts/dispatch-runner-test.py` so the
+pure parts of a script that only ever runs on the Mac are checked before
+they get there.
 
 **Nudge inflation.** Journals had described "nudge cycles" that were really
 scout picks. The first dispatch contract was a reconciliation that found the
@@ -245,6 +290,8 @@ against primary sources.
   decisions, lanes, topology, guardrails
 - **[`playbook.md`](playbook.md)** — the operating instructions the routines
   actually follow; the single source of behavioural truth
+- **[`CONTEXT.md`](CONTEXT.md)** — the glossary: one word per concept, the
+  words to avoid, and the ambiguities that have already cost a contract
 - **[`CHANGELOG.md`](CHANGELOG.md)** — every version, with the evidence
   behind each change
 - **[`setup/SETUP.md`](setup/SETUP.md)** — running Ivy from scratch
@@ -257,6 +304,10 @@ against primary sources.
 ```
 config.yml        identity, schedule, watchlist, lanes, dispatch limits
 playbook.md       immutable rules + retro-tunable behaviour
+CONTEXT.md        the glossary every routine, worker, and session writes in
+CLAUDE.md         navigation pointers and the agent-skills configuration
+.claude/skills/   Matt Pocock's promoted skill set, vendored (skills-lock.json)
+docs/agents/      how the skills map onto Ivy: tracker, labels, domain docs
 state.json        machine-readable daily outcomes (append-only schema)
 local-wip.json    the Mac scanner's latest view of local work
 memory/           knowledge wiki: INDEX, ops, patterns, models, repos/
@@ -275,8 +326,12 @@ Perplexity's Brain gave the memory model: a wiki of linked markdown over raw
 evidence, citations down and context sideways. Uber's software-factory
 write-up validated the dispatch thesis: optimise a fleet of specialised
 agents against per-class targets, and cut waste before you downgrade a
-model. Neither was copied wholesale — at this size, a small git repo and
-`grep` do what their infrastructure does.
+model. Matt Pocock's skills gave the working discipline and the glossary habit:
+grill first, tickets as tracer bullets, a `CONTEXT.md` so the agent stops
+using twenty words where one will do. Neither of the first two was copied
+wholesale — at this size, a small git repo and `grep` do what their
+infrastructure does — and the third is vendored as files, so it can be
+edited where Ivy's shape differs.
 
 ## Adopting it
 

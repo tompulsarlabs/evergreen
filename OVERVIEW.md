@@ -21,7 +21,7 @@ The failsafe is the floor: if a day would otherwise be empty, Ivy writes a
 genuine journal entry rather than faking activity. It has not been needed
 once in ten recorded days.
 
-## Four layers of state
+## The layers of state
 
 Each layer answers a different question, and they stay in their own lanes.
 
@@ -40,6 +40,9 @@ Each layer answers a different question, and they stay in their own lanes.
   stating the task, the definition of done, and a check that proves it.
 - **`procedures/`** — recipes. A task done well once, written down with
   exact commands so it never has to be re-derived from journal history.
+- **`CONTEXT.md`** — the glossary. One word per concept and the words to
+  avoid, so a journal, a memory page, and a contract all mean the same thing
+  by "nudge", "done", or "connected address".
 
 ## How memory works
 
@@ -77,6 +80,19 @@ Workers are not trusted. They push branches and open draft pull requests,
 never to a default branch. A contract is only *verified done* when the
 failsafe independently runs its verification step and stamps the result.
 Worker exit codes are claims; the check is the evidence.
+
+## Skills
+
+The routines, the workers, and my own sessions share one working discipline:
+[Matt Pocock's skills](https://github.com/mattpocock/skills), vendored under
+`.claude/skills/`. Design happens as a grilling interview that writes
+decisions into `CONTEXT.md` and `docs/adr/`; a spec breaks into
+tracer-bullet tickets that publish as a chain of contracts (`blocked_by`
+links them); review workers run `code-review`, build workers `tdd` then
+`code-review`; and the retro applies `writing-for-agents` to the playbook
+itself once a week, because every line of it costs on every run.
+`docs/agents/` holds the three files that tell the skills where Ivy keeps
+its tickets, its labels, and its decisions.
 
 ## Rules that don't change
 
@@ -128,7 +144,8 @@ stamp. The same afternoon its attribution gate refused three `tomgreen.ai`
 build contracts because the check compared against a single address while
 the account has two connected ones — a false positive, fixed by making the
 check membership over `connected_emails`. The gate did its job; the test
-under it was too narrow.
+under it was too narrow. The runner's own copy of that test was fixed on
+2 September, with a unit test, and the three contracts were re-queued.
 
 Two other things are honestly thin. Exactly one nudge has ever been sent
 and it didn't convert, which is far too little data to tune notification
@@ -140,6 +157,9 @@ the three the retro requires before moving any lane.
 ```
 config.yml       schedule, watchlist, lanes, dispatch limits
 playbook.md      operating instructions — immutable rules + tunable behavior
+CONTEXT.md       the glossary
+CLAUDE.md        navigation pointers + agent-skills configuration
+.claude/skills/  the vendored skill set; docs/agents/ maps it onto Ivy
 state.json       machine-readable daily outcomes
 memory/          the knowledge wiki (INDEX, ops, patterns, models, repos/)
 journal/         one engineering note per day
