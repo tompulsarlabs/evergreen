@@ -3,7 +3,7 @@
 Ivy is a set of scheduled agents that keep my software projects moving, and
 that remember what they learn while doing it.
 
-It runs four times a day in the cloud, watches 14 repositories, and writes
+It runs three times a day in the cloud (plus a weekly retro), watches 15 repositories, and writes
 everything it knows back into this repo as plain files. Nothing is hidden in
 a database or a vendor's memory store — the whole system is markdown, JSON,
 and git history you can read top to bottom.
@@ -19,7 +19,7 @@ and git history you can read top to bottom.
 
 The failsafe is the floor: if a day would otherwise be empty, Ivy writes a
 genuine journal entry rather than faking activity. It has not been needed
-once in seven days.
+once in ten recorded days.
 
 ## Four layers of state
 
@@ -102,9 +102,9 @@ human commit.
 
 ## What it has done
 
-Seven days, 115 contributions, all from real work — the failsafe has never
-had to fire. Volume is uneven by nature: 46 contributions one day, 2 the
-next, and both days cleared the bar.
+Ten recorded days (23 August–1 September), 142 contributions, all from real
+work — the failsafe has never had to fire. Volume is uneven by nature: 46
+contributions one day, 1 the next, and both days cleared the bar.
 
 The clearest thing it has caught: on 27 August, six real commits on
 `tomgreen.ai` were authored with an email GitHub didn't recognise, so none
@@ -119,12 +119,16 @@ recovered. All of it is on the `ops` memory page with citations.
 
 ## What isn't working yet
 
-The Mac dispatch runner is installed but has not executed a contract. Three
-contracts have been sitting unclaimed since 27–28 August: a cross-family
-code review, and two builds on `tomgreen.ai`. Ivy diagnosed this itself —
-the 30 August retro logged it as an infrastructure gap rather than a policy
-problem, and correctly declined to retune routing when the real constraint
-is that nothing has run.
+The Mac dispatch runner went live on 1 September, after the queue had sat
+unclaimed since 27–28 August — a gap the 30 August retro correctly logged as
+infrastructure rather than policy, declining to retune routing when nothing
+had run. Its first contract, a cross-family review executed by the OpenAI
+lane, produced a findings report and awaits the failsafe's verification
+stamp. The same afternoon its attribution gate refused three `tomgreen.ai`
+build contracts because the check compared against a single address while
+the account has two connected ones — a false positive, fixed by making the
+check membership over `connected_emails`. The gate did its job; the test
+under it was too narrow.
 
 Two other things are honestly thin. Exactly one nudge has ever been sent
 and it didn't convert, which is far too little data to tune notification
