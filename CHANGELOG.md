@@ -36,6 +36,15 @@ disclosure; provable no-behaviour-change deletions are free of the two-change
 cap) and curate `CONTEXT.md` with `domain-modeling`, ADRs to `docs/adr/`
 only when hard to reverse, surprising, and a real trade-off.
 
+Same day, later: gstack vs Matt's skills reconciled in
+`setup/AGENTIC-STACK.md` ("Which one for what") — no name clashes, three
+shared trigger phrases (`review`/`code-review`, `investigate`/
+`diagnosing-bugs`, two retros), and two things gstack must not do in this
+repo: `/spec --execute` and `/ship` (a second executor and a `VERSION` bump
+past Ivy's guardrails), `/learn`/gbrain/`/retro` (agent-written memory the
+agent then obeys). gstack's CLAUDE.md block belongs in `~/.claude/CLAUDE.md`,
+not here; `.context/` ignored defensively.
+
 ## v5 — 2026-08-30
 
 **First retro: no change — evidence still too thin to tune.** Reviewed
