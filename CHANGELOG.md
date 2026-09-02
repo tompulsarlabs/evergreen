@@ -1,5 +1,41 @@
 # Changelog
 
+## v6 — 2026-09-02
+
+**A glossary and a skill layer; the runner's gate fixed.** Adopted
+[mattpocock/skills](https://github.com/mattpocock/skills) (plugin v1.2.3,
+upstream `6654f6b`): the 25 promoted skills vendored under `.claude/skills/`
+via skills.sh (`skills-lock.json` pins hashes) so cloud routines load them
+from the checkout; `CLAUDE.md` added as navigation pointers plus the
+`## Agent skills` block; `docs/agents/` maps the skills onto Ivy — the issue
+tracker is `dispatch/queue/` (tickets from `/to-tickets` publish as a chain
+of contracts), specs and decision tickets live under `.scratch/`, triage
+roles map onto contract states. `CONTEXT.md` written: Ivy's glossary, with
+the ambiguities that already cost work recorded as resolved (nudge vs pick,
+claimed vs verified done, "the" connected address).
+
+Dispatch: `blocked_by: [id, id]` on contracts — the runner skips a contract
+until every id is in `dispatch/done/`, the lint refuses unknown ids
+(`dispatch/DESIGN.md` §2). The worker prompt names `code-review` (review)
+and `tdd` + `code-review` (build), conditionally. **Runner bug fixed:** the
+attribution gate tested `commit_email` alone, the same narrow check the
+scanner lost on 09-01; on 2026-09-01 17:01 it refused three `tomgreen.ai`
+builds on a clone correctly configured with `tom@pulsarlabsai.com`. Now
+membership over `connected_emails`, locked by
+`scripts/dispatch-runner-test.py` (red on the old code, green now). The
+three contracts re-queued as `-02` with an establish-current-state step,
+plus `2026-09-02-tomgreenai-context-01` to draft that repo's glossary.
+The launchd job runs the script from `~/Build/ivy`, so the fix lands on the
+Mac at the next `git pull` there.
+
+Playbook (Tunable only): scout contracts are tickets — one vertical slice,
+chains via `blocked_by`, glossary vocabulary; failsafe records
+`## Vocabulary gaps` in the journal; retro gains a third job — prune the
+steering files with `writing-for-agents` (no-ops, restatements, negation,
+disclosure; provable no-behaviour-change deletions are free of the two-change
+cap) and curate `CONTEXT.md` with `domain-modeling`, ADRs to `docs/adr/`
+only when hard to reverse, surprising, and a real trade-off.
+
 ## v5 — 2026-08-30
 
 **First retro: no change — evidence still too thin to tune.** Reviewed

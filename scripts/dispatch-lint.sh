@@ -2,8 +2,8 @@
 # Deterministic validation for dispatch contracts (dispatch/{queue,done,failed}/*.md).
 #
 # Checks frontmatter schema, id/filename agreement, known repo and lane,
-# state/directory consistency, required body sections, sane dates, outcome
-# blocks on terminal contracts, and the daily creation cap. Semantic checks —
+# state/directory consistency, blocked_by ids, required body sections, sane
+# dates, outcome blocks on terminal contracts, and the daily creation cap. Semantic checks —
 # is the work real, did verification actually pass — belong to the routines,
 # not this script. Exit 0 clean, 1 on any violation.
 set -uo pipefail
@@ -67,6 +67,19 @@ while IFS= read -r f; do
   fi
   v=$(grep -E '^ *verified:' "$f" | head -1 | sed 's/.*: *//')
   [ -z "$v" ] || case "$v" in true|false) ;; *) err "$f: verified '$v' not true|false";; esac
+
+  # blocked_by: optional inline list of contract ids that must reach done/ first
+  if printf '%s\n' "$fm" | grep -q '^blocked_by:'; then
+    bb=$(fm_get "$fm" blocked_by)
+    ids=$(printf '%s' "$bb" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//; s/ *$//' | grep -v '^$')
+    [ -n "$ids" ] || err "$f: blocked_by must be an inline list, e.g. blocked_by: [id, id]"
+    while IFS= read -r b; do
+      [ -n "$b" ] || continue
+      [ "$b" != "$id" ] || err "$f: blocked_by names itself"
+      [ -e "dispatch/queue/$b.md" ] || [ -e "dispatch/done/$b.md" ] || [ -e "dispatch/failed/$b.md" ] \
+        || err "$f: blocked_by '$b' is not a contract in dispatch/"
+    done <<< "$ids"
+  fi
 
   # required body sections
   for sec in '## Task' '## Definition of done' '## Verification'; do
