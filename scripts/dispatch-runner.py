@@ -25,7 +25,7 @@ The runner execs the copy inside IVY once the sync has run: the launchd entry
 point is a dev checkout that only moves when a human pulls, so without this a
 pushed runner change lands in IVY while the old code keeps executing.
 """
-import fcntl, os, re, shlex, signal, subprocess, sys
+import fcntl, os, re, shlex, shutil, signal, subprocess, sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -105,6 +105,20 @@ def author_connected(ident, connected):
 def open_blockers(fm, done_ids):
     """Ids in blocked_by that are not yet in dispatch/done/ (order kept)."""
     return [b for b in fm.get("blocked_by", []) if b not in done_ids]
+
+def resolve_harness(argv, which=shutil.which):
+    """argv with argv[0] resolved to an absolute path, or None if not found.
+
+    launchd hands the runner a PATH built only from /etc/paths(.d); `claude`
+    lives in ~/.local/bin, which only ~/.zshrc adds. On 2026-09-02 that raised
+    FileNotFoundError inside Popen *after* two contracts were claimed and the
+    claim commits pushed, stranding both in `claimed` with no outcome. Resolve
+    before claiming, and exec an absolute path so PATH cannot matter twice.
+    """
+    if not argv:
+        return None
+    found = which(argv[0])
+    return [found] + list(argv[1:]) if found else None
 
 def synced_runner(current, synced):
     """The synced runner to exec into, or None to carry on with this one.
@@ -241,6 +255,15 @@ def main():
 
         prompt = build_prompt(cid, repo, ctype, body.split("outcome:")[0])
         argv = harness_argv(entry, prompt, ctype)
+        resolved = resolve_harness(argv)
+        if not resolved:
+            # An environment fault, not a fault in the contract: leave it open
+            # so it runs untouched once the binary is reachable, rather than
+            # burning a good contract on a bad PATH.
+            log(f"{cid}: harness binary '{argv[0]}' not found on PATH — leaving open; "
+                f"PATH={os.environ.get('PATH', '')}")
+            continue
+        argv = resolved
         if dry:
             log(f"{cid}: DRY RUN — would claim, then exec in {clone}:")
             log("  " + " ".join(shlex.quote(a if len(a) < 120 else a[:117] + "...") for a in argv))
@@ -252,8 +275,17 @@ def main():
 
         log(f"{cid}: executing via {entry['harness']} ({entry['model']}), budget {fm['wall_minutes']}m")
         start = datetime.now()
-        proc = subprocess.Popen(argv, cwd=clone, text=True, stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT, start_new_session=True)
+        try:
+            proc = subprocess.Popen(argv, cwd=clone, text=True, stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT, start_new_session=True)
+        except OSError as e:
+            # The contract is already claimed and pushed; an unhandled raise here
+            # would strand it in `claimed` until expiry (2026-09-02: twice).
+            finalize(qpath, cid, "failed", "failed",
+                     [f"claimed_at: {now.isoformat(timespec='seconds')}",
+                      "exit: harness_error", f"note: could not start {argv[0]}: {e}"],
+                     f"dispatch: failed {cid} — harness would not start")
+            return 0
         try:
             out, _ = proc.communicate(timeout=fm["wall_minutes"] * 60)
             code = proc.returncode

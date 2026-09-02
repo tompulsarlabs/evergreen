@@ -94,6 +94,19 @@ with tempfile.TemporaryDirectory() as tmp:
     check("same path is never exec'd (no loop)", runner.synced_runner(a, a) is None)
     check("missing synced copy is tolerated", runner.synced_runner(a, Path(tmp) / "nope.py") is None)
 
+    # Red on 2026-09-02: `claude` is in ~/.local/bin, absent from launchd's PATH.
+    # Popen raised FileNotFoundError after the claim was pushed, stranding two
+    # contracts in `claimed`. Resolve before claiming; exec an absolute path.
+    argv = ["claude", "-p", "prompt", "--model", "claude-opus-5"]
+    check("harness resolved to an absolute path",
+          runner.resolve_harness(argv, which=lambda b: "/Users/x/.local/bin/" + b)
+          == ["/Users/x/.local/bin/claude", "-p", "prompt", "--model", "claude-opus-5"])
+    check("missing harness resolves to None (contract stays open)",
+          runner.resolve_harness(argv, which=lambda b: None) is None)
+    check("resolution keeps every argument after argv[0]",
+          len(runner.resolve_harness(argv, which=lambda b: "/bin/" + b)) == len(argv))
+    check("empty argv is tolerated", runner.resolve_harness([], which=lambda b: "/bin/x") is None)
+
     review = runner.build_prompt("c1", "o/r", "review", "## Task\nx\n")
     build = runner.build_prompt("c2", "o/r", "build", "## Task\nx\n")
     check("review prompt names the code-review skill", "code-review" in review)

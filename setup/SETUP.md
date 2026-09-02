@@ -82,13 +82,33 @@ identity set to one of `config.yml` `connected_emails`, or every `build`
 contract fails at the attribution gate. Models are pinned per lane in
 `config.yml`.
 
-**Updating the runner.** The launchd job runs
-`~/Build/ivy/scripts/dispatch-runner.py` — the human checkout, not the
-runner's own clone — so a merged change to the script takes effect only
-after `git pull` in `~/Build/ivy`. That is deliberate: the checkout is the
-gate between `main` and code that executes on the Mac. After pulling, run
-`python3 scripts/dispatch-runner-test.py` (the pure parts: config parsing,
-the attribution gate, `blocked_by`, the worker prompt) before the next tick.
+**PATH is declared in the plist, not inherited.** launchd starts with
+`/usr/bin:/bin:/usr/sbin:/sbin`, and no shell profile is read (the login shell
+is zsh; launchd does not run it), so anything in `~/.local/bin` — `claude`
+among them — is invisible unless named. The plist sets PATH explicitly; if a
+CLI moves, update `setup/ai.tomgreen.ivy-dispatch.plist` and re-run
+`install`. The runner resolves the harness binary to an absolute path before
+claiming a contract, and leaves the contract `open` if it cannot, so a bad
+PATH costs a log line rather than a contract.
+
+**Updating the runner.** `main` is what executes. The launchd job's entry
+point is `~/Build/ivy/scripts/dispatch-runner.py`, but after syncing its own
+clone the runner execs the copy in `~/.ivy-dispatch/ivy` — so a merged change
+takes effect on the next tick with no `git pull` needed.
+
+Until 2026-09-02 it did not: the entry point only moved when a human pulled,
+so a gate fix pushed at 18:37 sat unexecuted while the pre-fix code refused
+four contracts at 19:06. The runner had been faithfully syncing a checkout
+whose code it never ran. Treat `main` as the gate accordingly — a syntax error
+there stops every tick, which is why `dispatch-runner-test.py` runs before push.
+
+To test *local* edits you must opt out of the exec, or you will be testing
+`origin/main` instead of your change:
+
+```
+IVY_RUNNER_REEXEC=1 python3 scripts/dispatch-runner.py --once --dry-run
+python3 scripts/dispatch-runner-test.py    # pure parts; run before every push
+```
 
 **Skills for workers.** The worker prompt names `code-review` / `tdd` when
 they are installed in the harness: `claude plugins install

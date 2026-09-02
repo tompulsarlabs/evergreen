@@ -4,12 +4,29 @@
 <dict>
     <key>Label</key>
     <string>ai.tomgreen.ivy-dispatch</string>
+
+    <!-- No shell wrapper. `bash -lc` was here to pick up a login PATH, but there
+         is no ~/.bash_profile (the login shell is zsh), so bash sourced nothing
+         and PATH stayed launchd's /etc/paths default. `claude` lives in
+         ~/.local/bin, which only ~/.zshrc adds, so on 2026-09-02 two claimed
+         contracts died at Popen with FileNotFoundError. PATH is declared here
+         instead: explicit beats inherited, and there is no shell to get it wrong. -->
     <key>ProgramArguments</key>
     <array>
-        <string>/bin/bash</string>
-        <string>-lc</string>
-        <string>exec python3 /Users/tom/Build/ivy/scripts/dispatch-runner.py</string>
+        <string>/usr/local/bin/python3</string>
+        <string>/Users/tom/Build/ivy/scripts/dispatch-runner.py</string>
     </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- claude: ~/.local/bin | gh, codex, bun: /opt/homebrew/bin
+             node, npm, python3: /usr/local/bin | git: /usr/bin -->
+        <key>PATH</key>
+        <string>/Users/tom/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>/Users/tom</string>
+    </dict>
+
     <key>StartInterval</key>
     <integer>1800</integer>
     <key>RunAtLoad</key>

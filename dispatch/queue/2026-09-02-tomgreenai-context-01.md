@@ -1,8 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-context-01
 type: build
-state: claimed
-claimed_at: 2026-09-02T20:07:01+02:00
+state: open
 repo: tompulsarlabs/tomgreen.ai
 lane: workhorse
 pool: anthropic
@@ -55,11 +54,4 @@ Motivated by adopting mattpocock/skills on 2026-09-02: a shared language is
 the cheapest fix for verbose, drifting agent output, and tomgreen.ai is the
 highest-volume repo on the account, so it pays back fastest there.
 
-Re-queued 2026-09-02 20:05 +02:00. The 19:06 refusal was not this
-contract's fault and no worker was claimed: launchd executes
-~/Build/ivy/scripts/dispatch-runner.py while the runner syncs and reads
-~/.ivy-dispatch/ivy, so the connected_emails gate fix (a78bf80, pushed
-18:37) sat in the synced checkout while the pre-fix gate executed from
-the stale dev checkout and refused four contracts on the noreply address.
-The runner now execs the synced copy after the sync. Prior failure record:
-commits 3180a96, 4f10f6a, 90b4575, 38e9525.
+Re-queued 2026-09-02: two runner faults, neither this contract's (stale-checkout gate, then an unresolvable harness binary). No worker ran and no budget was spent. See ivy git history.
