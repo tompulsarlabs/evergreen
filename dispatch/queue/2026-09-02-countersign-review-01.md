@@ -1,7 +1,8 @@
 ---
 id: 2026-09-02-countersign-review-01
 type: review
-state: open
+state: claimed
+claimed_at: 2026-09-02T09:25:35+02:00
 repo: tompulsarlabs/countersign
 lane: frontier
 pool: openai
