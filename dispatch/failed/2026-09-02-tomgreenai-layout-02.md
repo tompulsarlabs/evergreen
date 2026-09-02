@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-layout-02
 type: build
-state: open
+state: failed
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
 pool: anthropic
@@ -69,3 +69,8 @@ A draft PR opened by tompulsarlabs exists on tompulsarlabs/tomgreen.ai
 referencing this contract id, created on or after 2026-09-02 — or the
 contract's report states that every listed width passed on the current
 `main`.
+
+outcome:
+  claimed_at: 2026-09-02T19:06:50+02:00
+  exit: attribution
+  note: next commit would author 'tompulsarlabs <tom@pulsarlabsai.com>' — not the connected address
