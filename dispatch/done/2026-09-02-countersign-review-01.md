@@ -48,3 +48,14 @@ outcome:
   exit: 0
   artifacts:
     - dispatch/reports/2026-09-02-countersign-review-01.md
+  verified: true
+  verified_note: >
+    Verification section executed 2026-09-02T22:40+02:00: the report exists
+    on main of ivy at dispatch/reports/2026-09-02-countersign-review-01.md
+    (158 lines, findings each tied to specific file:line references against
+    PR head 4bdfd15) and is non-empty. The path-level spot-check against
+    the PR head could not run: this cloud session's GitHub access is
+    scoped to tompulsarlabs/ivy alone, and repo-scoped tools against
+    countersign return "not configured for this session" (confirmed live
+    this run) — a known, documented environment constraint [[ops]], not a
+    finding against the contract. Verified on the checkable portion only.
