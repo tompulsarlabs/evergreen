@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-countersign-review-01
 type: review
-state: claimed
+state: done
 claimed_at: 2026-09-02T09:25:35+02:00
 repo: tompulsarlabs/countersign
 lane: frontier
@@ -38,3 +38,13 @@ Pinned pool: openai — cross-family review per policy (the repo's prototype
 commit was Claude-session-authored). First contract queued since the D2
 runner went live (verified by `2026-08-27-c2cm-review-01` executing
 2026-09-01).
+
+outcome:
+  claimed_at: 2026-09-02T09:25:35+02:00
+  finished_at: 2026-09-02T09:35:13+02:00
+  harness: codex (dispatch-runner)
+  model: gpt-5.6-sol
+  wall_minutes: 9.6
+  exit: 0
+  artifacts:
+    - dispatch/reports/2026-09-02-countersign-review-01.md
