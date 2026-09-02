@@ -25,7 +25,11 @@ cap=$(grep -E '^  daily_cap:' config.yml | sed 's/.*: *//; s/ .*//')
 
 fm_get() { printf '%s\n' "$1" | sed -n "s/^$2:[[:space:]]*//p" | head -1; }
 
-declare -A created_per_day
+# macOS ships bash 3.2, which has no associative arrays (`declare -A`): before
+# 2026-09-02 this aborted the check loop, so lint validated 1 of 10 contracts
+# and passed. Creation dates accumulate in a temp file instead.
+days_file=$(mktemp)
+trap 'rm -f "$days_file"' EXIT
 
 while IFS= read -r f; do
   count=$((count + 1))
@@ -105,15 +109,15 @@ sys.exit(0 if (c and e) else 1)
 PY
 
   day=${created%%T*}
-  [ -n "$day" ] && created_per_day[$day]=$(( ${created_per_day[$day]:-0} + 1 ))
+  [ -n "$day" ] && printf '%s\n' "$day" >> "$days_file"
 done < <(find dispatch/queue dispatch/done dispatch/failed -name '*.md' 2>/dev/null | sort)
 
 # daily creation cap (config: dispatch.daily_cap)
-if [ -n "${cap:-}" ]; then
-  for day in "${!created_per_day[@]}"; do
-    n=${created_per_day[$day]}
+if [ -n "${cap:-}" ] && [ -s "$days_file" ]; then
+  while read -r n day; do
+    [ -n "$day" ] || continue
     [ "$n" -le "$cap" ] || err "daily cap exceeded: $n contracts created $day (cap $cap)"
-  done
+  done < <(sort "$days_file" | uniq -c)
 fi
 
 [ "$fail" -eq 0 ] && echo "dispatch-lint: ok — $count contracts, schema and cap hold"

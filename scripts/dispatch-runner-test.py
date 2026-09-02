@@ -82,6 +82,18 @@ with tempfile.TemporaryDirectory() as tmp:
     check("unblocked once every blocker is done",
           runner.open_blockers(fm, {"2026-09-02-example-00", "2026-09-01-other-03"}) == [])
 
+    # Red on 2026-09-02: the launchd entry point (~/Build/ivy) and the synced
+    # checkout (~/.ivy-dispatch/ivy) are different working copies, so a pushed
+    # gate fix sat unexecuted while the old gate refused four contracts.
+    a, b = Path(tmp) / "a.py", Path(tmp) / "b.py"
+    a.write_text("old\n")
+    b.write_text("new\n")
+    check("differing synced copy is exec'd", runner.synced_runner(a, b) == b)
+    b.write_text("old\n")
+    check("identical synced copy is not exec'd", runner.synced_runner(a, b) is None)
+    check("same path is never exec'd (no loop)", runner.synced_runner(a, a) is None)
+    check("missing synced copy is tolerated", runner.synced_runner(a, Path(tmp) / "nope.py") is None)
+
     review = runner.build_prompt("c1", "o/r", "review", "## Task\nx\n")
     build = runner.build_prompt("c2", "o/r", "build", "## Task\nx\n")
     check("review prompt names the code-review skill", "code-review" in review)

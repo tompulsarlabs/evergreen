@@ -20,6 +20,10 @@ The attribution gate tests membership in config.yml `connected_emails`
 contracts on a clone correctly configured with the second connected
 address). A contract with `blocked_by: [id, ...]` is skipped until every id
 sits in dispatch/done/. Pure parts are covered by dispatch-runner-test.py.
+
+The runner execs the copy inside IVY once the sync has run: the launchd entry
+point is a dev checkout that only moves when a human pulls, so without this a
+pushed runner change lands in IVY while the old code keeps executing.
 """
 import fcntl, os, re, shlex, signal, subprocess, sys
 from datetime import datetime, timedelta
@@ -102,6 +106,22 @@ def open_blockers(fm, done_ids):
     """Ids in blocked_by that are not yet in dispatch/done/ (order kept)."""
     return [b for b in fm.get("blocked_by", []) if b not in done_ids]
 
+def synced_runner(current, synced):
+    """The synced runner to exec into, or None to carry on with this one.
+
+    The entry point (launchd points at a dev checkout) and the checkout the
+    runner syncs are different working copies, so a pushed runner change does
+    not reach the running code: on 2026-09-02 a fixed attribution gate sat in
+    IVY while the pre-fix gate executed from ~/Build/ivy and refused four
+    contracts. Exec the synced copy, never argv[0] — argv[0] is the stale file.
+    """
+    try:
+        if synced.resolve() == current.resolve() or not synced.is_file():
+            return None
+        return synced if synced.read_bytes() != current.read_bytes() else None
+    except OSError:
+        return None
+
 def bot_commit_push(msg, paths):
     run(["git", "add", "--"] + [str(p) for p in paths], cwd=IVY)
     run(["git"] + BOT + ["commit", "--quiet", "-m", msg], cwd=IVY)
@@ -180,6 +200,13 @@ def main():
         log("another runner instance holds the lock; exiting"); return 0
 
     ensure_clone(IVY, IVY_REMOTE)
+    fresh = synced_runner(Path(__file__), IVY / "scripts" / "dispatch-runner.py")
+    if fresh and not os.environ.get("IVY_RUNNER_REEXEC"):
+        log(f"runner differs from {IVY} — exec'ing the synced copy")
+        os.environ["IVY_RUNNER_REEXEC"] = "1"
+        lockf.close()          # flock released; the exec'd process re-acquires
+        os.execv(sys.executable, [sys.executable, str(fresh), *sys.argv[1:]])
+
     lint = run(["bash", "scripts/dispatch-lint.sh"], cwd=IVY, check=False)
     if lint.returncode != 0:
         log(f"queue not lint-clean, refusing to run: {lint.stderr or lint.stdout}"); return 1

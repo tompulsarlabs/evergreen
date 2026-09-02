@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-copy-02
 type: build
-state: failed
+state: open
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
 pool: anthropic
@@ -78,7 +78,11 @@ First `build` contract to reach a worker on the Mac runner; the three
 2026-08-28/31 builds never executed. Whatever this run shows about
 `claude -p` opening draft PRs from the Mac is routing evidence in itself.
 
-outcome:
-  claimed_at: 2026-09-02T19:06:50+02:00
-  exit: attribution
-  note: next commit would author 'tompulsarlabs <tom@pulsarlabsai.com>' — not the connected address
+Re-queued 2026-09-02 20:05 +02:00. The 19:06 refusal was not this
+contract's fault and no worker was claimed: launchd executes
+~/Build/ivy/scripts/dispatch-runner.py while the runner syncs and reads
+~/.ivy-dispatch/ivy, so the connected_emails gate fix (a78bf80, pushed
+18:37) sat in the synced checkout while the pre-fix gate executed from
+the stale dev checkout and refused four contracts on the noreply address.
+The runner now execs the synced copy after the sync. Prior failure record:
+commits 3180a96, 4f10f6a, 90b4575, 38e9525.
