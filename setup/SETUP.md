@@ -5,6 +5,10 @@ launchd job (the WIP scanner). Everything else is state in this repo.
 
 ## 1. Prerequisites
 
+Starting from a blank Mac, or handing this to someone non-technical? Work
+through [`AGENTIC-STACK.md`](AGENTIC-STACK.md) first — it installs the
+languages, Claude Code, Codex, and gstack, then arrives here.
+
 - A GitHub account whose noreply address matches `commit_email` in
   `config.yml` (the connected-address rule in `playbook.md` is what makes
   contributions count).

@@ -31,6 +31,9 @@ never had to fire.
 - **[`playbook.md`](playbook.md)** — the operating instructions the routines
   actually follow
 - **[`setup/SETUP.md`](setup/SETUP.md)** — running it from scratch
+- **[`setup/AGENTIC-STACK.md`](setup/AGENTIC-STACK.md)** — setting up the whole
+  agentic stack from a blank Mac (Claude Code, Codex, gstack across every
+  agent, AGENTS.md, then Ivy). Written for non-technical readers too
 
 ## Layout
 
