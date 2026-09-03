@@ -1,6 +1,6 @@
 # Setting up an agentic coding stack
 
-This is the setup I use: **Claude Code** and **Codex** as the agents, **gstack** as a shared skill layer installed across all of them at once, and optionally **Ivy** — a set of scheduled agents that keep projects moving on their own.
+This is the setup I use: **Claude Code** and **Codex** as the agents, two skill layers shared across both — **gstack** (a virtual engineering team) and **Matt Pocock's skills** (a way of working) — and optionally **Ivy**, a set of scheduled agents that keep projects moving on their own.
 
 It's written for a Mac, and for someone who has never used the Terminal. If a step looks obvious, do it and move on; nothing here assumes prior knowledge.
 
@@ -226,6 +226,8 @@ echo '@AGENTS.md' > CLAUDE.md
 
 That `@` is a Claude Code import — it pulls the other file in. One source of truth, every tool reads it.
 
+The exception is a repo only Claude Code ever opens. Ivy is one: its routines run as Claude Code in the cloud and its Codex workers operate in *other* repos, so `CLAUDE.md` there carries the content itself (navigation pointers plus the agent-skills block) and there is no `AGENTS.md` to point at.
+
 The same trick works for your personal, global preferences, which apply to every project:
 
 - Claude Code: `~/.claude/CLAUDE.md`
@@ -251,7 +253,7 @@ codex mcp add <name> --env API_KEY=xxx -- npx some-mcp-server
 
 # Part D — Ivy (optional, advanced)
 
-**Ivy is the repo you're reading this in.** It's an agentic DevOps loop: scheduled agents that read their own memory, find work worth doing across your repos, nudge you when a day is slipping, and write down what they learn. Four routines run daily — a morning scout, an evening check, a late failsafe, and a Sunday retro — plus a local scanner that reports work-in-progress that only exists on your laptop.
+**Ivy is the repo you're reading this in.** It's an agentic DevOps loop: scheduled agents that read their own memory, find work worth doing across your repos, nudge you when a day is slipping, and write down what they learn. Three routines run daily — a morning scout, an evening check, a late failsafe — plus a Sunday retro, a local scanner that reports work-in-progress that only exists on your laptop, and a dispatch runner that executes queued work on the Mac and reports its own heartbeat back into the repo.
 
 **Two things to know before you start.** It's **experimental**. And it needs **Claude Code cloud routines** (claude.ai/code → routines), which come with a paid Claude plan.
 
@@ -264,8 +266,8 @@ cd ivy
 
 Then swap the identity before running anything:
 
-1. **`config.yml`** — set `commit_email` to *your* GitHub noreply address (this is what makes contributions register), replace the repo watchlist with your own, and point `local_wip.roots` at your own project folders.
-2. **`setup/*.plist`** — rename the launchd job labels and the files themselves from `ai.tomgreen.ivy-*` to your own reverse-domain label, and update the paths inside.
+1. **`config.yml`** — set `commit_email` to *your* GitHub noreply address (this is what makes contributions register) and list every address verified on your GitHub account under `connected_emails`; the local scanner and the runner's attribution gate both test membership in that list, and the global `git config user.email` on the Mac must be one of them. Replace the repo watchlist with your own and point `local_wip.roots` at your own project folders.
+2. **`setup/*.plist`** — rename the launchd job labels and the files themselves from `ai.tomgreen.ivy-*` to your own reverse-domain label, and update every path inside: the script path, `HOME`, and the `PATH` line, which must include wherever `claude` lives (`~/.local/bin` by default). launchd inherits no shell profile, so a PATH that is right in your Terminal is not right here.
 3. **`journal/`, `memory/`, `state.json`** — these are the previous owner's history. Read them to understand how the system thinks, then clear them out for your own run.
 
 With that done, follow **[`SETUP.md`](SETUP.md)** for the mechanics: creating the four cloud routines, installing the local scanner as a launchd job, and the optional dispatch runner (which executes queued work on your Mac and needs both `claude` and `codex` authenticated — which, by this point, they are).
@@ -280,9 +282,10 @@ Start by reading [`OVERVIEW.md`](../OVERVIEW.md) and [`playbook.md`](../playbook
 brew update && brew upgrade                       # languages and tools
 cd ~/.claude/skills/gstack && git pull && ./setup --host auto   # gstack, all hosts
 npx skills@latest update -g                       # Matt Pocock's skills for Codex (the Claude plugin updates itself)
+cd ~/Build/ivy && git pull                        # Ivy: the local scanner runs from this checkout
 ```
 
-Claude Code updates itself in the background. Codex installed via Homebrew needs `brew upgrade --cask codex`.
+Claude Code updates itself in the background. Codex installed via Homebrew needs `brew upgrade --cask codex`. Ivy's dispatch runner needs no pull: it execs the synced copy of itself on every tick. A changed `setup/*.plist` needs `./setup/install-dispatch-runner.sh install` (or the scanner's `launchctl` reload) before launchd sees it.
 
 ## If something goes wrong
 
@@ -292,6 +295,9 @@ Claude Code updates itself in the background. Codex installed via Homebrew needs
 | `command not found: claude` / `codex` | Quit the Terminal fully (`⌘ + Q`) and reopen. |
 | gstack didn't set up one of your tools | That tool wasn't installed yet. Install it, then re-run `./setup --host auto`. |
 | Claude Code won't log in | Confirm your Claude plan is Pro or higher — the free tier excludes Claude Code. Then `claude doctor`. |
+| Ivy contracts sit `open` all day; `dispatch/runner-status.json` shows `harness.claude: false` | launchd can't see `claude`. Fix the `PATH` line in `setup/ai.tomgreen.ivy-dispatch.plist`, then `./setup/install-dispatch-runner.sh install`. |
+| No `dispatch/runner-status.json` commit at all inside 09:15–21:00 | The job isn't ticking: `./setup/install-dispatch-runner.sh status` (loaded?), and check the Mac wasn't asleep. |
+| A `build` contract fails with `exit: attribution` | The Mac's `git config --global user.email` isn't in `config.yml` `connected_emails`. Set it to one that is. |
 | Anything else | Paste the error into Claude Code and ask what it means. This works more often than it has any right to. |
 
 ## Glossary
