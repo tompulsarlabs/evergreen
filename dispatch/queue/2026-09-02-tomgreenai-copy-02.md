@@ -1,7 +1,8 @@
 ---
 id: 2026-09-02-tomgreenai-copy-02
 type: build
-state: open
+state: claimed
+claimed_at: 2026-09-03T10:13:41+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
 pool: anthropic
