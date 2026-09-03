@@ -45,6 +45,18 @@ past Ivy's guardrails), `/learn`/gbrain/`/retro` (agent-written memory the
 agent then obeys). gstack's CLAUDE.md block belongs in `~/.claude/CLAUDE.md`,
 not here; `.context/` ignored defensively.
 
+2026-09-03: first `build` contracts executed end to end. Two runner faults
+found and fixed on the Mac (Tom, `fb4ac9e`, `3fd6151`): the launchd entry
+point ran a stale checkout (runner now execs the synced copy), and launchd's
+PATH lacked `claude`, stranding two claims (harness resolved before
+claiming; PATH declared in the plist). `context-01` done in 14.5 min →
+tomgreen.ai #14 (a 344-line glossary draft); `copy-02` recorded as a
+40-minute timeout although its draft PR #15 had landed at 10:32 with
+tests, e2e, and `/code-review` green. Playbook: the failsafe now verifies
+`timeout`/`no_report` failures and promotes a passing one to `done/`, and
+re-opens claims older than budget × 3 — the latter promised in
+`dispatch/DESIGN.md` since D0 but never specified anywhere a routine reads.
+
 ## v5 — 2026-08-30
 
 **First retro: no change — evidence still too thin to tune.** Reviewed

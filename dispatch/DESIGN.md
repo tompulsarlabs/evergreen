@@ -72,7 +72,18 @@ running the Verification section — that stamp, not the move, is what feeds
 **Claim protocol:** claiming is a commit that sets `state: claimed` + a
 timestamp. Two runners racing resolve by git push conflict — the loser pulls,
 sees the claim, picks the next contract. A claim older than `budget.wall_minutes
-× 3` with no outcome is re-opened by the failsafe (runner died mid-task).
+× 3` with no outcome is re-opened by the failsafe (runner died mid-task) —
+specified in `playbook.md` since 2026-09-03; before that it was promised
+here and implemented nowhere, which is how two claims sat stranded on
+2026-09-02.
+
+**The runner's verdict is also a claim.** `exit: timeout` means the worker
+was killed before it printed its report, not that the work is absent:
+`2026-09-02-tomgreenai-copy-02` opened its draft PR (tomgreen.ai #15, tests
+and e2e green) twenty minutes before the runner recorded it as a failure.
+The failsafe therefore runs the Verification section on `timeout` and
+`no_report` failures too, and promotes a passing one to `done/` with
+`verified: true`. Only the external check decides; the runner never does.
 
 **Attribution gate:** before executing a `build` contract, the runner checks the
 target repo's `author_email_ok` (same `git var` check as local-wip): the next
