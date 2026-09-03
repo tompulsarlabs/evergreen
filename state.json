@@ -1,13 +1,13 @@
 {
-  "streak": 11,
-  "last_green": "2026-09-02",
+  "streak": 12,
+  "last_green": "2026-09-03",
   "memory_last_synthesized": "2026-09-02",
   "days": {
     "2026-09-03": {
-      "green_by": "tompulsarlabs/tomgreen.ai PR #14 (opened, context-01 CONTEXT.md glossary) + PR #15 (opened, copy-02 header rewrite)",
+      "green_by": "tompulsarlabs/ivy PR #13 + PR #14 + PR #15 (merged) + tompulsarlabs/tomgreen.ai PR #14 (opened, context-01 CONTEXT.md glossary) + PR #15 (opened, copy-02 header rewrite) + tompulsarlabs/talent-radar PR #1 (opened)",
       "method": "real-work",
-      "contributions": 2,
-      "signal_source": "github-mcp:search_pull_requests org:tompulsarlabs created:2026-09-03 (18:00 check; check.sh exit 2, no github.com egress in cloud sandbox) — PR #14 opened 09:42 CEST, PR #15 opened 10:32 CEST, both author tompulsarlabs (connected). list_commits + search_commits org:tompulsarlabs author-date:2026-09-03 found only 8 ivy commits today, all bot-authored (bot@ivy.invalid) — don't count per counting rules. dispatch/queue holds 3 open unclaimed contracts (layout-02, photo-02, vfx-review-01); dispatch/done holds context-01 awaiting failsafe verification.",
+      "contributions": 6,
+      "signal_source": "github-mcp:search_commits + search_pull_requests org:tompulsarlabs author-date:2026-09-03/created:2026-09-03 (failsafe 22:30 re-check; check.sh exit 2, no github.com egress in cloud sandbox) — 18:00 check saw 2 events (tomgreen.ai PR #14/#15 opened); failsafe found continued real activity through 22:35 CEST: ivy PR #13/#14/#15 merged (connected-author commits on main) plus a new talent-radar PR #1 opened 18:40 CEST, see journal ## Verification",
       "cite": "journal/2026-09-03.md",
       "nudge_sent": false,
       "nudge_converted": null,
