@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-context-01
 type: build
-state: claimed
+state: done
 claimed_at: 2026-09-03T09:29:04+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: workhorse
@@ -56,3 +56,13 @@ the cheapest fix for verbose, drifting agent output, and tomgreen.ai is the
 highest-volume repo on the account, so it pays back fastest there.
 
 Re-queued 2026-09-02: two runner faults, neither this contract's (stale-checkout gate, then an unresolvable harness binary). No worker ran and no budget was spent. See ivy git history.
+
+outcome:
+  claimed_at: 2026-09-03T09:29:04+02:00
+  finished_at: 2026-09-03T09:43:38+02:00
+  harness: claude-code (dispatch-runner)
+  model: claude-opus-5
+  wall_minutes: 14.5
+  exit: 0
+  artifacts:
+    - dispatch/reports/2026-09-02-tomgreenai-context-01.md
