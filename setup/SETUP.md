@@ -9,9 +9,11 @@ Starting from a blank Mac, or handing this to someone non-technical? Work
 through [`AGENTIC-STACK.md`](AGENTIC-STACK.md) first — it installs the
 languages, Claude Code, Codex, and gstack, then arrives here.
 
-- A GitHub account whose noreply address matches `commit_email` in
-  `config.yml` (the connected-address rule in `playbook.md` is what makes
-  contributions count).
+- A GitHub account whose noreply address is `commit_email` in `config.yml`,
+  with every other verified address listed under `connected_emails` (the
+  connected-address rule in `playbook.md` is what makes contributions
+  count; the scanner and the runner's attribution gate test membership in
+  that list).
 - Claude Code with cloud routines (claude.ai/code → routines).
 - A Mac (or any always-on-ish machine) for the local scanner. Python 3 and
   git on PATH; nothing else.
