@@ -1,7 +1,8 @@
 ---
 id: 2026-09-02-tomgreenai-context-01
 type: build
-state: open
+state: claimed
+claimed_at: 2026-09-03T09:29:04+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: workhorse
 pool: anthropic
