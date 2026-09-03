@@ -135,7 +135,14 @@ to execution lanes. Non-negotiables:
   a dead runner, an expired credential, a queue nothing is draining, a
   broken local scan, an unmerged fix everything else waits on. Blockers are
   invisible to a "cheapest ship today" ranking because their contribution
-  count is zero, which is exactly why they rot. Name any blocker in the
+  count is zero, which is exactly why they rot. **Read
+  `dispatch/runner-status.json`** — the Mac runner's heartbeat, committed when
+  its state changes and at least every 6 hours inside the window. `harness`
+  false or `lint_ok` false is a blocker from the first morning: every
+  contract waits on it. `last_tick` older than 3 hours inside the runner
+  window with contracts open means the runner is not ticking — a sleeping
+  Mac or an unloaded launchd job; name it, never guess which. `skipped`
+  says why each open contract was passed over. Name any blocker in the
   journal under `## Blockers` with what it stops and the smallest next
   action; carry it forward every day until it clears or is explicitly
   declined. A blocker that has persisted three days outranks the day's

@@ -25,7 +25,7 @@ The runner execs the copy inside IVY once the sync has run: the launchd entry
 point is a dev checkout that only moves when a human pulls, so without this a
 pushed runner change lands in IVY while the old code keeps executing.
 """
-import fcntl, os, re, shlex, shutil, signal, subprocess, sys
+import fcntl, json, os, re, shlex, shutil, signal, subprocess, sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -35,6 +35,9 @@ WORK = WORKROOT / "work"
 IVY_REMOTE = "https://github.com/tompulsarlabs/ivy.git"
 BOT = ["-c", "user.name=ivy-bot", "-c", "user.email=bot@ivy.invalid"]
 WINDOW = ((9, 15), (21, 0))
+STATUS_REL = "dispatch/runner-status.json"
+STATUS_HEARTBEAT_HOURS = 6
+STATUS_KEYS = ("harness", "lint_ok", "result", "skipped")  # what a reader acts on
 MARK_BEGIN, MARK_END = "BEGIN_REPORT", "END_REPORT"
 
 def log(msg):
@@ -136,6 +139,50 @@ def synced_runner(current, synced):
     except OSError:
         return None
 
+def status_changed(prev, cur):
+    """True when a part of the status a reader acts on differs. Timestamps and
+    the synced sha are informational and never justify a commit on their own."""
+    return any((prev or {}).get(k) != cur.get(k) for k in STATUS_KEYS)
+
+def status_commit_needed(prev, cur, now, heartbeat_hours=STATUS_HEARTBEAT_HOURS):
+    """Commit on change, and otherwise at most once per heartbeat so the cloud
+    can tell an idle runner from a dead one."""
+    if status_changed(prev, cur):
+        return True
+    try:
+        last = datetime.fromisoformat((prev or {})["last_tick"])
+    except (KeyError, TypeError, ValueError):
+        return True
+    return (now - last) >= timedelta(hours=heartbeat_hours)
+
+def build_status(prev, result, skipped, lint_ok, now, harness=None, sha=""):
+    """The runner's heartbeat. Booleans and fixed reason strings only: the file
+    is public, so never a path, a hostname, or a PATH."""
+    cur = {"last_tick": now.isoformat(timespec="seconds"), "runner_sha": sha,
+           "harness": harness if harness is not None
+                      else {h: shutil.which(h) is not None for h in ("claude", "codex")},
+           "lint_ok": lint_ok, "result": result, "skipped": skipped}
+    cur["since"] = (prev or {}).get("since") if prev and not status_changed(prev, cur) else cur["last_tick"]
+    return cur
+
+def publish_status(result, skipped, lint_ok, now):
+    """Write STATUS_REL and commit it bot-authored when it changed or the
+    heartbeat is due. The cloud scout reads it under `## Blockers`: without it
+    a runner that cannot find its harness, or never ticks, is indistinguishable
+    from one with nothing to do (2026-09-03: three contracts open all day,
+    no claim, no way to tell why from the cloud)."""
+    path = IVY / STATUS_REL
+    try:
+        prev = json.loads(path.read_text())
+    except (OSError, ValueError):
+        prev = None
+    sha = run(["git", "rev-parse", "--short", "HEAD"], cwd=IVY, check=False).stdout.strip()
+    cur = build_status(prev, result, skipped, lint_ok, now, sha=sha)
+    path.write_text(json.dumps(cur, indent=2, sort_keys=True) + "\n")
+    if status_commit_needed(prev, cur, now):
+        if not bot_commit_push(f"dispatch: runner status — {result}", [path]):
+            log("status push lost a race; next tick retries")
+
 def bot_commit_push(msg, paths):
     run(["git", "add", "--"] + [str(p) for p in paths], cwd=IVY)
     run(["git"] + BOT + ["commit", "--quiet", "-m", msg], cwd=IVY)
@@ -223,9 +270,13 @@ def main():
 
     lint = run(["bash", "scripts/dispatch-lint.sh"], cwd=IVY, check=False)
     if lint.returncode != 0:
-        log(f"queue not lint-clean, refusing to run: {lint.stderr or lint.stdout}"); return 1
+        log(f"queue not lint-clean, refusing to run: {lint.stderr or lint.stdout}")
+        if not dry:
+            publish_status("lint_failed", [], False, now)
+        return 1
     commit_email, connected, lanes = load_config()
     done_ids = {p.stem for p in (IVY / "dispatch" / "done").glob("*.md")}
+    skipped = []
 
     for qpath in sorted((IVY / "dispatch" / "queue").glob("*.md")):
         fm, body = parse_frontmatter(qpath.read_text())
@@ -233,13 +284,16 @@ def main():
             continue
         cid, repo, ctype = fm["id"], fm["repo"], fm["type"]
         if datetime.fromisoformat(fm["expires"]) <= now:
-            log(f"{cid}: past expiry, leaving for the failsafe to expire"); continue
+            log(f"{cid}: past expiry, leaving for the failsafe to expire")
+            skipped.append({"id": cid, "reason": "expired"}); continue
         blockers = open_blockers(fm, done_ids)
         if blockers:
-            log(f"{cid}: blocked by {', '.join(blockers)} (not in dispatch/done/) — skipping"); continue
+            log(f"{cid}: blocked by {', '.join(blockers)} (not in dispatch/done/) — skipping")
+            skipped.append({"id": cid, "reason": "blocked_by"}); continue
         entry = lanes.get(fm["lane"], {}).get(fm.get("pool") or "anthropic")
         if not entry or entry.get("model") == "VERIFY":
-            log(f"{cid}: lane {fm['lane']}/{fm.get('pool') or 'anthropic'} unresolved (VERIFY) — skipping"); continue
+            log(f"{cid}: lane {fm['lane']}/{fm.get('pool') or 'anthropic'} unresolved (VERIFY) — skipping")
+            skipped.append({"id": cid, "reason": "lane_unresolved"}); continue
 
         clone = WORK / repo.split("/")[-1]
         ensure_clone(clone, f"https://github.com/{repo}.git")
@@ -251,7 +305,7 @@ def main():
                           "exit: attribution",
                           f"note: next commit would author '{ident.split('>')[0].strip()}>' — not a connected address (config.yml connected_emails)"],
                          f"dispatch: failed {cid} — attribution gate")
-                continue
+                skipped.append({"id": cid, "reason": "attribution_gate"}); continue
 
         prompt = build_prompt(cid, repo, ctype, body.split("outcome:")[0])
         argv = harness_argv(entry, prompt, ctype)
@@ -262,7 +316,7 @@ def main():
             # burning a good contract on a bad PATH.
             log(f"{cid}: harness binary '{argv[0]}' not found on PATH — leaving open; "
                 f"PATH={os.environ.get('PATH', '')}")
-            continue
+            skipped.append({"id": cid, "reason": "harness_missing"}); continue
         argv = resolved
         if dry:
             log(f"{cid}: DRY RUN — would claim, then exec in {clone}:")
@@ -271,7 +325,8 @@ def main():
 
         set_state(qpath, "claimed", f"claimed_at: {now.isoformat(timespec='seconds')}")
         if not bot_commit_push(f"dispatch: claim {cid}", [qpath]):
-            log(f"{cid}: claim push lost a race; next tick retries"); return 0
+            log(f"{cid}: claim push lost a race; next tick retries")
+            publish_status("claim_race", skipped, True, now); return 0
 
         log(f"{cid}: executing via {entry['harness']} ({entry['model']}), budget {fm['wall_minutes']}m")
         start = datetime.now()
@@ -285,6 +340,7 @@ def main():
                      [f"claimed_at: {now.isoformat(timespec='seconds')}",
                       "exit: harness_error", f"note: could not start {argv[0]}: {e}"],
                      f"dispatch: failed {cid} — harness would not start")
+            publish_status(f"finished {cid}", skipped, True, now)
             return 0
         try:
             out, _ = proc.communicate(timeout=fm["wall_minutes"] * 60)
@@ -316,8 +372,11 @@ def main():
                      base + [f"note: {reason}; last output lines follow", "output_tail: |",
                              *("    " + l for l in tail.splitlines()[-12:])],
                      f"dispatch: failed {cid} — {reason}")
+        publish_status(f"finished {cid}", skipped, True, now)
         return 0
     log("no executable contract in queue")
+    if not dry:
+        publish_status("idle", skipped, True, now)
     return 0
 
 if __name__ == "__main__":

@@ -164,6 +164,12 @@ The CLI that runs a worker: `claude-code` or `codex`.
 inside the **runner window**, 09:15 to 21:00) it claims the oldest eligible
 open contract, runs the worker, and records the outcome.
 
+**Runner status**:
+`dispatch/runner-status.json`, the runner's heartbeat: last tick, whether
+each harness binary resolves, whether the queue lints, what it did, and why
+it skipped each open contract. Committed when it changes and at least every
+six hours in the window. The cloud's only view of the Mac runner.
+
 **Worker**:
 The harness session executing one contract in a fresh clone of the target
 repository. Untrusted: it pushes branches and opens draft PRs, never writes
