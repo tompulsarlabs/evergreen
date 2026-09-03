@@ -195,7 +195,20 @@ to execution lanes. Non-negotiables:
   before: for each contract in `dispatch/done/` without a `verified:` stamp,
   run its Verification section via cloud-checkable means and stamp
   `verified: true|false`; move contracts past `expires` to `dispatch/failed/`
-  with `state: expired`. Run `scripts/dispatch-lint.sh`; commit bot-authored
+  with `state: expired`. Two more cases, because the runner's bookkeeping is
+  a claim like any worker's:
+  - A contract in `dispatch/failed/` whose outcome says `exit: timeout` or
+    `no_report` may have finished the work and only missed printing the
+    report (2026-09-03: `copy-02` opened its draft PR at 10:32 and was
+    recorded as a 40-minute timeout at 10:53). Run its Verification too. If
+    it passes, set `state: done`, move it to `dispatch/done/`, stamp
+    `verified: true` with a `verified_note` saying the report never landed,
+    and count its wall-minutes as work, not waste. If it fails, leave it.
+  - A contract in `dispatch/queue/` with `state: claimed` and no outcome
+    whose `claimed_at` is older than `budget.wall_minutes × 3` is a runner
+    that died mid-task: set `state: open`, drop `claimed_at`, and say so in
+    the journal. It runs again on the next tick.
+  Run `scripts/dispatch-lint.sh`; commit bot-authored
   (`dispatch: verify <ids>`). Verified outcomes feed `memory/models.md` in
   the synthesis pass below.
 
