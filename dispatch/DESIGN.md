@@ -77,6 +77,14 @@ specified in `playbook.md` since 2026-09-03; before that it was promised
 here and implemented nowhere, which is how two claims sat stranded on
 2026-09-02.
 
+**The runner's heartbeat.** Each tick ends by writing
+`dispatch/runner-status.json` (last tick, harness binaries found, lint
+state, result, skipped contracts with a fixed reason) and committing it
+bot-authored when a reader-facing part changed or six hours have passed.
+Booleans and reason strings only — the file is public. Added 2026-09-03 after
+three contracts sat open all day with no way, from the cloud, to tell a
+sleeping Mac from a runner that could not find `claude`.
+
 **The runner's verdict is also a claim.** `exit: timeout` means the worker
 was killed before it printed its report, not that the work is absent:
 `2026-09-02-tomgreenai-copy-02` opened its draft PR (tomgreen.ai #15, tests

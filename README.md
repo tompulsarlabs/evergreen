@@ -144,7 +144,10 @@ public. If the scan is older than 36 hours the scout treats local work as
 inside 09:15–21:00) claims the oldest open contract, runs it through the
 lane's CLI, commits the outcome, and pushes. It works from `~/.ivy-dispatch/`
 so the human checkout is never mutated, and the window closes 90 minutes
-before the failsafe so a running worker never collides with day-close.
+before the failsafe so a running worker never collides with day-close. Each
+tick ends by committing `dispatch/runner-status.json`, the runner's
+heartbeat, when its state changes: the scout reads it, so "runner can't find
+`claude`" is a named blocker the next morning, not a day of silence.
 
 ## Procedures and blockers
 

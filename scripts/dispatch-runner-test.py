@@ -107,6 +107,28 @@ with tempfile.TemporaryDirectory() as tmp:
           len(runner.resolve_harness(argv, which=lambda b: "/bin/" + b)) == len(argv))
     check("empty argv is tolerated", runner.resolve_harness([], which=lambda b: "/bin/x") is None)
 
+    # Red on 2026-09-03: three contracts open all day, no claim, and nothing in
+    # the repo said why. The heartbeat commits only when a reader-facing part
+    # changes, or once per heartbeat window, and carries no path or hostname.
+    from datetime import datetime, timedelta
+    t0 = datetime.fromisoformat("2026-09-03T11:00:00+02:00")
+    h = {"claude": True, "codex": True}
+    s1 = runner.build_status(None, "idle", [], True, t0, harness=h, sha="abc1234")
+    check("first status starts its own since", s1["since"] == s1["last_tick"])
+    check("status carries no path or hostname", not any(
+        "/" in str(v) or ".local" in str(v) for v in [s1["harness"], s1["result"], s1["skipped"]]))
+    s2 = runner.build_status(s1, "idle", [], True, t0 + timedelta(minutes=30), harness=h, sha="def5678")
+    check("unchanged status keeps since", s2["since"] == s1["since"])
+    check("sha alone does not count as change", not runner.status_changed(s1, s2))
+    check("no commit within the heartbeat", not runner.status_commit_needed(s1, s2, t0 + timedelta(minutes=30)))
+    check("commit once the heartbeat is due", runner.status_commit_needed(s1, s2, t0 + timedelta(hours=6)))
+    s3 = runner.build_status(s1, "idle", [{"id": "x-01", "reason": "harness_missing"}], True,
+                             t0 + timedelta(minutes=30), harness={"claude": False, "codex": True}, sha="abc1234")
+    check("a missing harness is a change", runner.status_changed(s1, s3))
+    check("a change resets since", s3["since"] == s3["last_tick"])
+    check("a change commits at once", runner.status_commit_needed(s1, s3, t0 + timedelta(minutes=30)))
+    check("no previous status commits", runner.status_commit_needed(None, s1, t0))
+
     review = runner.build_prompt("c1", "o/r", "review", "## Task\nx\n")
     build = runner.build_prompt("c2", "o/r", "build", "## Task\nx\n")
     check("review prompt names the code-review skill", "code-review" in review)

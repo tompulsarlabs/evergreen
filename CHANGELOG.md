@@ -56,6 +56,11 @@ tests, e2e, and `/code-review` green. Playbook: the failsafe now verifies
 `timeout`/`no_report` failures and promotes a passing one to `done/`, and
 re-opens claims older than budget × 3 — the latter promised in
 `dispatch/DESIGN.md` since D0 but never specified anywhere a routine reads.
+Later the same day: `dispatch/runner-status.json`, the runner's heartbeat —
+after the log tail could not be read from the cloud and three contracts sat
+open with no claim, the runner now commits its own state (harness found,
+lint, result, skipped-with-reason) on change and every six hours; the scout
+reads it under `## Blockers`.
 
 ## v5 — 2026-08-30
 
