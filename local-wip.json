@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-02T15:45:02Z",
+  "generated_at": "2026-09-03T15:45:01Z",
   "repos": [
     {
       "name": "Talent Radar",
       "remote": "tompulsarlabs/talent-radar",
       "branch": "main",
-      "dirty_files": 0,
-      "unpushed_commits": 0,
+      "dirty_files": 1,
+      "unpushed_commits": 4,
       "last_commit": "2026-08-25",
       "author_email_ok": true,
       "last_commit_email_ok": true
@@ -25,7 +25,7 @@
       "name": "countersign",
       "remote": "tompulsarlabs/countersign",
       "branch": "main",
-      "dirty_files": 0,
+      "dirty_files": 1,
       "unpushed_commits": 0,
       "last_commit": "2026-08-26",
       "author_email_ok": true,
