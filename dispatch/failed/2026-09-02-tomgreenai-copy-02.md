@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-copy-02
 type: build
-state: claimed
+state: failed
 claimed_at: 2026-09-03T10:13:41+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
@@ -80,3 +80,13 @@ First `build` contract to reach a worker on the Mac runner; the three
 `claude -p` opening draft PRs from the Mac is routing evidence in itself.
 
 Re-queued 2026-09-02: two runner faults, neither this contract's (stale-checkout gate, then an unresolvable harness binary). No worker ran and no budget was spent. See ivy git history.
+
+outcome:
+  claimed_at: 2026-09-03T10:13:41+02:00
+  finished_at: 2026-09-03T10:53:44+02:00
+  harness: claude-code (dispatch-runner)
+  model: claude-opus-5
+  wall_minutes: 40.0
+  exit: timeout
+  note: timeout; last output lines follow
+  output_tail: |
