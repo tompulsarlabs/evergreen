@@ -1,7 +1,7 @@
 ---
 id: 2026-09-03-tomgreenai-vfx-review-01
 type: review
-state: claimed
+state: done
 claimed_at: 2026-09-04T18:31:21+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
@@ -34,3 +34,13 @@ names what was actually reviewed), committed and pushed.
 
 The report file exists on main of ivy, is non-empty, and every referenced
 path exists on the PR head.
+
+outcome:
+  claimed_at: 2026-09-04T18:31:21+02:00
+  finished_at: 2026-09-04T18:37:05+02:00
+  harness: codex (dispatch-runner)
+  model: gpt-5.6-sol
+  wall_minutes: 5.7
+  exit: 0
+  artifacts:
+    - dispatch/reports/2026-09-03-tomgreenai-vfx-review-01.md
