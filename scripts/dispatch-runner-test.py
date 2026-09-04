@@ -129,6 +129,46 @@ with tempfile.TemporaryDirectory() as tmp:
     check("a change commits at once", runner.status_commit_needed(s1, s3, t0 + timedelta(minutes=30)))
     check("no previous status commits", runner.status_commit_needed(None, s1, t0))
 
+    # Red on 2026-09-03 10:53 -> 09-04: copy-02's worker was killed at budget on
+    # its own branch with edits in the tree; `git checkout main` then refused,
+    # the exception escaped, and every tick since died before claiming or
+    # writing a heartbeat. ensure_clone must recover any state a worker leaves.
+    import subprocess
+    def git(*args, cwd):
+        return subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args],
+                              cwd=cwd, text=True, capture_output=True, check=True).stdout.strip()
+    remote = Path(tmp) / "remote.git"; seed = Path(tmp) / "seed"; clone = Path(tmp) / "work" / "repo"
+    git("init", "--quiet", "--bare", "-b", "main", str(remote), cwd=tmp)
+    git("clone", "--quiet", str(remote), str(seed), cwd=tmp)
+    (seed / "a.txt").write_text("v1\n"); (seed / ".gitignore").write_text("node_modules/\n")
+    git("add", ".", cwd=seed); git("commit", "-q", "-m", "v1", cwd=seed); git("push", "-q", "origin", "HEAD:main", cwd=seed)
+    git("symbolic-ref", "HEAD", "refs/heads/main", cwd=remote)
+    head = runner.ensure_clone(clone, str(remote))
+    check("fresh clone lands on the default branch", head == "main" and git("rev-parse", "--abbrev-ref", "HEAD", cwd=clone) == "main")
+    # what a killed worker leaves behind
+    git("checkout", "-q", "-b", "dispatch/x-01", cwd=clone)
+    (clone / "a.txt").write_text("edited by worker\n")
+    (clone / "untracked.json").write_text("{}\n")
+    (clone / "node_modules").mkdir(); (clone / "node_modules" / "keep").write_text("x")
+    git("commit", "-q", "-am", "worker wip", cwd=clone); (clone / "a.txt").write_text("dirty again\n")
+    head = runner.ensure_clone(clone, str(remote))
+    check("dirty clone on a worker branch recovers to main", git("rev-parse", "--abbrev-ref", "HEAD", cwd=clone) == "main")
+    check("tree is pinned to origin", (clone / "a.txt").read_text() == "v1\n" and git("status", "--porcelain", cwd=clone) == "")
+    check("untracked worker files are gone", not (clone / "untracked.json").exists())
+    check("ignored install survives", (clone / "node_modules" / "keep").exists())
+
+    # An unexpected exception must surface as a heartbeat, never a silent death.
+    published = {}
+    real_main, real_publish = runner.main, runner.publish_status
+    runner.main = lambda: (_ for _ in ()).throw(RuntimeError("boom"))
+    runner.publish_status = lambda result, skipped, lint_ok, now: published.update(result=result)
+    try:
+        rc = runner.guarded_main()
+    finally:
+        runner.main, runner.publish_status = real_main, real_publish
+    check("guarded_main returns 1 on an exception", rc == 1)
+    check("and publishes runner_error with the type only", published.get("result") == "runner_error: RuntimeError")
+
     review = runner.build_prompt("c1", "o/r", "review", "## Task\nx\n")
     build = runner.build_prompt("c2", "o/r", "build", "## Task\nx\n")
     check("review prompt names the code-review skill", "code-review" in review)
