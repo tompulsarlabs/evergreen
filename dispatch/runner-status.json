@@ -3,11 +3,11 @@
     "claude": true,
     "codex": true
   },
-  "last_tick": "2026-09-04T18:31:21+02:00",
+  "last_tick": "2026-09-04T19:07:13+02:00",
   "lint_ok": true,
-  "result": "finished 2026-09-03-tomgreenai-vfx-review-01",
-  "runner_sha": "352b80c",
-  "since": "2026-09-04T18:31:21+02:00",
+  "result": "idle",
+  "runner_sha": "1cfda1d",
+  "since": "2026-09-04T19:07:13+02:00",
   "skipped": [
     {
       "id": "2026-09-02-tomgreenai-photo-02",
