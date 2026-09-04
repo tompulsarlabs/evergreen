@@ -1,7 +1,8 @@
 ---
 id: 2026-09-03-tomgreenai-vfx-review-01
 type: review
-state: open
+state: claimed
+claimed_at: 2026-09-04T18:31:21+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
 pool: openai
