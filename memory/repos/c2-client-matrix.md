@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/c2-client-matrix
 type: repo
-updated: 2026-09-02
+updated: 2026-09-04
 ---
 
 # c2-client-matrix
@@ -73,8 +73,22 @@ The queued review contract has now executed (request changes, six real
 defects) and still hasn't moved it — one more data point toward "nudging
 isn't converting this PR," still short of the bar to act on [[patterns]].
 
+## Parked (2026-09-03, effective 2026-09-04)
+
+Tom: "not WIP or something to devote my time to atm — Ivy should be focused
+on what creates value" [cite:e7e918b]. Added to `config.yml`
+`watchlist.parked`: still watched for counting and attribution, but the
+scout no longer proposes it as a candidate, contract, or audit, and
+`dispatch-lint.sh` refuses new contracts against it. Cause was exactly the
+pattern below — PR #1 as the fallback pick for eight consecutive runs with
+zero conversions, one of them a full review contract that still didn't
+move it [[patterns]]. Leaves `parked` only by Tom's commit or a retro
+`learn:`.
+
 ## Changelog
 
+- 2026-09-04 — parked by Tom; no longer a scout candidate. PR #1 and the
+  review below stay as the historical record of why.
 - 2026-09-02 — review contract `2026-08-27-c2cm-review-01` outcome recorded
   (request changes, six findings); PR still unconverted after the review.
 - 2026-08-30 (retro) — reviewed the close/decline question raised

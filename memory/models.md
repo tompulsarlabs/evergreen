@@ -1,7 +1,7 @@
 ---
 subject: execution-lane routing evidence
 type: evidence
-updated: 2026-09-02
+updated: 2026-09-04
 ---
 
 # Models: lane × task-class outcomes
@@ -18,6 +18,9 @@ policy lives in `playbook.md` and `config.yml`, never here). One row per
 | 2026-08-27-ivy-nudge-audit-01 | chore | workhorse / anthropic | yes | 8 | Memory reconciliation; interactive D1 manual run [cite:2026-08-27] |
 | 2026-08-27-c2cm-review-01 | review | frontier / openai | yes | 9.7 | D2 runner's first live execution (2026-09-01); six real findings, request-changes verdict [cite:2026-09-02] |
 | 2026-09-02-countersign-review-01 | review | frontier / openai | yes | 9.6 | Second D2 execution; keep-in-draft verdict, late-webhook race as top finding [cite:2026-09-02] |
+| 2026-09-02-tomgreenai-context-01 | build | workhorse / anthropic | yes | 14.5 | First verified `build`; CONTEXT.md glossary, draft PR #14, exactly the one file specified [cite:2026-09-04] |
+| 2026-09-02-tomgreenai-copy-02 | build | frontier / anthropic | yes | 40.0 | Draft PR #15 opened before the 40-min budget hit; runner recorded `exit: timeout` and never printed the report, verified done retroactively — see [[ops]] on the misclassification [cite:2026-09-04] |
+| 2026-09-03-tomgreenai-vfx-review-01 | review | frontier / openai | yes | 5.7 | Third D2 review execution; PR #13's "review gate, not a site change" claim held, but four real defects found in the asset-generation tooling itself [cite:2026-09-04] |
 
 ## Pool health
 
@@ -32,19 +35,37 @@ No throttle or refusal events recorded on either pool yet [cite:2026-08-27].
 
 ## Reading
 
-n=3 now (1 chore, 2 review), all first-pass, all frontier/openai or
-workhorse/anthropic — still short of the ≥3-verified-outcomes-per-class bar
-the Pareto rule requires before any lane move, since the two new outcomes
-are both `review`/frontier/openai rather than adding depth to a different
-class. Zero waste so far (0 failed, 0 expired) among *verified* contracts;
-today's four tomgreen.ai build contracts that failed at the attribution
-gate and were returned to `queue/` (not `failed/`, no worker claimed, no
-budget spent) are a runner-reliability incident, not routing waste — see
-[[ops]] for the stale-checkout/PATH root causes, fixed same day
-[cite:2026-09-02].
+n=6 now (1 chore, 3 review, 2 build), all first-pass. `review` just cleared
+the ≥3-verified-outcomes bar the Pareto rule requires before a lane move —
+all three ran frontier/openai, so the retro has a real basis to consider
+stepping `review` down to workhorse and watching whether the verdict
+quality holds, rather than trying it. `build` has its first two data
+points (workhorse/anthropic and frontier/anthropic, both first-pass) —
+still short of the bar, and confounded by lane: `copy-02` ran frontier
+only because it was hand-pinned there after the runner-bug re-queue, not
+by routing policy, so it is not yet evidence that `build` needs the
+frontier tier [cite:2026-09-04].
+
+**First real waste of the fleet, 2026-09-04:** `2026-09-02-tomgreenai-layout-02`
+spent its full 45-minute budget (frontier/anthropic) and produced no PR and
+no report — genuine waste, not a runner fault this time, since the runner
+itself ticked correctly (contrast `copy-02` above, same failure mode by
+outcome record but confirmed to have actually finished). `2026-09-02-tomgreenai-photo-02`
+expired unclaimed (0 wall-minutes spent, so 0 waste-minutes, but still an
+expired-unexecuted event for the weekly waste count) [cite:2026-09-04].
+Prior to today, zero waste among verified contracts; 2026-09-02's four
+tomgreen.ai build contracts that failed at the attribution gate and were
+returned to `queue/` (not `failed/`, no worker claimed, no budget spent)
+remain a runner-reliability incident, not routing waste — see [[ops]] for
+the stale-checkout/PATH root causes, fixed same day [cite:2026-09-02].
 
 ## Changelog
 
+- 2026-09-04 — three more contracts verified (`context-01`, `copy-02` both
+  `build`; `vfx-review-01` review) via the new cross-repo query-string
+  technique [[ops]]; n=3→6; `review` class cleared the Pareto
+  verified-outcomes bar. First real fleet waste recorded: `layout-02`
+  (45 wall-min, no output) and `photo-02` (expired unclaimed).
 - 2026-09-02 — both queued review contracts verified done (request-changes
   on c2-client-matrix, keep-in-draft on countersign); n=1→3, still under
   the per-class Pareto bar.

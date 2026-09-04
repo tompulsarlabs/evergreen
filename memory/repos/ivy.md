@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/ivy
 type: repo
-updated: 2026-08-30
+updated: 2026-09-04
 ---
 
 # ivy
@@ -45,8 +45,27 @@ same-morning per the outranking rule, before it reached `main`
 state-schema refactor), plus 2 PRs opened same day [cite:2026-08-27]. Bot-authored
 bookkeeping commits are excluded everywhere and never count [[ops]].
 
+## Dispatch runner: dirty-clone recovery (PR #17, 2026-09-04)
+
+A worker killed at its wall-minute budget with edits still in its clone's
+tree (`copy-02`, 2026-09-03) left that clone dirty; the runner's next
+`git checkout main` on it refused, the exception escaped `ensure_clone`
+uncaught, and every tick died at that line — before claiming, before the
+heartbeat — from 2026-09-03T10:53 CEST until a same-day reinstall
+2026-09-04. Idle and dead looked identical from the cloud side for that
+whole span [cite:407cf03]. Fixed same day: `ensure_clone` now
+force-checks-out and hard-resets each work clone before use (ignored
+installs survive `clean -fd`), and `guarded_main` turns any escaping
+runner exception into a `runner_error: <type>` heartbeat so a broken
+runner is distinguishable from an idle one going forward [cite:407cf03].
+Paired same day with PR #16, parking `c2-client-matrix`
+[[repos/c2-client-matrix]] and teaching the scout to rank by revealed
+focus over cheapest ship [cite:e7e918b].
+
 ## Changelog
 
+- 2026-09-04 — recorded the dispatch-runner dirty-clone bug (PR #17) and
+  the guardrail it added; both PR #16 and #17 merged same day, real work.
 - 2026-08-30 (retro) — added the pre-push attribution catch on this repo's
   own Mac checkout.
 - 2026-08-27 — page created from journals 2026-08-23→27, `state.json`, and
