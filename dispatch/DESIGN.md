@@ -229,7 +229,9 @@ verification, and evidence with the lowest blast radius.
 
 | Failure | Mitigation |
 |---------|-----------|
-| Mac asleep / runner dead | Contracts queue and expire honestly; Anthropic lanes cloud-dispatchable; stale claims re-opened by failsafe |
+| Mac asleep / runner dead | Contracts queue and expire honestly; Anthropic lanes cloud-dispatchable; stale claims re-opened by failsafe; `dispatch/runner-status.json` shows the last tick |
+| Worker killed mid-task leaves its clone dirty | `ensure_clone` forces the checkout, pins to origin, and cleans untracked files; work clones are disposable by contract. Before 2026-09-04 the plain checkout refused and every tick died at that line, silently, for a day |
+| Runner raises anywhere | `guarded_main` logs it and publishes `runner_error: <type>` as the heartbeat, so the cloud sees a broken runner rather than an idle one |
 | Double execution | Claim-commit race resolves via git push conflict; loser re-pulls |
 | Worker produces garbage | Branch+PR only; verification external; failed verification = `verified: false` evidence, PR closed |
 | Prompt injection via contract body | Runner executes only lint-clean contracts from scout/Tom commits; workers get the contract + a scoped checkout, never Ivy's playbook authority |

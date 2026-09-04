@@ -61,8 +61,16 @@ def ensure_clone(path, remote):
     run(["git", "fetch", "--quiet", "origin"], cwd=path)
     head = run(["git", "symbolic-ref", "--quiet", "refs/remotes/origin/HEAD"], cwd=path,
                check=False).stdout.strip().rsplit("/", 1)[-1] or "main"
-    run(["git", "checkout", "--quiet", head], cwd=path)
+    # A worker killed at its budget leaves the clone on its branch with edits
+    # in the tree. A plain `checkout` then refuses to switch, the exception
+    # escapes, and every later tick dies at the same line before it can claim
+    # or even write a heartbeat (2026-09-03 10:53 -> 09-04, after copy-02).
+    # These clones are disposable by contract ("a fresh checkout"): force the
+    # switch, pin to origin, drop untracked files. Ignored files (node_modules)
+    # stay, so a repo's install survives between contracts.
+    run(["git", "checkout", "--force", "--quiet", head], cwd=path)
     run(["git", "reset", "--hard", "--quiet", f"origin/{head}"], cwd=path)
+    run(["git", "clean", "-fd", "--quiet"], cwd=path)
     return head
 
 def parse_frontmatter(text):
@@ -379,5 +387,19 @@ def main():
         publish_status("idle", skipped, True, now)
     return 0
 
+def guarded_main():
+    """Never die silently: an unexpected exception is logged and, where the
+    synced clone exists, published as a heartbeat so the cloud sees it."""
+    try:
+        return main()
+    except Exception as e:  # noqa: BLE001 — the point is to catch everything
+        log(f"runner error: {e!r}")
+        try:
+            publish_status(f"runner_error: {type(e).__name__}", [], True,
+                           datetime.now().astimezone())
+        except Exception as e2:  # noqa: BLE001
+            log(f"status publish failed too: {e2!r}")
+        return 1
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(guarded_main())

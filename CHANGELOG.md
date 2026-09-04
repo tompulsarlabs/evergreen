@@ -70,6 +70,15 @@ preference for new work since 08-27). Scout ranks by revealed focus (recent
 Tom-authored commits, local WIP, drafts he touched) over cheapest ship; the
 lint refuses a new contract on a parked repo.
 
+2026-09-04: the silent day explained. `copy-02`'s worker was killed at its
+budget on its own branch with edits in the tree; the runner's next
+`git checkout main` refused, the exception escaped, and every tick from
+2026-09-03 10:53 until the reinstall on 09-04 died at that line before it
+could claim or write a heartbeat. `ensure_clone` now forces the checkout,
+pins to origin, and cleans untracked files (ignored installs survive);
+`guarded_main` turns any escaping exception into a `runner_error` heartbeat.
+Both locked by tests against a real temporary git remote.
+
 ## v5 — 2026-08-30
 
 **First retro: no change — evidence still too thin to tune.** Reviewed
