@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-03T15:45:01Z",
+  "generated_at": "2026-09-04T06:45:05Z",
   "repos": [
     {
       "name": "Talent Radar",
       "remote": "tompulsarlabs/talent-radar",
-      "branch": "main",
-      "dirty_files": 1,
-      "unpushed_commits": 4,
-      "last_commit": "2026-08-25",
+      "branch": "main-wre2w1",
+      "dirty_files": 3,
+      "unpushed_commits": 2,
+      "last_commit": "2026-09-03",
       "author_email_ok": true,
       "last_commit_email_ok": true
     },
@@ -37,9 +37,9 @@
       "branch": "main",
       "dirty_files": 1,
       "unpushed_commits": 0,
-      "last_commit": "2026-09-02",
+      "last_commit": "2026-09-03",
       "author_email_ok": true,
-      "last_commit_email_ok": true
+      "last_commit_email_ok": false
     },
     {
       "name": "sybil",
@@ -65,7 +65,7 @@
       "name": "tomgreen.ai",
       "remote": "tompulsarlabs/tomgreen.ai",
       "branch": "claude/fable-system-design-retro-qrvdfy",
-      "dirty_files": 0,
+      "dirty_files": 1,
       "unpushed_commits": 0,
       "last_commit": "2026-08-29",
       "author_email_ok": true,
