@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-layout-02
 type: build
-state: claimed
+state: failed
 claimed_at: 2026-09-04T17:16:11+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
@@ -74,3 +74,13 @@ contract's report states that every listed width passed on the current
 ## Notes
 
 Re-queued 2026-09-02: two runner faults, neither this contract's (stale-checkout gate, then an unresolvable harness binary). No worker ran and no budget was spent. See ivy git history.
+
+outcome:
+  claimed_at: 2026-09-04T17:16:11+02:00
+  finished_at: 2026-09-04T18:01:15+02:00
+  harness: claude-code (dispatch-runner)
+  model: claude-opus-5
+  wall_minutes: 45.0
+  exit: timeout
+  note: timeout; last output lines follow
+  output_tail: |
