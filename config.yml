@@ -25,6 +25,9 @@ schedule:            # local times in `timezone`; nothing after 22:30 (midnight 
 watchlist:
   source: auto       # scout syncs from `gh api user/repos`; forks + archived excluded
   exclude: []        # manual opt-outs by full name, e.g. tompulsarlabs/scratch
+  parked:            # watched, never proposed: contributions still count and attribution is still scanned,
+                     # but the scout emits no candidate, contract, or audit for these. Tom's call, retro-reviewed.
+    - tompulsarlabs/c2-client-matrix   # 2026-09-03: "not WIP or something to devote my time to atm"; #1 picked 8x, 0 conversions
   repos:             # synced 2026-09-03 — 16 repos, 0 forks, 0 archived, 0 excluded (+tompulsarlabs, new 2026-09-02)
     - tompulsarlabs/talent-scout
     - tompulsarlabs/talent-radar

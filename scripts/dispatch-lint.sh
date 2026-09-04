@@ -19,6 +19,7 @@ err() { printf 'dispatch-lint: %s\n' "$1" >&2; fail=1; }
 # Authoritative sets come from config.yml, not from this script.
 lanes=$(sed -n '/^lanes:/,/^[a-z]/p' config.yml | grep -E '^  [a-z-]+:' | sed 's/^ *//; s/:.*//' | sort -u)
 repos=$(sed -n '/^  repos:/,/^[a-z#]/p' config.yml | grep -E '^ *- ' | sed 's/^ *- //')
+parked=$(sed -n '/^  parked:/,/^  [a-z]/p' config.yml | grep -E '^ *- ' | sed 's/^ *- //; s/ *#.*//')
 cap=$(grep -E '^  daily_cap:' config.yml | sed 's/.*: *//; s/ .*//')
 [ -n "$lanes" ] || err "config.yml: no lanes: block found"
 [ -n "$cap" ] || err "config.yml: no dispatch.daily_cap found"
@@ -57,6 +58,10 @@ while IFS= read -r f; do
   [ -z "$pool" ] || case "$pool" in anthropic|openai) ;; *) err "$f: unknown pool '$pool'";; esac
   printf '%s\n' "$lanes" | grep -qx "$lane" || err "$f: lane '$lane' not in config.yml lanes"
   printf '%s\n' "$repos" | grep -qx "$repo" || err "$f: repo '$repo' not in config.yml watchlist"
+  # a parked repo is watched, never worked: no new contract may target it
+  if [ "$dir" = "queue" ] && printf '%s\n' "$parked" | grep -qx "$repo"; then
+    err "$f: repo '$repo' is parked in config.yml (watchlist.parked) — no contracts"
+  fi
 
   # state must agree with the directory the contract lives in
   case "$dir" in

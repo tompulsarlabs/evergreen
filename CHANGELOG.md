@@ -62,6 +62,14 @@ open with no claim, the runner now commits its own state (harness found,
 lint, result, skipped-with-reason) on change and every six hours; the scout
 reads it under `## Blockers`.
 
+2026-09-03, Tom: `watchlist.parked` — repos watched for counting and
+attribution but never proposed. `c2-client-matrix` parked ("not WIP or
+something to devote my time to atm"; #1 was the fallback pick eight runs
+running, zero conversions — `memory/patterns.md` had recorded the revealed
+preference for new work since 08-27). Scout ranks by revealed focus (recent
+Tom-authored commits, local WIP, drafts he touched) over cheapest ship; the
+lint refuses a new contract on a parked repo.
+
 ## v5 — 2026-08-30
 
 **First retro: no change — evidence still too thin to tune.** Reviewed

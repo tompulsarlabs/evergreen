@@ -130,6 +130,14 @@ to execution lanes. Non-negotiables:
   Then sync watchlist (`gh api user/repos`, minus forks/archived/excludes).
   Gather candidates: open PRs close to merge, assigned issues, branches with recent
   pushes but no PR, yesterday's carry-over.
+  **Rank by value, not by cheapness.** Tom's focus is revealed, not declared:
+  repos with Tom-authored commits in the last 7 days, local WIP, and draft
+  PRs he updated this week rank above any "cheapest ship" on a stale PR.
+  A repo in `config.yml` `watchlist.parked` is watched only — its
+  contributions count and its attribution is scanned — and produces no
+  candidate, contract, or audit; it leaves `parked` by Tom's commit or a
+  retro `learn:`. Evidence: `c2-client-matrix` #1 was the fallback pick for
+  eight runs with zero conversions before Tom parked it (2026-09-03).
   **Also hunt blockers, not just candidates.** A candidate produces a
   contribution today; a blocker stops future work from happening at all —
   a dead runner, an expired credential, a queue nothing is draining, a
