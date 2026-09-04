@@ -44,3 +44,15 @@ outcome:
   exit: 0
   artifacts:
     - dispatch/reports/2026-09-03-tomgreenai-vfx-review-01.md
+  verified: true
+  verified_note: >
+    Verification section executed 2026-09-04T22:30+02:00 (failsafe): the
+    report exists on main of ivy at
+    dispatch/reports/2026-09-03-tomgreenai-vfx-review-01.md (56 lines,
+    four findings each tied to specific file:line references against PR
+    #13 head aa180e8) and is non-empty. Path-level existence checks
+    against the tomgreen.ai PR head could not run: this cloud session's
+    GitHub access remains scoped to ivy only
+    (`pull_request_read`/`get_file_contents` against tomgreen.ai both
+    denied), same limitation as prior nights' reviews
+    [cite:2026-08-27][cite:2026-09-02].

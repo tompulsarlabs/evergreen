@@ -1,7 +1,7 @@
 ---
 id: 2026-09-02-tomgreenai-photo-02
 type: build
-state: open
+state: expired
 repo: tompulsarlabs/tomgreen.ai
 lane: workhorse
 pool: anthropic
@@ -75,3 +75,15 @@ components checked.
 ## Notes
 
 Re-queued 2026-09-02: two runner faults, neither this contract's (stale-checkout gate, then an unresolvable harness binary). No worker ran and no budget was spent. See ivy git history.
+
+Never claimed before `expires` (2026-09-04T18:30:00+02:00); the runner's
+own `dispatch/runner-status.json` recorded it `skipped: expired` at its
+2026-09-04T19:07:13+02:00 tick. Moved to dispatch/failed/, state: expired,
+by the 2026-09-04 failsafe per the playbook's expiry rule.
+
+outcome:
+  claimed_at: null
+  finished_at: null
+  harness: none
+  exit: expired
+  note: never claimed; no worker ran, no budget spent.

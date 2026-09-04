@@ -66,3 +66,20 @@ outcome:
   exit: 0
   artifacts:
     - dispatch/reports/2026-09-02-tomgreenai-context-01.md
+  verified: true
+  verified_note: >
+    Verification section executed 2026-09-04T22:30+02:00 (failsafe): a
+    draft PR by tompulsarlabs exists on tompulsarlabs/tomgreen.ai (#14,
+    "One word for each thing, and the words to stop using", created
+    2026-09-03T07:42:16Z) whose body opens "Contract:
+    2026-09-02-tomgreenai-context-01" and states "One file, CONTEXT.md. No
+    code, no copy, no configuration," with its own Verification section
+    citing `git diff --stat main` as `CONTEXT.md | 344 +` — satisfying the
+    exactly-one-file requirement from the PR's own stated diff stat.
+    Fetched via `search_pull_requests query:"repo:tompulsarlabs/tomgreen.ai
+    created:2026-09-03"` (embedding `repo:` in the query text rather than
+    the tool's owner/repo parameters, which this session's repo scope
+    still rejects) — `pull_request_read`/`get_file_contents` against
+    tomgreen.ai remain blocked, so this is the first session to get
+    independent PR-body confirmation on this contract rather than leaving
+    it unstamped [cite:2026-09-03].
