@@ -1,13 +1,13 @@
 {
-  "streak": 12,
+  "streak": 13,
   "last_green": "2026-09-04",
-  "memory_last_synthesized": "2026-09-02",
+  "memory_last_synthesized": "2026-09-04",
   "days": {
     "2026-09-04": {
-      "green_by": "tompulsarlabs/ivy PR #16 (merged, park c2-client-matrix) + PR #17 (merged, dispatch runner dirty-clone fix) + tompulsarlabs/tomgreen.ai PR #16 (opened, planetary capture engine)",
+      "green_by": "tompulsarlabs/ivy PR #16 (merged, park c2-client-matrix) + PR #17 (merged, dispatch runner dirty-clone fix) + tompulsarlabs/tomgreen.ai PR #16 (opened, planetary capture engine) + tompulsarlabs/tompulsarlabs (3 commits, README wording)",
       "method": "real-work",
-      "contributions": 3,
-      "signal_source": "github-mcp:search_commits + search_pull_requests org:tompulsarlabs author-date:2026-09-04/created:2026-09-04 (18:00 check; check.sh exit 2, no github.com egress in cloud sandbox) — PR #16/#17 merge commits authored by the connected noreply address land on ivy main; tomgreen.ai PR #16 opened 12:27 UTC, still open/draft",
+      "contributions": 6,
+      "signal_source": "github-mcp:search_commits + search_pull_requests org:tompulsarlabs (failsafe 22:30 re-check; check.sh exit 2, no github.com egress in cloud sandbox) — 18:00 check saw 3 events (ivy PR #16/#17 merged, tomgreen.ai PR #16 opened); failsafe found continued real activity through 20:10 CEST: 3 more tompulsarlabs README commits by the connected tom@pulsarlabsai.com address, see journal ## Verification",
       "cite": "journal/2026-09-04.md",
       "nudge_sent": false,
       "nudge_converted": null,
