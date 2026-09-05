@@ -1,7 +1,8 @@
 ---
 id: 2026-09-05-tomgreenai-planetary-review-01
 type: review
-state: open
+state: claimed
+claimed_at: 2026-09-05T10:15:23+02:00
 repo: tompulsarlabs/tomgreen.ai
 lane: frontier
 pool: openai
