@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-05T06:45:04Z",
+  "generated_at": "2026-09-05T15:45:05Z",
   "repos": [
     {
       "name": "Talent Radar",
       "remote": "tompulsarlabs/talent-radar",
       "branch": "main-wre2w1",
-      "dirty_files": 3,
+      "dirty_files": 4,
       "unpushed_commits": 2,
       "last_commit": "2026-09-03",
       "author_email_ok": true,
@@ -15,7 +15,7 @@
       "name": "Yeva",
       "remote": "tompulsarlabs/yeva",
       "branch": "main",
-      "dirty_files": 0,
+      "dirty_files": 2,
       "unpushed_commits": 0,
       "last_commit": "2026-09-02",
       "author_email_ok": true,
@@ -35,9 +35,9 @@
       "name": "ivy",
       "remote": "tompulsarlabs/ivy",
       "branch": "main",
-      "dirty_files": 1,
+      "dirty_files": 3,
       "unpushed_commits": 0,
-      "last_commit": "2026-09-04",
+      "last_commit": "2026-09-05",
       "author_email_ok": true,
       "last_commit_email_ok": false
     },
@@ -64,12 +64,12 @@
     {
       "name": "tomgreen.ai",
       "remote": "tompulsarlabs/tomgreen.ai",
-      "branch": "codex/remove-baked-fragments",
-      "dirty_files": 21,
+      "branch": "codex/cv-mobile-alignment",
+      "dirty_files": 1,
       "unpushed_commits": 0,
-      "last_commit": "2026-09-04",
+      "last_commit": "2026-09-05",
       "author_email_ok": true,
-      "last_commit_email_ok": false
+      "last_commit_email_ok": true
     }
   ]
 }
