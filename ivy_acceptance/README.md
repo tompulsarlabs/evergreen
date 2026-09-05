@@ -1,4 +1,26 @@
-# Acceptance architecture scaffold
+# Acceptance preview and runtime probe
+
+Extra High added a durable local attempt ledger, verified input materialization,
+bounded supervisor capture, a credential-free Docker probe, recovery commands and
+independent citation controls. **The first real preparation attempt failed at
+`docker cp`; the runtime proof and milestone A have not passed.** See
+[the current High handoff](../docs/next-phase/runtime-handoff.md). The 27 deterministic
+tests pass; they are not evidence of a working model evaluation.
+
+The explicit `probe` command executes a fixed Python infrastructure test. It never
+uses a model, account credential or a primary model-comparison slot. `plan` retains
+its read-only behavior. `recover-probe` inspects and stops an attempt-owned container
+after a supervisor failure; it cannot erase the consumed attempt. `verify-probe`
+checks saved artifact hashes without executing anything.
+
+New modules: `storage.py` (locked, atomic reservations), `materialization.py`
+(recompiled plan and byte checks), `docker_probe.py` (container lifecycle and capture),
+`probe_cli.py` (explicit commands) and `grading.py` (citation integrity only).
+Checksums assume a trusted local supervisor and detect changed artifacts; they are
+not signed attestations against a hostile host operator. Model adapters, authenticated
+benchmark approval, semantic grading and a comparison report remain unfinished.
+
+The rest of this document describes the underlying architecture scaffold.
 
 Python 3.11+; standard library only. Run from the repository root; no installation,
 server or provider credential is needed for this stage.

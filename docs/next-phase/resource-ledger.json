@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "stage": "ultra_architecture_scaffold",
+  "stage": "extra_high_runtime_implementation",
   "tracked_started_at": "2026-09-05T13:14:03+00:00",
-  "recorded_through": "2026-09-05T13:34:54.069844+00:00",
+  "recorded_through": "2026-09-05T14:08:44.573608+00:00",
   "tracked_wall_seconds": 1251,
-  "engineering_budget_debit_seconds": 4080,
-  "debit_method": "Conservative allowance: full tracked wall window for each of 3 participants plus 300 seconds initial inspection, rounded up to a minute. This is a budget debit, not measured active or billed time.",
+  "engineering_budget_debit_seconds": 5400,
+  "debit_method": "Prior scaffold debit 4080 seconds plus current single-assistant wall from 13:47:30 UTC, rounded up to a minute. The gap waiting for Tom between stages is excluded. This is a budget debit, not billed inference time.",
   "limits": {
     "milestone_a_engineering_seconds": 7200,
     "total_proof_engineering_seconds": 43200,
@@ -13,19 +13,37 @@
     "per_attempt_seconds": 90,
     "execution_wall_seconds": 3600
   },
-  "milestone_a_budget_remaining_at_checkpoint_seconds": 3120,
+  "milestone_a_budget_remaining_at_checkpoint_seconds": 1800,
   "evaluated_worker_attempts": 0,
   "model_judge_attempts": 0,
   "implementation_assistants": {
-    "participants": 3,
+    "participants": 4,
     "tokens": null,
     "billed_dollars": null,
-    "usage_status": "per-call usage unavailable in this task"
+    "usage_status": "per-call usage unavailable in this task",
+    "participants_note": "Three prior scaffold participants and one sequential Extra High build invocation; no new subagents."
   },
   "provider_execution_budget": {
     "billed_dollars": null,
-    "status": "no metered execution path configured"
+    "status": "No authenticated isolated model path; dedicated key and $5 cap question pending. No paid calls authorized yet."
   },
-  "stage_status": "scaffold tested; live feasibility milestone A not passed",
-  "continuation_rule": "Charge subsequent implementation/debugging and any later verification time to this same budget. Handoffs do not reset it."
+  "stage_status": "27 deterministic tests pass; first actual Docker preparation failed; milestone A not passed",
+  "continuation_rule": "Charge subsequent implementation/debugging and any later verification time to this same budget. Handoffs do not reset it.",
+  "stage_debits": [
+    {
+      "stage": "ultra_architecture_scaffold",
+      "seconds": 4080
+    },
+    {
+      "stage": "extra_high_runtime_implementation",
+      "started_at": "2026-09-05T13:47:30+00:00",
+      "through": "2026-09-05T14:08:44.573608+00:00",
+      "seconds": 1320
+    }
+  ],
+  "runtime_probe_attempts": 1,
+  "runtime_probe_outcomes": {
+    "preparation_failed_unconfirmed": 1,
+    "completed": 0
+  }
 }

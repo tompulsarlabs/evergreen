@@ -1,0 +1,103 @@
+"""Bounded infrastructure proof, independently labeled from model evaluation."""
+import json
+import subprocess
+from dataclasses import asdict
+from pathlib import Path
+
+from .budget import BudgetBlocked, Limits
+from .canonical import InvalidManifest, read_json
+from .docker_probe import DockerProbeAdapter
+from .grading import check_citations
+from .materialization import materialize_preview
+from .planning import compile_plan
+from .ports import WorkerRequest, WorkloadHandle
+from .storage import AttemptStore, file_sha256, read_record, write_record
+
+
+def add_commands(sub):
+    p = sub.add_parser("probe", help="execute a fixed credential-free container probe; never run a model")
+    p.add_argument("config", type=Path)
+    p.add_argument("--root", type=Path, default=Path.cwd())
+    p.add_argument("--store", type=Path, required=True, help="private supervisor artifact directory")
+    p.add_argument("--image", required=True, help="local image pinned as repository@sha256:digest")
+    p.add_argument("--context", required=True, help="explicit Docker context")
+    p.add_argument("--attempt", required=True, help="fresh identifier; never silently reuse an attempt")
+    p.add_argument("--case", default="R1")
+    p.add_argument("--variant", choices=("baseline", "changed"), default="baseline")
+    p.add_argument("--deadline", type=int, default=10)
+    p.add_argument("--wait", action="store_true", help="keep probe alive for cancellation/timeout control")
+    p.add_argument("--cancel-after", type=float)
+    r = sub.add_parser("recover-probe", help="confirm shutdown of a reserved probe after supervisor failure")
+    r.add_argument("--store", type=Path, required=True)
+    r.add_argument("--attempt", required=True)
+    v = sub.add_parser("verify-probe", help="verify saved runtime evidence hashes without executing")
+    v.add_argument("directory", type=Path)
+
+
+def verify_probe(directory):
+    receipt = read_record(directory / "receipt.json")
+    if (receipt.get("schema_version") != 1
+            or receipt.get("evidence_kind") != "infrastructure_probe_not_model_evaluation"):
+        raise InvalidManifest("not a probe receipt")
+    expected = receipt["artifact_sha256"]
+    if type(expected) is not dict or set(expected) != {"preparation.json", "prepared.json", "events.jsonl", receipt["stop_evidence"]}:
+        raise InvalidManifest("incomplete artifact bindings")
+    for name, sha in expected.items():
+        from .canonical import relative_path
+        relative_path(name)
+        if "/" in name or file_sha256(directory / name) != sha:
+            raise InvalidManifest("bound probe artifact changed")
+    if receipt["capture_sha256"] != expected["events.jsonl"]:
+        raise InvalidManifest("capture binding changed")
+    prep = read_record(directory / "preparation.json")
+    stop = read_record(directory / receipt["stop_evidence"])
+    if (prep["binding"] != receipt["binding"] or prep["runtime_id"] != receipt["runtime_id"]
+            or stop["runtime_id"] != receipt["runtime_id"]
+            or stop["termination_confirmed"] != receipt["termination_confirmed"]):
+        raise InvalidManifest("probe provenance mismatch")
+    return {"integrity": "verified", "execution_state": receipt["execution_state"],
+            "termination_confirmed": receipt["termination_confirmed"],
+            "capture_complete": receipt["capture_complete"],
+            "model_evaluation": False, "benchmark_status": "evidence_incomplete"}
+
+
+def run_command(args):
+    if args.command == "verify-probe":
+        return verify_probe(args.directory)
+    if args.command == "recover-probe":
+        from .storage import safe_id
+        safe_id(args.attempt)
+        prior = read_record(args.store / "ledger.json")
+        prep = read_record(args.store / args.attempt / "preparation.json")
+        with AttemptStore(args.store, prior["binding"], Limits(**prior["limits"])) as store:
+            if prep["binding"] != prior["binding"]:
+                raise InvalidManifest("recovery binding mismatch")
+            adapter = DockerProbeAdapter(store, {}, prior["binding"], prep["runtime"]["image"], prep["runtime"]["context"])
+            row = next((r for r in store.state["attempts"] if r["id"] == args.attempt), None)
+            if row is None or row["runtime_id"] != prep["runtime_id"] or row["termination_confirmed"]:
+                raise InvalidManifest("no unresolved reservation for this attempt")
+            stop = adapter.cancel(WorkloadHandle(args.attempt, row["runtime_id"]))
+            store.finish(args.attempt, row["runtime_id"], row["outcome"] or "execution_error", terminated=stop.terminated)
+            return {"recovery": asdict(stop), "model_evaluation": False,
+                    "result": "reservation_closed" if stop.terminated else "still_blocked"}
+    config = read_json(args.config)
+    envelope = compile_plan(config, args.root)
+    files, binding = materialize_preview(config, envelope, args.root, args.case, args.variant)
+    # No runtime proof can authorize or occupy a frozen model-comparison slot.
+    binding = {**binding, "purpose": "infrastructure_probe_not_model_evaluation"}
+    with AttemptStore(args.store, binding, Limits(**config["budget"])) as store:
+        adapter = DockerProbeAdapter(store, files, binding, args.image, args.context,
+                                     wait=args.wait, cancel_after=args.cancel_after)
+        request = WorkerRequest(args.attempt, "infrastructure-probe", binding["plan_sha256"],
+                                binding["fixture_sha256"], binding["agent_version_sha256"], args.deadline)
+        handle = adapter.prepare(request)
+        outcome = adapter.run(handle, lambda event: None)
+        bad = {"findings": [{"path": "not-present.py", "line": 999, "explanation": "Known bad citation for the software control."}]}
+        control = {"evidence_kind": "deterministic_bad_output_control_not_model_evaluation",
+                   "assessment": check_citations(bad, files)}
+        write_record(args.store / args.attempt / "bad-output-control.json", control)
+        return {"attempt_id": args.attempt, "execution_state": outcome.execution_state.value,
+                "evidence_directory": str((args.store / args.attempt).resolve()),
+                "integrity": verify_probe(args.store / args.attempt),
+                "bad_output_control_status": control["assessment"]["status"],
+                "milestone_a": "not_passed_model_authentication_and_real_agent_run_pending"}

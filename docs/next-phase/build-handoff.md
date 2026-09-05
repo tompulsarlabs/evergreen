@@ -5,6 +5,10 @@ Ultra, implementation at Extra High, then debugging at High (5 September 2026).
 Keep these stages in the existing task and shared build budget. This handoff does
 not claim that the app's model/reasoning setting has been changed automatically.
 
+**Current checkpoint:** Extra High implementation has reached its first actual
+runtime preparation failure. Continue with [runtime-handoff.md](runtime-handoff.md)
+at High; it supersedes the original scaffold status below. Milestone A is not passed.
+
 ## Stage 1 — Ultra: architecture and scaffold
 
 Implemented in `codex/ivy-acceptance-scaffold`, based on design PR 19. The worktree
