@@ -1,13 +1,13 @@
 {
-  "streak": 13,
-  "last_green": "2026-09-04",
-  "memory_last_synthesized": "2026-09-04",
+  "streak": 14,
+  "last_green": "2026-09-05",
+  "memory_last_synthesized": "2026-09-05",
   "days": {
     "2026-09-05": {
-      "green_by": "tompulsarlabs/tomgreen.ai PR #16 through #27 (12 merged, planetary capture engine + mobile CV/nav/hover fixes) + tompulsarlabs/ivy PR #18 + #19 + #20 (opened, draft) + tompulsarlabs/writing-voice-skill PR #2 (opened, draft) + talent-radar review contract done",
+      "green_by": "tompulsarlabs/tomgreen.ai PR #16 through #29 (14 merged, planetary capture engine + mobile CV/nav/hover fixes + copy/role clarity) + tompulsarlabs/ivy PR #18 + #19 + #20 (opened, draft) + tompulsarlabs/writing-voice-skill PR #2 (opened, draft) + talent-radar + tomgreen.ai review contracts verified done",
       "method": "real-work",
-      "contributions": 16,
-      "signal_source": "github-mcp:search_pull_requests org:tompulsarlabs created:2026-09-05 + is:merged merged:2026-09-05 (check.sh exit 2, no github.com egress in cloud sandbox) — 12 tomgreen.ai PRs merged today including yesterday's carry-over #16 (\"planetary capture engine\"), plus 3 new ivy draft PRs and 1 writing-voice-skill draft PR opened; all authored by the connected tompulsarlabs login, see journal ## Verification",
+      "contributions": 18,
+      "signal_source": "github-mcp:search_pull_requests org:tompulsarlabs created:2026-09-05 + is:merged merged:2026-09-05 (failsafe 22:30 re-check; check.sh exit 2, no github.com egress in cloud sandbox) — 18:00 check saw 16 events through PR #27; failsafe found continued real activity through 19:30 CEST: tomgreen.ai PR #28 and #29 both opened and merged after the check, all connected-author, see journal ## Verification",
       "cite": "journal/2026-09-05.md",
       "nudge_sent": false,
       "nudge_converted": null,
