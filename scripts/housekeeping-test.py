@@ -8,7 +8,7 @@ with tempfile.TemporaryDirectory() as tmp:
  for d in ['queue','done','failed']:(r/'dispatch'/d).mkdir(parents=True)
  for name in ['dispatch-lint.sh','verification.py']:shutil.copy2(root/'scripts'/name,r/'scripts'/name)
  shutil.copy2(root/'config.yml',r/'config.yml')
- old=next((root/'dispatch/done').glob('*.md')).read_text()
+ old=(root/'dispatch/done/2026-08-27-c2cm-review-01.md').read_text()
  import re
  old=re.sub(r'^id: .*$', 'id: fixture',old,flags=re.M)
  p=r/'dispatch/done/fixture.md';p.write_text(old)
