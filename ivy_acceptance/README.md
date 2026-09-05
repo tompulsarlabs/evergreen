@@ -3,8 +3,10 @@
 Extra High added a durable local attempt ledger, verified input materialization,
 bounded supervisor capture, a credential-free Docker probe, recovery commands and
 independent citation controls. **The first real preparation attempt failed at
-`docker cp`; the runtime proof and milestone A have not passed.** See
-[the current High handoff](../docs/next-phase/runtime-handoff.md). The 27 deterministic
+`docker cp`; the runtime proof and milestone A have not passed.** High reproduced
+the read-only-root error and replaced copying with a fixed COPY-only image path,
+which remains unverified on real Docker. See
+[the current High handoff](../docs/next-phase/runtime-handoff.md). The 36 deterministic
 tests pass; they are not evidence of a working model evaluation.
 
 The explicit `probe` command executes a fixed Python infrastructure test. It never

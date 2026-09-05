@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "stage": "extra_high_runtime_implementation",
+  "stage": "high_bounded_debugging",
   "tracked_started_at": "2026-09-05T13:14:03+00:00",
-  "recorded_through": "2026-09-05T14:08:44.573608+00:00",
+  "recorded_through": "2026-09-05T16:26:20+00:00",
   "tracked_wall_seconds": 1251,
-  "engineering_budget_debit_seconds": 5400,
-  "debit_method": "Prior scaffold debit 4080 seconds plus current single-assistant wall from 13:47:30 UTC, rounded up to a minute. The gap waiting for Tom between stages is excluded. This is a budget debit, not billed inference time.",
+  "engineering_budget_debit_seconds": 7200,
+  "debit_method": "Original 5400-second debit preserved. Remaining 1800 seconds conservatively allocated to primary review, verification, handoff and PR closeout plus the Astra High debugging lane, including approval waiting. Parallel work does not multiply the allowance. Stage allocation, not exactly measured active inference time; no budget reset.",
   "limits": {
     "milestone_a_engineering_seconds": 7200,
     "total_proof_engineering_seconds": 43200,
@@ -13,21 +13,21 @@
     "per_attempt_seconds": 90,
     "execution_wall_seconds": 3600
   },
-  "milestone_a_budget_remaining_at_checkpoint_seconds": 1800,
+  "milestone_a_budget_remaining_at_checkpoint_seconds": 0,
   "evaluated_worker_attempts": 0,
   "model_judge_attempts": 0,
   "implementation_assistants": {
-    "participants": 4,
+    "participants": 6,
     "tokens": null,
     "billed_dollars": null,
     "usage_status": "per-call usage unavailable in this task",
-    "participants_note": "Three prior scaffold participants and one sequential Extra High build invocation; no new subagents."
+    "participants_note": "Four prior participants plus primary review/handoff and one explicitly requested gpt-6-astra/high debugging lane. Child start timestamp not sampled; approximately 390 seconds waiting for tool approval before interruption. Per-agent token/cost accounting unavailable."
   },
   "provider_execution_budget": {
     "billed_dollars": null,
     "status": "No authenticated isolated model path; dedicated key and $5 cap question pending. No paid calls authorized yet."
   },
-  "stage_status": "27 deterministic tests pass; first actual Docker preparation failed; milestone A not passed",
+  "stage_status": "36 deterministic tests pass; copy failure reproduced; one candidate repair; recovery and new runtime verification unexecuted; milestone A not passed; engineering allocation exhausted",
   "continuation_rule": "Charge subsequent implementation/debugging and any later verification time to this same budget. Handoffs do not reset it.",
   "stage_debits": [
     {
@@ -39,11 +39,27 @@
       "started_at": "2026-09-05T13:47:30+00:00",
       "through": "2026-09-05T14:08:44.573608+00:00",
       "seconds": 1320
+    },
+    {
+      "stage": "high_bounded_debugging",
+      "started_at": "2026-09-05T16:09:30+00:00",
+      "through": "2026-09-05T16:26:20+00:00",
+      "seconds": 1800,
+      "accounting": "Conservative aggregate allocation including final closeout; exact per-agent active duration unavailable."
     }
   ],
   "runtime_probe_attempts": 1,
   "runtime_probe_outcomes": {
     "preparation_failed_unconfirmed": 1,
     "completed": 0
+  },
+  "repair_iterations_used": 1,
+  "repair_iterations_limit": 2,
+  "runtime_debug_controls": {
+    "copy_failure_reproduced": true,
+    "recovery": "unverified_approval_wait_interrupted",
+    "fresh_budget_refusal": "predicted_from_ledger_not_executed",
+    "runtime_window": "expired_no_reset",
+    "actual_build_cancel_deadline": "unverified"
   }
 }

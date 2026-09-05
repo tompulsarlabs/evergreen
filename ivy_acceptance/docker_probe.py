@@ -5,11 +5,13 @@ capture and termination boundary needed by the later authenticated harness.
 """
 import base64
 import hashlib
+import io
 import json
 import os
 import re
 import selectors
 import subprocess
+import tarfile
 import time
 from pathlib import Path
 
@@ -40,6 +42,19 @@ if sys.argv[1] == 'wait':
 '''
 
 
+def pack_image_context(files, base_id):
+    """A fixed COPY-only context; no host paths, RUN, remote ADD or build hooks."""
+    if not re.fullmatch(r"sha256:[a-f0-9]{64}", base_id):
+        raise InvalidManifest("invalid local base image identity")
+    buffer = io.BytesIO(pack_worker(files))
+    with tarfile.open(fileobj=buffer, mode="a") as archive:
+        body = ("FROM " + base_id + "\nCOPY worker/ /worker/\n").encode()
+        entry = tarfile.TarInfo("Dockerfile")
+        entry.size, entry.mode = len(body), 0o444
+        archive.addfile(entry, io.BytesIO(body))
+    return buffer.getvalue()
+
+
 class DockerProbeAdapter:
     """The caller holds AttemptStore's exclusive lock for the entire workload."""
     def __init__(self, store, files, binding, image, context, *, wait=False, cancel_after=None):
@@ -55,15 +70,27 @@ class DockerProbeAdapter:
         self.wait, self.cancel_after = wait, cancel_after
         self.request = None
         self.path = None
+        self.derived_image = None
 
-    def _cmd(self, args, *, data=None, timeout=15):
-        return subprocess.run(["docker", "--context", self.context, *args], input=data,
-                              capture_output=True, timeout=timeout, check=True)
+    def _cmd(self, args, *, data=None, timeout=15, env=None):
+        try:
+            return subprocess.run(["docker", "--context", self.context, *args], input=data,
+                                  capture_output=True, timeout=timeout, check=True, env=env)
+        except subprocess.SubprocessError as exc:
+            if self.path is not None:
+                write_record(self.path / ("command-error-" + str(time.time_ns()) + ".json"), {
+                    "arguments": args, "error": type(exc).__name__,
+                    "returncode": getattr(exc, "returncode", None),
+                    "stdout": (getattr(exc, "stdout", None) or b"").decode(errors="replace"),
+                    "stderr": (getattr(exc, "stderr", None) or b"").decode(errors="replace"),
+                    "input_sha256": hashlib.sha256(data).hexdigest() if data is not None else None})
+            raise
 
     def describe(self):
         return {"available": True, "kind": "runtime_probe", "model_execution": False,
                 "image": self.image, "context": self.context, "network": "none",
                 "read_only_root": True, "host_mounts": [], "credentials": "none",
+                "derived_image": self.derived_image,
                 "capture_scope": "Docker stdout/stderr and supervisor lifecycle; not an agent tool trace"}
 
     def _inspect(self, handle):
@@ -91,6 +118,28 @@ class DockerProbeAdapter:
             "visible_files": {k: hashlib.sha256(v).hexdigest() for k, v in sorted(self.files.items())},
             "deadline_seconds": request.deadline_seconds,
             "evidence_kind": "infrastructure_probe_not_model_evaluation"})
+        # Resolve the already-local pinned base before building. The legacy builder
+        # accepts its content ID directly without a registry resolver. No fallback
+        # or engine installation is attempted if this Docker capability is absent.
+        base = json.loads(self._cmd(["image", "inspect", self.image]).stdout)[0]
+        if base["Config"].get("OnBuild") or base["Config"].get("Volumes"):
+            raise InvalidManifest("base image must not define build hooks or volumes")
+        context = pack_image_context(self.files, base["Id"])
+        write_record(self.path / "image-input.json", {
+            "base_image": self.image, "base_id": base["Id"],
+            "context_sha256": hashlib.sha256(context).hexdigest(),
+            "dockerfile": "FROM " + base["Id"] + "\nCOPY worker/ /worker/\n"})
+        built = self._cmd(["build", "--network", "none", "--pull=false", "--no-cache",
+                           "--tag", name + ":probe", "-"], data=context, timeout=60,
+                          env={**os.environ, "DOCKER_BUILDKIT": "0"})
+        derived = json.loads(self._cmd(["image", "inspect", name + ":probe"]).stdout)[0]
+        self.derived_image = derived["Id"]
+        if not re.fullmatch(r"sha256:[a-f0-9]{64}", self.derived_image):
+            raise InvalidManifest("invalid derived image identity")
+        write_record(self.path / "image-build.json", {
+            "base_image": self.image, "base_id": base["Id"], "derived_image": self.derived_image,
+            "context_sha256": hashlib.sha256(context).hexdigest(),
+            "stdout": built.stdout.decode(errors="replace"), "stderr": built.stderr.decode(errors="replace")})
         # Reservation already names the container, even if create's response is lost.
         self._cmd(["create", "--name", name, "--label", "ivy.attempt=" + request.attempt_id,
                    "--label", "ivy.binding=" + digest(self.binding), "--read-only",
@@ -98,12 +147,11 @@ class DockerProbeAdapter:
                    "--security-opt", "no-new-privileges=true", "--pids-limit", "64",
                    "--memory", "256m", "--cpus", "1", "--restart", "no",
                    "--log-driver", "local", "--log-opt", "max-size=1m", "--log-opt", "max-file=1",
-                   "--entrypoint", "python3", self.image, "-I", "-B", "-u",
+                   "--entrypoint", "python3", self.derived_image, "-I", "-B", "-u",
                    "/worker/probe.py", "wait" if self.wait else "complete"])
-        self._cmd(["cp", "-", name + ":/"], data=pack_worker(self.files))
         info = self._inspect(handle)
         hc = info["HostConfig"]
-        if (info["Mounts"] or not hc["ReadonlyRootfs"] or hc["NetworkMode"] != "none"
+        if (info["Image"] != self.derived_image or info["Mounts"] or not hc["ReadonlyRootfs"] or hc["NetworkMode"] != "none"
                 or info["Config"]["User"] != "65534:65534" or hc["Privileged"]
                 or hc["CapDrop"] != ["ALL"] or "no-new-privileges=true" not in hc["SecurityOpt"]):
             raise InvalidManifest("effective container isolation does not match the probe")
@@ -201,7 +249,8 @@ class DockerProbeAdapter:
                        "observed_effort": None, "usage": None, "error": error}
             receipt["artifact_sha256"] = {
                 name: file_sha256(self.path / name)
-                for name in ("preparation.json", "prepared.json", "events.jsonl", receipt["stop_evidence"])
+                for name in ("preparation.json", "prepared.json", "image-input.json", "image-build.json",
+                             "events.jsonl", receipt["stop_evidence"])
                 if (self.path / name).exists()}
             write_record(self.path / "receipt.json", receipt)
             self.store.finish(handle.attempt_id, handle.runtime_id, state.value, terminated=control.terminated)

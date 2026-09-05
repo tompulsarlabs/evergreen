@@ -1,4 +1,33 @@
-# Extra High → High: first runtime preparation failure
+# High checkpoint: repair implemented, live verification blocked
+
+High continuation, 5 September 2026: one repair iteration, 36 deterministic tests
+passing. The exact original copy failure was reproduced and retained:
+`Error response from daemon: container rootfs is marked read-only`.
+The before/after container inspection confirmed matching ownership and created,
+stopped state. The adapter now packages verified inputs through a fixed FROM/COPY
+image context and records base/derived identities while preserving worker isolation.
+This replacement has not been built or executed on real Docker.
+
+The recovery helper waited approximately 390 seconds for escalation approval and
+was interrupted at the budget checkpoint. No recovery result was obtained; the
+original reservation remains unconfirmed. No ownership-rejection control or fresh
+probe executed. The unchanged ledger's one-hour elapsed window has expired, so a
+fresh attempt would also be refused after recovery. Do not create another store,
+change timestamps or raise limits to bypass either condition.
+
+Actual completion, explicit cancellation of a running container, deadline shutdown,
+builder availability/offline behavior and runtime receipt verification remain
+unverified. Synthetic receipt controls do reject tampering/missing evidence and
+preserve incomplete states. Preparation commands have separate timeouts outside
+the run-phase `--deadline`; whole-operation boundedness is not established.
+No evaluated agent or judge calls occurred; milestone A remains not passed.
+
+See [engineering review](runtime-engineering-review.md) and the portable
+[sanitized evidence summary](evidence/runtime-debug-20260905.json). The original
+failed attempt and added reproduction record remain in the private store. The
+resource ledger carries the original debit plus this continuation; no budget reset.
+
+## Original Extra High handoff (retained history)
 
 5 September 2026. Worktree `/tmp/ivy-acceptance-scaffold`, branch
 `codex/ivy-acceptance-scaffold`, stacked draft PR 20. Do not modify the unrelated

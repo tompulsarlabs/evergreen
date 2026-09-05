@@ -40,7 +40,10 @@ def verify_probe(directory):
             or receipt.get("evidence_kind") != "infrastructure_probe_not_model_evaluation"):
         raise InvalidManifest("not a probe receipt")
     expected = receipt["artifact_sha256"]
-    if type(expected) is not dict or set(expected) != {"preparation.json", "prepared.json", "events.jsonl", receipt["stop_evidence"]}:
+    required = {"preparation.json", "prepared.json", "events.jsonl", receipt["stop_evidence"]}
+    if receipt["runtime"].get("derived_image"):
+        required.update(("image-input.json", "image-build.json"))
+    if type(expected) is not dict or set(expected) != required:
         raise InvalidManifest("incomplete artifact bindings")
     for name, sha in expected.items():
         from .canonical import relative_path
@@ -55,6 +58,15 @@ def verify_probe(directory):
             or stop["runtime_id"] != receipt["runtime_id"]
             or stop["termination_confirmed"] != receipt["termination_confirmed"]):
         raise InvalidManifest("probe provenance mismatch")
+    if receipt["runtime"].get("derived_image"):
+        image_input = read_record(directory / "image-input.json")
+        build = read_record(directory / "image-build.json")
+        prepared = read_record(directory / "prepared.json")
+        if (build["derived_image"] != receipt["runtime"]["derived_image"]
+                or prepared["container"]["Image"] != build["derived_image"]
+                or build["base_image"] != prep["runtime"]["image"]
+                or any(build[k] != image_input[k] for k in ("base_image", "base_id", "context_sha256"))):
+            raise InvalidManifest("probe image provenance mismatch")
     return {"integrity": "verified", "execution_state": receipt["execution_state"],
             "termination_confirmed": receipt["termination_confirmed"],
             "capture_complete": receipt["capture_complete"],
@@ -90,7 +102,11 @@ def run_command(args):
                                      wait=args.wait, cancel_after=args.cancel_after)
         request = WorkerRequest(args.attempt, "infrastructure-probe", binding["plan_sha256"],
                                 binding["fixture_sha256"], binding["agent_version_sha256"], args.deadline)
-        handle = adapter.prepare(request)
+        try:
+            handle = adapter.prepare(request)
+        except subprocess.CalledProcessError as exc:
+            raise InvalidManifest("Docker preparation failed: " +
+                                  (exc.stderr or b"").decode(errors="replace").strip()) from exc
         outcome = adapter.run(handle, lambda event: None)
         bad = {"findings": [{"path": "not-present.py", "line": 999, "explanation": "Known bad citation for the software control."}]}
         control = {"evidence_kind": "deterministic_bad_output_control_not_model_evaluation",
