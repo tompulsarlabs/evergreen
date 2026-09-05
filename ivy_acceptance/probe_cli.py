@@ -32,6 +32,9 @@ def add_commands(sub):
     r.add_argument("--attempt", required=True)
     v = sub.add_parser("verify-probe", help="verify saved runtime evidence hashes without executing")
     v.add_argument("directory", type=Path)
+    e = sub.add_parser("authorize-probe-extension", help="record explicit local approval for one 20-minute, three-probe extension")
+    e.add_argument("--store", type=Path, required=True)
+    e.add_argument("--authorization-reference", required=True)
 
 
 def verify_probe(directory):
@@ -76,6 +79,11 @@ def verify_probe(directory):
 def run_command(args):
     if args.command == "verify-probe":
         return verify_probe(args.directory)
+    if args.command == "authorize-probe-extension":
+        prior = read_record(args.store / "ledger.json")
+        with AttemptStore(args.store, prior["binding"], Limits(**prior["limits"])) as store:
+            return {"authorization_extension": store.authorize_extension(args.authorization_reference),
+                    "original_limits_preserved": True, "model_evaluation": False}
     if args.command == "recover-probe":
         from .storage import safe_id
         safe_id(args.attempt)

@@ -1,4 +1,56 @@
-# Recovery verified; bounded execution extension pending
+# Live cancellation and deadline verified; model integration still blocked
+
+Latest checkpoint, 5 September 2026, supersedes the historical sections below.
+Tom approved the proposed additive extension: 45 aggregate engineering minutes,
+20 minutes for at most three fresh runtime probes, and the one remaining repair
+iteration. The original ledger, start time, limits and consumed failed attempt
+were preserved. No API spending was authorized by the subscription upgrade.
+
+Repair iteration 2 adds an explicit, one-use local authorization record and a
+shared preparation/run command deadline. It also disables Docker local-log
+compression, after the first new probe exposed an incompatible `max-file=1`
+configuration. That failed probe remains visible; it was not retried under its ID.
+
+| New attempt | Actual result | Container stopped | Capture |
+|---|---|---|---|
+| `extension-complete-1` | Image built; Docker start failed on log configuration | Confirmed | Complete error stream, not worker success |
+| `extension-cancel-2` | Worker ran; explicit cancellation | Confirmed | Partial |
+| `extension-deadline-3` | Worker ran; deadline shutdown | Confirmed | Partial |
+
+All three saved receipts independently verify. Actual receipt-copy tampering,
+wrong-owner inspection and refusal of a fourth reservation were checked without
+altering originals. There are four consumed attempts in total, with 200 seconds
+reserved, no unresolved final-container reservation and no completed worker run.
+The three-probe extension is spent; do not renew it or create a replacement store.
+Both repair iterations are now used. The engineering ledger records the separate
+additive allowance and continuation debit; handoff is never a reset.
+
+The full deterministic suite passes **45 tests**. The read-only plan still returns
+`execution_ready: false`. No real agent, model or judge attempt ran. Milestone A is
+**not passed**, even though the running-container shutdown controls now work.
+
+Remaining verification: natural completion with the corrected logging option;
+daemon-side build cancellation and failures before final-container creation;
+hard whole-lifecycle timing; isolated real-agent authentication, effective harness
+metadata, approved neutral case and independent semantic assessment. The shared
+deadline clamps Docker preparation commands and the run loop, with a separate
+15-second shutdown grace; filesystem work, daemon build lifetime and a final
+five-second client wait prevent claiming a hard end-to-end wall ceiling.
+
+Host Codex 0.153.0 still reports ChatGPT login. Official documentation supports
+subscription CLI authentication, but no attempt-scoped subscription credential
+broker was established here. Neither a host CLI working directory nor ignoring
+user config establishes the intended isolation. Do not copy/mount host auth into
+the worker or reinterpret a Pro upgrade as API-key billing authorization.
+See [authentication](https://learn.chatgpt.com/docs/auth) and
+[non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode).
+
+Private originals remain in `/tmp/ivy-runtime-proof-20260905`; portable, allowlisted
+observations are in [the extension summary](evidence/runtime-extension-20260905.json).
+No raw Docker inspection, provider credentials or machine/account paths belong in
+the public evidence summary. Existing branch and stacked draft PR #20 are preserved.
+
+## Previous recovery checkpoint (retained history)
 
 Follow-up on 5 September 2026, after Tom asked to solve the outstanding gaps:
 `recover-probe` confirmed that the original attempt-owned container is stopped

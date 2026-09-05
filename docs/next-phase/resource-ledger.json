@@ -1,33 +1,48 @@
 {
   "schema_version": 1,
-  "stage": "high_bounded_debugging",
+  "stage": "high_authorized_runtime_extension",
   "tracked_started_at": "2026-09-05T13:14:03+00:00",
-  "recorded_through": "2026-09-05T16:26:20+00:00",
+  "recorded_through": "2026-09-05T18:43:43+00:00",
   "tracked_wall_seconds": 1251,
-  "engineering_budget_debit_seconds": 7200,
-  "debit_method": "Original 5400-second debit preserved. Remaining 1800 seconds conservatively allocated to primary review, verification, handoff and PR closeout plus the Astra High debugging lane, including approval waiting. Parallel work does not multiply the allowance. Stage allocation, not exactly measured active inference time; no budget reset.",
+  "engineering_budget_debit_seconds": 8400,
+  "debit_method": "Prior 7200-second debit preserved. Added 1200-second aggregate stage allocation: Astra High 350 measured wall seconds plus primary review/authentication/tests/docs and closeout allowance of 850 seconds from 18:34:51 through at most 18:49:01 UTC. Parallel lane time is additive; not exactly measured active inference time. Further work after that closeout allowance must debit the remaining extension; no budget reset. Legacy tracked_wall_seconds is the original sample, not cumulative effort.",
   "limits": {
-    "milestone_a_engineering_seconds": 7200,
+    "milestone_a_engineering_seconds": 9900,
     "total_proof_engineering_seconds": 43200,
     "worker_attempts": 32,
     "per_attempt_seconds": 90,
     "execution_wall_seconds": 3600
   },
-  "milestone_a_budget_remaining_at_checkpoint_seconds": 0,
+  "milestone_a_budget_remaining_at_checkpoint_seconds": 1500,
+  "authorized_extensions": [
+    {
+      "recorded_at": "2026-09-05T18:34:51+00:00",
+      "authorization": "Tom: i upgraded to the 20x pro plan / you can continue and complete what we need to do. LFG",
+      "responds_to": "Proposed 45 additional engineering minutes, 20-minute runtime window, at most three fresh probes and one remaining repair iteration.",
+      "additional_aggregate_engineering_seconds": 2700,
+      "previous_engineering_debit_seconds": 7200,
+      "additional_runtime_window_seconds": 1200,
+      "additional_runtime_probes": 3,
+      "repair_iterations_remaining_at_authorization": 1,
+      "budget_reset": false,
+      "api_spending_authorized": false,
+      "status": "runtime_probe_allowance_consumed_implementation_iteration_complete"
+    }
+  ],
   "evaluated_worker_attempts": 0,
   "model_judge_attempts": 0,
   "implementation_assistants": {
-    "participants": 6,
+    "participants": 8,
     "tokens": null,
     "billed_dollars": null,
     "usage_status": "per-call usage unavailable in this task",
-    "participants_note": "Four prior participants plus primary review/handoff and one explicitly requested gpt-6-astra/high debugging lane. Child start timestamp not sampled; approximately 390 seconds waiting for tool approval before interruption. Per-agent token/cost accounting unavailable."
+    "participants_note": "Six prior stage participants retained, plus this primary continuation and explicitly requested gpt-6-astra/high runtime extension lane. Count is stage participations, not unique humans/models. Current child sampled 18:35:36 through 18:41:26 UTC (350 seconds). Prior approval-wait history retained in stage records; per-agent token/cost accounting unavailable."
   },
   "provider_execution_budget": {
     "billed_dollars": null,
-    "status": "No authenticated isolated model path; dedicated key and $5 cap question pending. No paid calls authorized yet."
+    "status": "Host CLI subscription login verified; no attempt-scoped isolated subscription authentication established. Pro upgrade is not API spending authorization. Dedicated local API key and enforceable request/cost plan remain unresolved; zero evaluated model/judge calls."
   },
-  "stage_status": "36 deterministic tests at prior revision; recovery, ownership rejection and expired-budget refusal now observed; fresh build/cancel/deadline verification awaits extension; milestone A not passed",
+  "stage_status": "45 deterministic tests pass; live build, cancellation, deadline shutdown, actual receipt-copy tamper rejection and fourth-attempt refusal verified. Natural completion and hard lifecycle bound remain unverified; isolated real-agent execution absent; milestone A not passed.",
   "continuation_rule": "Charge subsequent implementation/debugging and any later verification time to this same budget. Handoffs do not reset it.",
   "stage_debits": [
     {
@@ -46,22 +61,41 @@
       "through": "2026-09-05T16:26:20+00:00",
       "seconds": 1800,
       "accounting": "Conservative aggregate allocation including final closeout; exact per-agent active duration unavailable."
+    },
+    {
+      "stage": "high_authorized_runtime_extension",
+      "started_at": "2026-09-05T18:34:51+00:00",
+      "checkpoint_at": "2026-09-05T18:43:43+00:00",
+      "seconds": 1200,
+      "astra_high_wall_seconds": 350,
+      "primary_and_closeout_allocation_seconds": 850,
+      "primary_closeout_allocation_ends_at": "2026-09-05T18:49:01+00:00",
+      "accounting": "Conservative aggregate stage allocation includes final verification, commit, push and CI check; unused engineering extension is retained, not a new repair/probe grant."
     }
   ],
-  "runtime_probe_attempts": 1,
+  "runtime_probe_attempts": 4,
   "runtime_probe_outcomes": {
     "preparation_failed_recovered": 1,
+    "start_failed_logging_configuration": 1,
+    "canceled": 1,
+    "timed_out": 1,
     "completed": 0
   },
-  "repair_iterations_used": 1,
+  "repair_iterations_used": 2,
   "repair_iterations_limit": 2,
   "runtime_debug_controls": {
     "copy_failure_reproduced": true,
     "recovery": "verified_stopped_reservation_closed",
     "fresh_budget_refusal": "observed_cli_exit_2_ledger_unchanged",
-    "runtime_window": "expired_no_reset",
-    "actual_build_cancel_deadline": "unverified",
-    "ownership_rejection": "observed_real_docker_inspection"
+    "runtime_window": "explicit_additive_1200_second_extension_three_of_three_consumed",
+    "actual_build_cancel_deadline": "verified_on_real_docker",
+    "natural_completion": "unverified_after_incremental_logging_correction",
+    "hard_whole_lifecycle_deadline": "unverified_filesystem_daemon_build_and_final_client_wait",
+    "ownership_rejection": "observed_real_docker_inspection",
+    "actual_receipt_copy_tamper_controls_rejected": 4,
+    "fourth_reservation_refusal": "observed_original_ledger_byte_identical",
+    "runtime_reserved_seconds_total": 200,
+    "running_containers_at_final_inventory": 0
   },
   "followup_recovery": {
     "observed_at": "2026-09-05 18:02:35 UTC",

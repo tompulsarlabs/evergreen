@@ -93,6 +93,69 @@ class DurableLedgerTests(unittest.TestCase):
             with self.assertRaises(BudgetBlocked):
                 store.reserve("four", "container-four", 1)
 
+    def test_extension_preserves_history_and_cannot_renew_after_restart(self):
+        with self.store() as store:
+            store.reserve("old", "container-old", 3)
+            store.finish("old", "container-old", "execution_error", terminated=True)
+            original = copy.deepcopy(store.state)
+        self.now += 100
+        with self.store() as store:
+            ext = store.authorize_extension("User approved 3 probes / 20 minutes")
+            self.assertEqual(ext["prior_ledger_sha256"], digest(original))
+            for key in ("started_at", "attempts", "limits", "binding"):
+                self.assertEqual(store.state[key], original[key])
+            store.reserve("fresh", "container-fresh", 10)
+        with self.store() as store:
+            with self.assertRaises(BudgetBlocked):
+                store.authorize_extension("renew")
+            with self.assertRaises(BudgetBlocked):
+                store.reserve("next", "container-next", 10)
+            store.finish("fresh", "container-fresh", "completed", terminated=True)
+            store.reserve("next", "container-next", 10)
+            store.finish("next", "container-next", "completed", terminated=True)
+            with self.assertRaises(BudgetBlocked):
+                store.reserve("global-fourth", "container-fourth", 1)
+
+    def test_extension_enforces_three_fresh_attempts_and_original_reserved_time(self):
+        self.limits = Limits(32, 90, 3600)
+        with self.store() as store:
+            store.authorize_extension("approved")
+            for number in range(3):
+                name = str(number)
+                store.reserve(name, "container-" + name, 90)
+                store.finish(name, "container-" + name, "completed", terminated=True)
+            with self.assertRaises(BudgetBlocked):
+                store.reserve("four", "container-four", 1)
+        # Separate synthetic ledger: extension cannot refund old reserved seconds.
+        self.directory = self.directory / "reserved-cap"
+        self.limits = Limits(32, 10, 10)
+        with self.store() as store:
+            store.reserve("old", "container-old", 10)
+            store.finish("old", "container-old", "completed", terminated=True)
+            store.authorize_extension("approved")
+            with self.assertRaises(BudgetBlocked):
+                store.reserve("fresh", "container-fresh", 1)
+
+    def test_extension_window_includes_full_reservation_and_rejects_rollback(self):
+        with self.store() as store:
+            store.authorize_extension("approved")
+        self.now += 1191
+        with self.store() as store:
+            with self.assertRaises(BudgetBlocked):
+                store.reserve("too-late", "container-late", 10)
+        self.now = 999
+        with self.store() as store:
+            with self.assertRaises(BudgetBlocked):
+                store.reserve("rollback", "container-rollback", 1)
+
+    def test_extension_requires_explicit_reference_and_known_shutdown(self):
+        with self.store() as store:
+            with self.assertRaises(BudgetBlocked):
+                store.authorize_extension(" ")
+            store.reserve("old", "container-old", 1)
+            with self.assertRaises(BudgetBlocked):
+                store.authorize_extension("approved")
+
 
 class MaterializationTests(unittest.TestCase):
     def setUp(self):

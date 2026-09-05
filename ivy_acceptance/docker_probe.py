@@ -71,11 +71,22 @@ class DockerProbeAdapter:
         self.request = None
         self.path = None
         self.derived_image = None
+        self.operation_deadline = None
+        self.cleanup_deadline = None
 
-    def _cmd(self, args, *, data=None, timeout=15, env=None):
+    def _remaining(self, maximum, *, cleanup=False):
+        deadline = self.cleanup_deadline if cleanup else self.operation_deadline
+        if deadline is None:
+            return maximum
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise subprocess.TimeoutExpired("Docker probe operation", 0)
+        return min(maximum, remaining)
+
+    def _cmd(self, args, *, data=None, timeout=15, env=None, cleanup=False):
         try:
             return subprocess.run(["docker", "--context", self.context, *args], input=data,
-                                  capture_output=True, timeout=timeout, check=True, env=env)
+                                  capture_output=True, timeout=self._remaining(timeout, cleanup=cleanup), check=True, env=env)
         except subprocess.SubprocessError as exc:
             if self.path is not None:
                 write_record(self.path / ("command-error-" + str(time.time_ns()) + ".json"), {
@@ -93,8 +104,8 @@ class DockerProbeAdapter:
                 "derived_image": self.derived_image,
                 "capture_scope": "Docker stdout/stderr and supervisor lifecycle; not an agent tool trace"}
 
-    def _inspect(self, handle):
-        info = json.loads(self._cmd(["container", "inspect", handle.runtime_id]).stdout)[0]
+    def _inspect(self, handle, *, cleanup=False):
+        info = json.loads(self._cmd(["container", "inspect", handle.runtime_id], cleanup=cleanup).stdout)[0]
         labels = info["Config"].get("Labels") or {}
         if (labels.get("ivy.attempt") != handle.attempt_id
                 or labels.get("ivy.binding") != digest(self.binding)):
@@ -109,6 +120,8 @@ class DockerProbeAdapter:
         safe_id(request.attempt_id)
         name = "ivy-" + hashlib.sha256((str(self.store.directory.resolve()) + request.attempt_id).encode()).hexdigest()[:32]
         handle = WorkloadHandle(request.attempt_id, name)
+        # One monotonic execution deadline includes reserve, preparation and run.
+        self.operation_deadline = time.monotonic() + request.deadline_seconds
         self.store.reserve(request.attempt_id, name, request.deadline_seconds)
         self.request = request
         self.path = self.store.directory / request.attempt_id
@@ -117,6 +130,7 @@ class DockerProbeAdapter:
             "binding": self.binding, "runtime": self.describe(), "runtime_id": name,
             "visible_files": {k: hashlib.sha256(v).hexdigest() for k, v in sorted(self.files.items())},
             "deadline_seconds": request.deadline_seconds,
+            "deadline_scope": "preparation_and_run", "shutdown_grace_seconds": 15,
             "evidence_kind": "infrastructure_probe_not_model_evaluation"})
         # Resolve the already-local pinned base before building. The legacy builder
         # accepts its content ID directly without a registry resolver. No fallback
@@ -147,6 +161,7 @@ class DockerProbeAdapter:
                    "--security-opt", "no-new-privileges=true", "--pids-limit", "64",
                    "--memory", "256m", "--cpus", "1", "--restart", "no",
                    "--log-driver", "local", "--log-opt", "max-size=1m", "--log-opt", "max-file=1",
+                   "--log-opt", "compress=false",
                    "--entrypoint", "python3", self.derived_image, "-I", "-B", "-u",
                    "/worker/probe.py", "wait" if self.wait else "complete"])
         info = self._inspect(handle)
@@ -162,11 +177,15 @@ class DockerProbeAdapter:
         """Confirm the attempt-owned container stopped, independently of its client."""
         path = self.store.directory / safe_id(handle.attempt_id)
         terminated, info, error = False, None, None
+        # Safety shutdown has its own single bounded grace, including every CLI
+        # call. Expired execution time must not prevent container termination.
+        if self.cleanup_deadline is None:
+            self.cleanup_deadline = time.monotonic() + 15
         try:
-            info = self._inspect(handle)
+            info = self._inspect(handle, cleanup=True)
             if info["State"]["Running"] or info["State"].get("Restarting"):
-                self._cmd(["kill", handle.runtime_id])
-                info = self._inspect(handle)
+                self._cmd(["kill", handle.runtime_id], cleanup=True)
+                info = self._inspect(handle, cleanup=True)
             terminated = (info["State"]["Status"] in ("exited", "dead", "created")
                           and not info["State"]["Running"] and not info["State"].get("Restarting"))
         except (OSError, subprocess.SubprocessError, ValueError, KeyError) as exc:
@@ -180,7 +199,6 @@ class DockerProbeAdapter:
     def run(self, handle, emit):
         if self.request is None or handle.attempt_id != self.request.attempt_id:
             raise InvalidManifest("adapter has not prepared this attempt")
-        self._inspect(handle)
         capture = self.path / "events.jsonl"
         state, process = ExecutionState.EXECUTION_ERROR, None
         complete, total, sequence = False, 0, 0
@@ -188,6 +206,7 @@ class DockerProbeAdapter:
         started = time.monotonic()
         control = None
         try:
+            self._inspect(handle)
             with open(capture, "xb", buffering=0) as output, selectors.DefaultSelector() as selector:
                 def event(kind, **values):
                     nonlocal sequence
@@ -198,15 +217,16 @@ class DockerProbeAdapter:
                     emit(record)
 
                 event("start_requested", runtime_id=handle.runtime_id)
+                self._remaining(1)  # Never start after preparation consumed the deadline.
                 process = subprocess.Popen(["docker", "--context", self.context, "start", "--attach", handle.runtime_id],
                                            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 for stream, channel in ((process.stdout, "stdout"), (process.stderr, "stderr")):
                     selector.register(stream, selectors.EVENT_READ, channel)
                 while selector.get_map():
                     elapsed = time.monotonic() - started
-                    if elapsed >= self.request.deadline_seconds or (self.cancel_after is not None and elapsed >= self.cancel_after):
-                        state = (ExecutionState.CANCELED if self.cancel_after is not None
-                                 and self.cancel_after < self.request.deadline_seconds else ExecutionState.TIMED_OUT)
+                    deadline_reached = time.monotonic() >= self.operation_deadline
+                    if deadline_reached or (self.cancel_after is not None and elapsed >= self.cancel_after):
+                        state = ExecutionState.TIMED_OUT if deadline_reached else ExecutionState.CANCELED
                         event("stop_requested", reason=state.value)
                         control = self.cancel(handle)
                         break
@@ -220,7 +240,7 @@ class DockerProbeAdapter:
                             raise RuntimeError("capture byte limit exceeded; evidence is incomplete")
                         event("worker_stream", channel=key.data, data_base64=base64.b64encode(chunk).decode())
                 else:
-                    process.wait(timeout=5)
+                    process.wait(timeout=self._remaining(5))
                     info = self._inspect(handle)
                     complete = True
                     state = (ExecutionState.COMPLETED if process.returncode == 0 and info["State"]["ExitCode"] == 0
@@ -229,7 +249,8 @@ class DockerProbeAdapter:
                 os.fsync(output.fileno())
         except (Exception, KeyboardInterrupt) as exc:
             error = type(exc).__name__ + ": " + str(exc)
-            state = ExecutionState.CANCELED if isinstance(exc, KeyboardInterrupt) else ExecutionState.EXECUTION_ERROR
+            state = (ExecutionState.CANCELED if isinstance(exc, KeyboardInterrupt) else
+                     ExecutionState.TIMED_OUT if isinstance(exc, subprocess.TimeoutExpired) else ExecutionState.EXECUTION_ERROR)
         finally:
             control = control or self.cancel(handle)
             if process is not None:

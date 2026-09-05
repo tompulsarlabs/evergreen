@@ -1,5 +1,75 @@
 # Runtime preparation engineering review
 
+## Authorized extension review — current result
+
+5 September 2026, after Tom approved the proposed bounded extension. This section
+supersedes the historical review below, whose failed attempts and prior conclusions
+are retained. The existing branch and draft PR #20 remain unchanged in identity.
+
+Repair iteration 2 reused the existing ledger and Docker adapter. An explicit
+one-use local authorization record carries the previous ledger hash and allows
+three fresh probes within 1,200 seconds; original start, rows and count/reserved-time
+limits remain unchanged. It is a trusted-operator assertion, not signed approval.
+Preparation commands and the worker loop share one monotonic deadline. Docker's
+local logging compression is disabled after the first probe exposed its conflict
+with `max-file=1`. This incremental correction and its failed probe are retained.
+
+Observed outcomes:
+
+- Fixed COPY-only preparation built successfully on real Docker.
+- Natural completion probe failed before start on logging configuration; no
+  successful completed-worker receipt exists after the correction.
+- Explicit cancellation and deadline controls ran the worker and confirmed its
+  owned container stopped. Both receipts retain partial capture.
+- Four controls on copies of actual receipts rejected raw receipt changes,
+  capture changes, missing capture and checksum-valid inconsistent image identity.
+- Real wrong-owner inspection rejected; a fourth reservation was refused with
+  byte-identical ledger. Original failure/recovery remains retained.
+- Post-run inventory found four known stopped containers and no intermediates.
+  This snapshot does not prove cancellation of an interrupted daemon-side build.
+
+Primary verification independently ran all three receipt verifiers, the read-only
+plan, and **45 deterministic tests**. New independent tests cover inherited build
+hooks/volumes, preparation-timeout restart blocking and unreachable shutdown.
+Their first run failed from a test-fixture constructor error (`Limits()` without
+required arguments); supplying explicit limits fixed the tests. No runtime attempt
+was replaced or consumed by this software-test correction.
+
+Remaining release gaps:
+
+1. Natural worker completion with the corrected log settings is unverified; the
+   authorized three probes and both repair iterations are consumed.
+2. A hard whole-lifecycle wall ceiling is not established. Command timeouts clamp
+   preparation/run, and safety shutdown commands share a 15-second grace, but
+   filesystem packing/fsync, daemon-side build lifetime and a further five-second
+   Docker-client wait are outside that hard-ceiling claim. Pre-create failure can
+   retain an unresolved reservation; missing final container is not shutdown proof.
+3. No isolated real-agent authentication, frozen effective harness metadata or
+   human-approved neutral-case assessment exists. CLI subscription login is verified;
+   an attempt-scoped subscription broker is not. No API spending or host credential
+   exposure was authorized. Milestone A remains not passed.
+
+OpenAI Docs informed the authentication boundary: subscription CLI sign-in and
+API-key billing are separate paths; saved auth is sensitive. The documented
+non-interactive invocation does not by itself implement Ivy's worker isolation.
+[Authentication](https://learn.chatgpt.com/docs/auth),
+[non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode).
+
+### GSTACK REVIEW REPORT — current
+
+| Review | Status | Remaining |
+|---|---|---|
+| Engineering continuation / primary independent checks | issues_open | Natural completion, hard lifecycle bound, real-agent integration |
+| Astra High runtime repair | bounded work complete | Three probes retained; no additional repair/probe allowance |
+| Outside model review | skipped under Codex | No nested Codex call or cross-model agreement claim |
+
+VERDICT: NOT CLEARED for full runtime or milestone-A acceptance. Cancellation,
+deadline shutdown and materialization now have real evidence. The remaining
+decisions require a revised execution plan and intentional authentication; do not
+silently renew the ledger or turn infrastructure results into a benchmark pass.
+
+## Prior review — retained history
+
 5 September 2026. Target: `runtime-handoff.md`, on the existing
 `codex/ivy-acceptance-scaffold` branch and stacked draft PR #20.
 The user requested gstack/plan-eng-review and Astra High debugging, preserving

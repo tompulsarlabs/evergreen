@@ -15,6 +15,34 @@ from ivy_acceptance.storage import file_sha256, read_record, write_record
 
 
 class ImagePreparationControls(unittest.TestCase):
+    def test_all_commands_share_remaining_operation_time(self):
+        adapter = DockerProbeAdapter(None, {}, {}, "python@sha256:" + "a" * 64, "test-context")
+        adapter.operation_deadline = 100
+        with patch("ivy_acceptance.docker_probe.time.monotonic", return_value=98), patch(
+                "ivy_acceptance.docker_probe.subprocess.run") as run:
+            adapter._cmd(["build"], timeout=60)
+            self.assertEqual(run.call_args.kwargs["timeout"], 2)
+        with patch("ivy_acceptance.docker_probe.time.monotonic", return_value=101), patch(
+                "ivy_acceptance.docker_probe.subprocess.run") as run:
+            with self.assertRaises(subprocess.TimeoutExpired):
+                adapter._cmd(["create"])
+            run.assert_not_called()
+
+    def test_cleanup_has_one_grace_and_does_not_reopen_execution(self):
+        adapter = DockerProbeAdapter(None, {}, {}, "python@sha256:" + "a" * 64, "test-context")
+        adapter.operation_deadline, adapter.cleanup_deadline = 100, 115
+        with patch("ivy_acceptance.docker_probe.time.monotonic", return_value=110), patch(
+                "ivy_acceptance.docker_probe.subprocess.run") as run:
+            adapter._cmd(["kill", "owned"], cleanup=True)
+            self.assertEqual(run.call_args.kwargs["timeout"], 5)
+            with self.assertRaises(subprocess.TimeoutExpired):
+                adapter._cmd(["start", "owned"])
+        with patch("ivy_acceptance.docker_probe.time.monotonic", return_value=116), patch(
+                "ivy_acceptance.docker_probe.subprocess.run") as run:
+            with self.assertRaises(subprocess.TimeoutExpired):
+                adapter._cmd(["container", "inspect", "owned"], cleanup=True)
+            run.assert_not_called()
+
     def test_build_context_contains_only_fixed_recipe_and_selected_bytes(self):
         files = {"fixture/head/code.py": b"print(1)\n", "instructions/AGENTS.md": b"Review only.\n"}
         image = "sha256:" + "a" * 64

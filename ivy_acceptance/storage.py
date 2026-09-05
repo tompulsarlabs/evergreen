@@ -96,7 +96,7 @@ class AttemptStore:
     def _validate(self):
         s = self.state
         keys = {"schema_version", "binding", "limits", "started_at", "last_time", "attempts"}
-        if (type(s) is not dict or set(s) != keys or type(s["schema_version"]) is not int
+        if (type(s) is not dict or set(s) not in (keys, keys | {"authorization_extension"}) or type(s["schema_version"]) is not int
                 or s["schema_version"] != 1 or s["binding"] != self.binding
                 or s["limits"] != asdict(self.limits) or type(s["attempts"]) is not list):
             raise InvalidManifest("ledger schema, comparison or limits changed")
@@ -124,6 +124,46 @@ class AttemptStore:
         if (unresolved > 1 or len(ids) > self.limits.max_attempts
                 or sum(r["seconds"] for r in s["attempts"]) > self.limits.total_seconds):
             raise InvalidManifest("ledger exceeds limits")
+        if "authorization_extension" in s:
+            ext = s["authorization_extension"]
+            if (type(ext) is not dict or set(ext) != {"authorization_reference", "authority", "started_at",
+                    "window_seconds", "max_fresh_attempts", "prior_attempt_count", "prior_ledger_sha256"}
+                    or type(ext["authorization_reference"]) is not str or not ext["authorization_reference"].strip()
+                    or ext["authority"] != "trusted_local_supervisor_not_signed_authority"
+                    or type(ext["started_at"]) not in (int, float)
+                    or not s["started_at"] <= ext["started_at"] <= s["last_time"]
+                    or type(ext["window_seconds"]) is not int or ext["window_seconds"] != 1200
+                    or type(ext["max_fresh_attempts"]) is not int or ext["max_fresh_attempts"] != 3
+                    or type(ext["prior_attempt_count"]) is not int
+                    or not 0 <= ext["prior_attempt_count"] <= len(s["attempts"])
+                    or len(s["attempts"]) - ext["prior_attempt_count"] > ext["max_fresh_attempts"]
+                    or type(ext["prior_ledger_sha256"]) is not str
+                    or not re.fullmatch(r"[a-f0-9]{64}", ext["prior_ledger_sha256"])):
+                raise InvalidManifest("invalid authorization extension")
+
+    def authorize_extension(self, reference):
+        """Record the one explicit local approval; preserve every original debit/cap.
+
+        This is an operator assertion, not a signed or externally verified grant.
+        Its window starts immediately; it cannot be renewed by this API.
+        """
+        if "authorization_extension" in self.state:
+            raise BudgetBlocked("authorization extension already recorded; no renewal")
+        if type(reference) is not str or not reference.strip() or len(reference) > 2000:
+            raise BudgetBlocked("explicit authorization reference required")
+        now = self._now()
+        if now < self.state["last_time"]:
+            raise BudgetBlocked("clock moved backwards; no extension")
+        if any(not row["termination_confirmed"] for row in self.state["attempts"]):
+            raise BudgetBlocked("previous workload termination is unconfirmed; recover it first")
+        previous = digest(self.state)
+        self.state["authorization_extension"] = {
+            "authorization_reference": reference, "authority": "trusted_local_supervisor_not_signed_authority",
+            "started_at": now, "window_seconds": 1200, "max_fresh_attempts": 3,
+            "prior_attempt_count": len(self.state["attempts"]), "prior_ledger_sha256": previous}
+        self.state["last_time"] = now
+        self._save()
+        return self.state["authorization_extension"]
 
     def _save(self):
         self._validate()
@@ -142,9 +182,14 @@ class AttemptStore:
             raise BudgetBlocked("attempt id already consumed")
         if type(seconds) is not int or not 0 < seconds <= self.limits.per_attempt_seconds:
             raise BudgetBlocked("invalid deadline")
+        ext = self.state.get("authorization_extension")
+        window_exhausted = (now - self.state["started_at"] + seconds > self.limits.total_seconds)
+        if ext is not None:
+            window_exhausted = (now - ext["started_at"] + seconds > ext["window_seconds"]
+                                or len(rows) - ext["prior_attempt_count"] >= ext["max_fresh_attempts"])
         if (len(rows) >= self.limits.max_attempts
                 or sum(row["seconds"] for row in rows) + seconds > self.limits.total_seconds
-                or now - self.state["started_at"] + seconds > self.limits.total_seconds):
+                or window_exhausted):
             raise BudgetBlocked("attempt or execution time budget exhausted")
         self.state["last_time"] = now
         rows.append({"id": attempt_id, "runtime_id": runtime_id, "seconds": seconds,

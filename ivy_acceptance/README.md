@@ -2,11 +2,12 @@
 
 Extra High added a durable local attempt ledger, verified input materialization,
 bounded supervisor capture, a credential-free Docker probe, recovery commands and
-independent citation controls. **The first real preparation attempt failed at
-`docker cp`; the runtime proof and milestone A have not passed.** High reproduced
-the read-only-root error and replaced copying with a fixed COPY-only image path,
-which remains unverified on real Docker. See
-[the current High handoff](../docs/next-phase/runtime-handoff.md). The 36 deterministic
+independent citation controls. **Real image preparation, running-worker cancellation
+and deadline shutdown are verified; natural completion and milestone A remain
+unverified.** The original read-only-root copy failure and a later Docker logging
+failure are retained. High replaced copying with a fixed COPY-only image and disabled
+incompatible log compression. See
+[the current High handoff](../docs/next-phase/runtime-handoff.md). The 45 deterministic
 tests pass; they are not evidence of a working model evaluation.
 
 The explicit `probe` command executes a fixed Python infrastructure test. It never
@@ -14,6 +15,13 @@ uses a model, account credential or a primary model-comparison slot. `plan` reta
 its read-only behavior. `recover-probe` inspects and stops an attempt-owned container
 after a supervisor failure; it cannot erase the consumed attempt. `verify-probe`
 checks saved artifact hashes without executing anything.
+
+`authorize-probe-extension` records an explicit local operator approval for one
+additional 20-minute/three-probe window on the original store. It does not obtain
+approval, renew itself, erase attempts or change original count/reservation caps.
+Do not invoke it without authorization. The approved continuation's three probes
+are already consumed. `--deadline` shares a preparation/run command budget;
+shutdown has a separate 15-second grace, and this is not a hard daemon-wide deadline.
 
 New modules: `storage.py` (locked, atomic reservations), `materialization.py`
 (recompiled plan and byte checks), `docker_probe.py` (container lifecycle and capture),
