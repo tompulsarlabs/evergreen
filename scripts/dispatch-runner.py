@@ -28,7 +28,6 @@ pushed runner change lands in IVY while the old code keeps executing.
 import fcntl, json, os, re, shlex, shutil, signal, subprocess, sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from verification import eligible_ids
 
 WORKROOT = Path.home() / ".ivy-dispatch"
 IVY = WORKROOT / "ivy"
@@ -284,6 +283,10 @@ def main():
             publish_status("lint_failed", [], False, now)
         return 1
     commit_email, connected, lanes = load_config()
+    # Load the gate from the synchronized checkout, after ensure_clone. The
+    # launchd copy can be stale or lack this companion module altogether.
+    sys.path.insert(0, str(IVY / "scripts"))
+    from verification import eligible_ids
     done_ids = eligible_ids(IVY)
     skipped = []
 
