@@ -22,9 +22,8 @@ If a file is missing, proceed silently.
 
 When output names an Ivy concept (a contract's Task, a journal heading, a
 memory-page claim, a commit message), use the term as `CONTEXT.md` defines it
-and avoid the words it lists under _Avoid_. A concept the glossary lacks is
-either language Ivy does not use (reconsider) or a real gap: note it in the
-journal under `## Vocabulary gaps` for the retro.
+and avoid the words it lists under _Avoid_. If a recurring Ivy concept needs a stable name, note the gap under
+`## Vocabulary gaps` for the retro. Ordinary explanatory language needs no entry.
 
 ## Flag decision conflicts
 

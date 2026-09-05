@@ -66,7 +66,9 @@ outcome:
   exit: 0
   artifacts:
     - dispatch/reports/2026-09-02-tomgreenai-context-01.md
-  verified: true
+  verified: false
+  verification_status: unverified
+  verification_audit: 2026-09-05 — prior stamp retained below as historical narrative; independent receipt required before reuse.
   verified_note: >
     Verification section executed 2026-09-04T22:30+02:00 (failsafe): a
     draft PR by tompulsarlabs exists on tompulsarlabs/tomgreen.ai (#14,

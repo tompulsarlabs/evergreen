@@ -28,6 +28,7 @@ pushed runner change lands in IVY while the old code keeps executing.
 import fcntl, json, os, re, shlex, shutil, signal, subprocess, sys
 from datetime import datetime, timedelta
 from pathlib import Path
+from verification import eligible_ids
 
 WORKROOT = Path.home() / ".ivy-dispatch"
 IVY = WORKROOT / "ivy"
@@ -283,7 +284,7 @@ def main():
             publish_status("lint_failed", [], False, now)
         return 1
     commit_email, connected, lanes = load_config()
-    done_ids = {p.stem for p in (IVY / "dispatch" / "done").glob("*.md")}
+    done_ids = eligible_ids(IVY)
     skipped = []
 
     for qpath in sorted((IVY / "dispatch" / "queue").glob("*.md")):
@@ -296,7 +297,7 @@ def main():
             skipped.append({"id": cid, "reason": "expired"}); continue
         blockers = open_blockers(fm, done_ids)
         if blockers:
-            log(f"{cid}: blocked by {', '.join(blockers)} (not in dispatch/done/) — skipping")
+            log(f"{cid}: blocked by {', '.join(blockers)} (not independently verified) — skipping")
             skipped.append({"id": cid, "reason": "blocked_by"}); continue
         entry = lanes.get(fm["lane"], {}).get(fm.get("pool") or "anthropic")
         if not entry or entry.get("model") == "VERIFY":

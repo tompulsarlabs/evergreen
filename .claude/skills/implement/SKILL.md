@@ -8,8 +8,8 @@ Implement the work described by the user in the spec or tickets.
 
 Use /tdd where possible, at pre-agreed seams.
 
-Run typechecking regularly, single test files regularly, and the full test suite once at the end.
+Run checks relevant to the changed behavior. Run broader checks when integration risk or repository requirements justify them.
 
-Once done, use /code-review to review the work.
+Review the diff against the request; use /code-review when its additional structure helps.
 
-Commit your work to the current branch.
+Follow the repository and user instructions for branches, commits and PRs.

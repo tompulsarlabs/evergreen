@@ -1,0 +1,203 @@
+[
+  {
+    "id": "complete-independent-evidence",
+    "required": [
+      "artifact",
+      "paths"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "artifact",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": "git show abc:report.md",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "id": "paths",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": "GitHub tree at abc",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "pass"
+  },
+  {
+    "id": "skipped-path-check-real-incident",
+    "required": [
+      "artifact",
+      "paths"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "artifact",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": "git show abc:report.md",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "id": "paths",
+        "status": "unverified",
+        "source": "external-tool",
+        "evidence": "403 repository inaccessible",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "unverified"
+  },
+  {
+    "id": "worker-pr-body-is-not-independent-diff",
+    "required": [
+      "files"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "files",
+        "status": "pass",
+        "source": "worker",
+        "evidence": "PR body says only CONTEXT.md changed",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "unverified"
+  },
+  {
+    "id": "missing-requirement",
+    "required": [
+      "artifact",
+      "paths"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "artifact",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": "report exists",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "unverified"
+  },
+  {
+    "id": "wrong-revision",
+    "required": [
+      "paths"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "paths",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": "tree",
+        "revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ],
+    "expect": "unverified"
+  },
+  {
+    "id": "observed-failure",
+    "required": [
+      "test"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "test",
+        "status": "fail",
+        "source": "external-tool",
+        "evidence": "test exit 1",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "fail"
+  },
+  {
+    "id": "empty-suite-never-passes",
+    "required": [],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [],
+    "expect": "unverified"
+  },
+  {
+    "id": "blank-evidence",
+    "required": [
+      "test"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "test",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": " ",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "unverified"
+  },
+  {
+    "id": "duplicate-result",
+    "required": [
+      "test"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "test",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": "exit 0",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "id": "test",
+        "status": "pass",
+        "source": "external-tool",
+        "evidence": "exit 0",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "unverified"
+  },
+  {
+    "id": "unknown-result",
+    "required": [
+      "test"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "test",
+        "status": "skipped",
+        "source": "external-tool",
+        "evidence": "not run",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "unverified"
+  },
+  {
+    "id": "human-adjudication",
+    "required": [
+      "quality"
+    ],
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "checks": [
+      {
+        "id": "quality",
+        "status": "pass",
+        "source": "human-review",
+        "evidence": "reviewer rubric and artifact reference",
+        "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "expect": "pass"
+  }
+]

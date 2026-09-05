@@ -90,7 +90,9 @@ outcome:
   exit: timeout
   note: timeout; last output lines follow
   output_tail: |
-  verified: true
+  verified: false
+  verification_status: unverified
+  verification_audit: 2026-09-05 — prior stamp retained below as historical narrative; independent receipt required before reuse.
   verified_note: >
     Verification section executed 2026-09-04T22:30+02:00 (failsafe): the
     worker finished the work and only missed printing the report before
