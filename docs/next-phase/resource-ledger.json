@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "stage": "ultra_architecture_scaffold",
+  "tracked_started_at": "2026-09-05T13:14:03+00:00",
+  "recorded_through": "2026-09-05T13:34:54.069844+00:00",
+  "tracked_wall_seconds": 1251,
+  "engineering_budget_debit_seconds": 4080,
+  "debit_method": "Conservative allowance: full tracked wall window for each of 3 participants plus 300 seconds initial inspection, rounded up to a minute. This is a budget debit, not measured active or billed time.",
+  "limits": {
+    "milestone_a_engineering_seconds": 7200,
+    "total_proof_engineering_seconds": 43200,
+    "worker_attempts": 32,
+    "per_attempt_seconds": 90,
+    "execution_wall_seconds": 3600
+  },
+  "milestone_a_budget_remaining_at_checkpoint_seconds": 3120,
+  "evaluated_worker_attempts": 0,
+  "model_judge_attempts": 0,
+  "implementation_assistants": {
+    "participants": 3,
+    "tokens": null,
+    "billed_dollars": null,
+    "usage_status": "per-call usage unavailable in this task"
+  },
+  "provider_execution_budget": {
+    "billed_dollars": null,
+    "status": "no metered execution path configured"
+  },
+  "stage_status": "scaffold tested; live feasibility milestone A not passed",
+  "continuation_rule": "Charge subsequent implementation/debugging and any later verification time to this same budget. Handoffs do not reset it."
+}
