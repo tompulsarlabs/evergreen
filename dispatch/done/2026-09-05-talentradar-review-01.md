@@ -42,3 +42,16 @@ outcome:
   exit: 0
   artifacts:
     - dispatch/reports/2026-09-05-talentradar-review-01.md
+
+verified: true
+verified_note: >
+  Report exists on main of ivy, 111 lines, non-empty. PR #1 remains open
+  (draft, not merged), so its added files live only on the PR branch --
+  search_code only indexes default branches and cannot confirm them
+  directly (session tools are otherwise hard-scoped to ivy alone). Cross-
+  checked instead against PR #1's own body text: src/lib/board.ts is named
+  verbatim ("pointing src/lib/board.ts at the live tables is the next piece
+  of work"), and the Supabase fetch-layer narrative (schema, upsert
+  function, polling) matches the report's supabase/functions/fetch-jobs
+  and poll.ts findings. Treated as sufficient corroboration, same standard
+  used for context-01/copy-02 on 2026-09-04.

@@ -42,3 +42,12 @@ outcome:
   exit: 0
   artifacts:
     - dispatch/reports/2026-09-05-tomgreenai-planetary-review-01.md
+
+verified: true
+verified_note: >
+  Report exists on main of ivy, 97 lines, non-empty. PR #16 merged
+  2026-09-05T08:20:21Z (shortly after the review claimed), so its files are
+  now on tomgreen.ai main. Sampled 3 of the report's referenced paths via
+  search_code (repo: qualifier in query, cross-repo default-branch index):
+  src/lib/planet-model.ts, src/components/operating-orbit-3d.tsx, and
+  src/lib/golden-path-store.ts all resolved with matching content.
