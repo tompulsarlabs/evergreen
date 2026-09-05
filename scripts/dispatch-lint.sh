@@ -63,6 +63,22 @@ while IFS= read -r f; do
     err "$f: repo '$repo' is parked in config.yml (watchlist.parked) — no contracts"
   fi
 
+  # New contracts must declare their evaluation requirements before execution.
+  if [[ "$created" > "2026-09-04T23:59:59" ]]; then
+    python3 - "$f" <<'PYCHECK' || fail=1
+import json,re,sys
+from pathlib import Path
+text=Path(sys.argv[1]).read_text()
+m=re.search(r'^verification_checks: (\[.*\])$',text,re.M)
+try:
+    ids=json.loads(m.group(1)) if m else []
+    assert isinstance(ids,list) and ids and all(isinstance(x,str) and re.fullmatch(r'[a-z][a-z0-9_-]*',x) for x in ids)
+    assert len(ids)==len(set(ids))
+except (ValueError,AssertionError):
+    print('dispatch-lint: new contract requires unique verification_checks: '+sys.argv[1]);sys.exit(1)
+PYCHECK
+  fi
+
   # state must agree with the directory the contract lives in
   case "$dir" in
     queue)  case "$state" in open|claimed) ;; *) err "$f: state '$state' invalid in queue/ (open|claimed)";; esac ;;
@@ -124,6 +140,8 @@ if [ -n "${cap:-}" ] && [ -s "$days_file" ]; then
     [ "$n" -le "$cap" ] || err "daily cap exceeded: $n contracts created $day (cap $cap)"
   done < <(sort "$days_file" | uniq -c)
 fi
+
+python3 scripts/verification.py >/dev/null || err "a verified stamp lacks complete, revision-bound independent evidence"
 
 [ "$fail" -eq 0 ] && echo "dispatch-lint: ok — $count contracts, schema and cap hold"
 exit "$fail"

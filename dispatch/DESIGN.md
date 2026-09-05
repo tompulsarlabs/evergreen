@@ -14,6 +14,15 @@ outcomes behind it.
 
 ---
 
+## 2026-09-05 verification correction
+
+The operating verification format is now `procedures/verify-contract.md`.
+New contracts declare `verification_checks`; passing independent receipts bind to
+the assignment and a full artifact revision. Missing evidence stays unverified.
+A `done/` directory entry alone no longer unlocks dependencies. Historical tables
+below describe the original decisions; this correction takes precedence where
+those tables describe boolean-only stamps or done-directory eligibility.
+
 ## 1. Architectural decisions
 
 | # | Decision | Chosen | Rejected alternative | Why |
@@ -45,6 +54,7 @@ created: 2026-08-30T09:00:00+02:00
 created_by: scout         # scout | tom
 expires: 2026-09-01T09:00:00+02:00
 budget: { wall_minutes: 30 }
+verification_checks: ["artifact", "paths"]
 blocked_by: []            # optional; ids that must sit in dispatch/done/ before this runs
 ---
 

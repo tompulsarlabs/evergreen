@@ -40,7 +40,9 @@ outcome:
   artifacts:
     - memory/patterns.md (discrepancy section resolved + changelog)
     - memory/repos/c2-client-matrix.md (nudge history corrected + changelog)
-  verified: true
+  verified: false
+  verification_status: unverified
+  verification_audit: 2026-09-05 — prior stamp retained below as historical narrative; independent receipt required before reuse.
   verified_note: >
     Verification section executed 2026-08-27T19:08+02:00: both pages carry the
     resolution, neither contains unresolved-discrepancy language (grep clean),

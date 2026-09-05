@@ -14,7 +14,7 @@ A **flow** is a path through the skills. Most paths run along one **main flow**,
 
 The route most work travels. You have an idea and want it built.
 
-1. **`/grill-with-docs`** sharpens the idea by interview. Start here whenever you are **working in a working directory**: it's stateful, retaining what it learns in `CONTEXT.md` and ADRs. (No working directory? Use `/grill-me` instead, covered under Standalone. Both run the same `/grilling` primitive; `grill-with-docs` is the one that leaves a paper trail, which makes it the better of the two whenever a repo is there to leave it in.)
+1. For a clear, bounded request, implement directly. Use **`/grill-with-docs`** when material product decisions remain unresolved: it's stateful, retaining what it learns in `CONTEXT.md` and ADRs. (No working directory? Use `/grill-me` instead, covered under Standalone. Both run the same `/grilling` primitive; `grill-with-docs` is the one that leaves a paper trail, which makes it the better of the two whenever a repo is there to leave it in.)
 2. **Branch: can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/handoff`** in both directions (a prototype lives in its own directory, which is exactly what `/handoff` is for; see Phase boundaries):
    - **`/handoff`** out, then open a fresh session against that file,
    - **`/prototype`** to answer the question with throwaway code,
@@ -29,7 +29,7 @@ The route most work travels. You have an idea and want it built.
 
 Keep steps 1–3 in **one unbroken context window** (don't compact or clear until after `/to-tickets`) so the grilling, spec, and tickets all build on the same thinking. Each `/implement` then starts fresh, working from the ticket.
 
-The limit on this is the **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**: the window (~150k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before `/to-tickets`, don't push on degraded; `/compact` at the nearest phase boundary and carry on (see Phase boundaries).
+Use the current harness context indicators and observed coherence to decide when to compact. There is no universal token threshold across models. Preserve the active task and evidence when compacting.
 
 ## On-ramps
 

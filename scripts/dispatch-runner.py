@@ -283,7 +283,11 @@ def main():
             publish_status("lint_failed", [], False, now)
         return 1
     commit_email, connected, lanes = load_config()
-    done_ids = {p.stem for p in (IVY / "dispatch" / "done").glob("*.md")}
+    # Load the gate from the synchronized checkout, after ensure_clone. The
+    # launchd copy can be stale or lack this companion module altogether.
+    sys.path.insert(0, str(IVY / "scripts"))
+    from verification import eligible_ids
+    done_ids = eligible_ids(IVY)
     skipped = []
 
     for qpath in sorted((IVY / "dispatch" / "queue").glob("*.md")):
@@ -296,7 +300,7 @@ def main():
             skipped.append({"id": cid, "reason": "expired"}); continue
         blockers = open_blockers(fm, done_ids)
         if blockers:
-            log(f"{cid}: blocked by {', '.join(blockers)} (not in dispatch/done/) — skipping")
+            log(f"{cid}: blocked by {', '.join(blockers)} (not independently verified) — skipping")
             skipped.append({"id": cid, "reason": "blocked_by"}); continue
         entry = lanes.get(fm["lane"], {}).get(fm.get("pool") or "anthropic")
         if not entry or entry.get("model") == "VERIFY":

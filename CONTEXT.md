@@ -3,8 +3,8 @@
 Scheduled agents that keep Tom's repositories moving and remember what they
 learn. This file is the glossary: the one word for each thing, and the words
 to stop using. Journals, memory pages, contracts, and commit messages use
-these terms. A concept that needs a word this file lacks is a gap to flag
-for the retro, never a synonym to invent.
+these terms. Flag a recurring Ivy concept that lacks a stable term for the retro. Ordinary
+explanatory language does not need a glossary entry.
 
 ## Language
 

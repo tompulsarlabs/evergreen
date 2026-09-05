@@ -1,6 +1,7 @@
 ---
 id: 2026-09-05-tomgreenai-planetary-review-01
 type: review
+verification_checks: ["report_on_main", "report_nonempty", "paths_at_pr_head"]
 state: done
 claimed_at: 2026-09-05T10:15:23+02:00
 repo: tompulsarlabs/tomgreen.ai
@@ -34,6 +35,8 @@ The report file exists on main of ivy, is non-empty, and every referenced
 path exists on the PR head.
 
 outcome:
+  verified: false
+  verification_status: unverified
   claimed_at: 2026-09-05T10:15:23+02:00
   finished_at: 2026-09-05T10:29:59+02:00
   harness: codex (dispatch-runner)

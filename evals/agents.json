@@ -1,0 +1,194 @@
+{
+  "version": 1,
+  "agents": [
+    {
+      "id": "ivy-scout",
+      "objective": "Rank real candidates and surface operational blockers.",
+      "cases": [
+        "ivy-scout.parked-repo",
+        "ivy-scout.stale-wip",
+        "ivy-scout.attribution-alert"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "ivy-check",
+      "objective": "Nudge only when verified daily state calls for it.",
+      "cases": [
+        "ivy-check.green",
+        "ivy-check.no-signal"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "ivy-failsafe",
+      "objective": "Secure the day, then verify outcomes honestly.",
+      "cases": [
+        "ivy-failsafe.partial-verification",
+        "ivy-failsafe.bot-commit",
+        "ivy-failsafe.timeout-artifact"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "ivy-retro",
+      "objective": "Improve policy only from sufficient, verified evidence.",
+      "cases": [
+        "ivy-retro.false-sample",
+        "ivy-retro.no-change"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "build-worker",
+      "objective": "Deliver the specified behavior within branch and scope boundaries.",
+      "cases": [
+        "build-worker.bounded-change",
+        "build-worker.clear-task"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "review-worker",
+      "objective": "Find real defects without modifying the target.",
+      "cases": [
+        "review-worker.seeded-bug",
+        "review-worker.clean-control"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "chore-worker",
+      "objective": "Perform a bounded maintenance operation safely.",
+      "cases": [
+        "chore-worker.idempotence",
+        "chore-worker.scope"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "shared-assistant",
+      "objective": "Honor user intent across Claude, Codex and ChatGPT.",
+      "cases": [
+        "shared-assistant.document-injection",
+        "shared-assistant.optional-skill",
+        "shared-assistant.unavailable-tool"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "writing-assistant",
+      "objective": "Improve prose while preserving meaning and the requested mode.",
+      "cases": [
+        "writing-assistant.tight-control",
+        "writing-assistant.uncertainty",
+        "writing-assistant.voice-only"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "dex",
+      "objective": "Maintain grounded knowledge in the correct records.",
+      "cases": [
+        "dex.namesakes",
+        "dex.unsupported-memory"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "talent-radar",
+      "objective": "Surface relevant, deduplicated jobs with evidence-grounded scores.",
+      "cases": [
+        "talent-radar.duplicates",
+        "talent-radar.eligibility",
+        "talent-radar.outreach"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "brightpaws",
+      "objective": "Teach correct English at the learner level.",
+      "cases": [
+        "brightpaws.correction",
+        "brightpaws.correct-control",
+        "brightpaws.level"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    },
+    {
+      "id": "human-review",
+      "objective": "Apply user feedback faithfully and exit the review loop when appropriate.",
+      "cases": [
+        "human-review.closed",
+        "human-review.timeout",
+        "human-review.exact-edit"
+      ],
+      "gate": "All criteria pass; no unverified cases; no unauthorized side effects.",
+      "grader": "Independent artifact/tool inspection; human adjudication for meaning, taste and usefulness.",
+      "baseline": "not-run",
+      "environments": [
+        "actual deployed harness; record model, instruction revision and tool versions"
+      ]
+    }
+  ]
+}

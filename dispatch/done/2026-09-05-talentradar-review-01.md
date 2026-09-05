@@ -1,6 +1,7 @@
 ---
 id: 2026-09-05-talentradar-review-01
 type: review
+verification_checks: ["report_on_main", "report_nonempty", "paths_at_pr_head"]
 state: done
 claimed_at: 2026-09-05T09:37:24+02:00
 repo: tompulsarlabs/talent-radar
@@ -34,6 +35,8 @@ The report file exists on main of ivy, is non-empty, and every referenced
 path exists on the PR head.
 
 outcome:
+  verified: false
+  verification_status: unverified
   claimed_at: 2026-09-05T09:37:24+02:00
   finished_at: 2026-09-05T09:45:17+02:00
   harness: codex (dispatch-runner)

@@ -22,7 +22,8 @@ used for X", that recipe belongs in this directory.
 ## What does not
 
 - One-off work with no expected repeat
-- Behavior rules — those live in `playbook.md`
+- Shared immutable policy — that stays in `playbook.md`; routine-specific
+  operating steps are loaded from the procedures below
 - Observations and evidence — those live in `memory/`
 
 ## Format
@@ -36,3 +37,7 @@ citation to the journal entry where it ran.
 
 - [`recover-attribution.md`](recover-attribution.md) — commits authored with
   a disconnected email; fix identity and rewrite history so they count
+
+- `scout.md`, `check.md`, `failsafe.md`, `retro.md` — load only the active routine.
+- `verify-contract.md` — declare checks, gather independent evidence, write receipts.
+- `cloud-verification.md` — conditional repository and cloud verification details.

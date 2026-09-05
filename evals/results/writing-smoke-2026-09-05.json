@@ -1,0 +1,29 @@
+{
+  "kind": "isolated writing smoke test, not a comparative release eval",
+  "date": "2026-09-05",
+  "model": null,
+  "model_note": "CLI default model ID was not emitted in the captured events; incomplete provenance prevents promotion.",
+  "harness": "codex exec --ignore-user-config --ephemeral --sandbox read-only",
+  "skill_revision": "6872b5ef37ee83c678ccc424d81aa8d2735aa1f5",
+  "duration_seconds": 7.9,
+  "usage": {
+    "input_tokens": 18078,
+    "cached_input_tokens": 11520,
+    "output_tokens": 102
+  },
+  "artifact": "evals/results/writing-smoke-2026-09-05-output.json",
+  "artifact_sha256": "85c7e40c26eeb48491b4929eb20dbc09ff74828070cc6b8bd8a723cad2f7b6e9",
+  "assessment": {
+    "reviewer": "Codex housekeeping assistant, separate from tested CLI run; not a calibrated blind judge",
+    "tight": "Meaning retained; no forced percentage cut.",
+    "uncertainty": "Tentative claim and sample limitation retained.",
+    "voice_only": "Specific observations supplied without a replacement draft."
+  },
+  "promotion_status": "unverified",
+  "limitations": [
+    "One run, no baseline comparison",
+    "Model ID not captured",
+    "Three requests batched together",
+    "Not evidence for the remaining agent roles"
+  ]
+}

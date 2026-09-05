@@ -1,0 +1,20 @@
+name: Agent and verification checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 scripts/verification-test.py
+      - run: python3 scripts/eval-agents-test.py
+      - run: python3 scripts/housekeeping-test.py
+      - run: python3 scripts/dispatch-runner-test.py
+      - run: bash scripts/dispatch-lint.sh
+      - run: bash scripts/memory-lint.sh
