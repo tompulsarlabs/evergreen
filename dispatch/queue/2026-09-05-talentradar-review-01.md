@@ -1,7 +1,8 @@
 ---
 id: 2026-09-05-talentradar-review-01
 type: review
-state: open
+state: claimed
+claimed_at: 2026-09-05T09:37:24+02:00
 repo: tompulsarlabs/talent-radar
 lane: frontier
 pool: openai
