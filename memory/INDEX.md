@@ -1,7 +1,7 @@
 ---
 subject: memory index
 type: index
-updated: 2026-09-02
+updated: 2026-09-05
 ---
 
 # Memory index
@@ -19,7 +19,7 @@ behavior lives in `playbook.md` and only the retro changes it.
 - [[repos/BrightPaws]] — ex-`margaux-en-tutor`; alive, but PR #1 is stale
 - [[repos/ai-capability-app]] — local alias `sybil`; PR #7 shipped 08-28
 - [[repos/countersign]] — private; PO core loop prototype
-- [[repos/talent-radar]] — private; scaffolded 2026-08-25
+- [[repos/talent-radar]] — private; scaffolded 08-25, PR #1 live build 09-03→
 - [[repos/talent-scout]] — first signal 2026-08-29, one data point
 - [[repos/yeva]] — private; setup-guide work, two sessions 09-01/09-02
 - [[repos/tompulsarlabs]] — org profile repo; first signal 2026-09-02

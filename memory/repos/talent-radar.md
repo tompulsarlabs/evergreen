@@ -1,13 +1,15 @@
 ---
 subject: tompulsarlabs/talent-radar
 type: repo
-updated: 2026-08-27
+updated: 2026-09-05
 ---
 
 # talent-radar
 
 **Private.** First seen in the 2026-08-26 watchlist sync, created the day
-before [cite:2026-08-26].
+before [cite:2026-08-26]. Dormant from the 2026-08-25 scaffold until PR #1
+opened 2026-09-03 — then became a substantial, still-unmerged feature
+build.
 
 As with [[repos/countersign]], private status means a green day resting on
 this repo alone is not independently confirmable — it depends on the profile's
@@ -17,14 +19,29 @@ every recorded day [[patterns]].
 ## Activity
 
 `4633ba0`, 2026-08-25 14:05:57 — "chore: scaffold Talent Radar repo,"
-correctly attributed to the connected address [cite:2026-08-25]. It is one of
-only two non-bot commits recorded that day — the lowest-volume day so far —
-though the public [[repos/tomgreen.ai]] commit is what actually confirmed
-green.
+correctly attributed to the connected address [cite:2026-08-25]. Clean tree,
+0 unpushed commits on the 2026-08-26 scan [cite:2026-08-26]; no further
+activity until PR #1.
 
-Clean tree, 0 unpushed commits on the 2026-08-26 scan [cite:2026-08-26]. No
-activity since the scaffold; no open PRs or issues.
+**PR #1** ("Restore Cowork history, build the Session 1 fetch layer, take it
+live on Supabase, and add the Radar UI"), opened 2026-09-03, still open and
+drafting as of 2026-09-05: a `talent_radar` Postgres schema (7 tables) live
+on Supabase, a Greenhouse/Lever/Ashby polling layer behind one interface
+(`fetch-jobs` fired by pg_cron), a read-only Radar UI, 126 vitest tests, and
+CI wired to gstack. First full poll run completed clean (38 boards, 4,271
+postings, 0 board errors) per the PR body [cite:2026-09-05]. Reviewed
+2026-09-05 by `2026-09-05-talentradar-review-01` (verified done) [[models]].
+
+## Verification note
+
+PR #1's files exist only on its own branch, not `main` — `search_code`
+(cross-repo, default-branch only) cannot confirm them directly; the PR's
+own body text is the fallback corroboration [[ops]]. This will resolve
+itself the day the PR merges.
 
 ## Changelog
 
+- 2026-09-05 — rewritten: dormant-scaffold framing replaced with the real
+  PR #1 build (Supabase fetch layer, Radar UI, CI); recorded the
+  search_code verification gap while PR #1 stays unmerged.
 - 2026-08-27 — page created from journals 2026-08-25→26 and `state.json`.

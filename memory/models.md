@@ -1,7 +1,7 @@
 ---
 subject: execution-lane routing evidence
 type: evidence
-updated: 2026-09-04
+updated: 2026-09-05
 ---
 
 # Models: lane × task-class outcomes
@@ -21,6 +21,8 @@ policy lives in `playbook.md` and `config.yml`, never here). One row per
 | 2026-09-02-tomgreenai-context-01 | build | workhorse / anthropic | yes | 14.5 | First verified `build`; CONTEXT.md glossary, draft PR #14, exactly the one file specified [cite:2026-09-04] |
 | 2026-09-02-tomgreenai-copy-02 | build | frontier / anthropic | yes | 40.0 | Draft PR #15 opened before the 40-min budget hit; runner recorded `exit: timeout` and never printed the report, verified done retroactively — see [[ops]] on the misclassification [cite:2026-09-04] |
 | 2026-09-03-tomgreenai-vfx-review-01 | review | frontier / openai | yes | 5.7 | Third D2 review execution; PR #13's "review gate, not a site change" claim held, but four real defects found in the asset-generation tooling itself [cite:2026-09-04] |
+| 2026-09-05-talentradar-review-01 | review | frontier / openai | yes | 7.8 | First review of `talent-radar`; PR #1's Supabase fetch layer and Radar UI, findings file:line-tied; verified via PR-body corroboration since PR #1 is still open (see [[ops]] on the search_code default-branch limit) [cite:2026-09-05] |
+| 2026-09-05-tomgreenai-planetary-review-01 | review | frontier / openai | yes | 14.5 | Fourth `tomgreen.ai` review; PR #16 merged before the review even finished, so verified directly via `search_code` against 3 sampled paths [cite:2026-09-05] |
 
 ## Pool health
 
@@ -35,11 +37,10 @@ No throttle or refusal events recorded on either pool yet [cite:2026-08-27].
 
 ## Reading
 
-n=6 now (1 chore, 3 review, 2 build), all first-pass. `review` just cleared
-the ≥3-verified-outcomes bar the Pareto rule requires before a lane move —
-all three ran frontier/openai, so the retro has a real basis to consider
-stepping `review` down to workhorse and watching whether the verdict
-quality holds, rather than trying it. `build` has its first two data
+n=8 now (1 chore, 5 review, 2 build), all first-pass. `review` has run
+frontier/openai five times straight, all first-pass — the retro has an even
+stronger basis now to try stepping it down to workhorse and watching
+whether verdict quality holds. `build` has its first two data
 points (workhorse/anthropic and frontier/anthropic, both first-pass) —
 still short of the bar, and confounded by lane: `copy-02` ran frontier
 only because it was hand-pinned there after the runner-bug re-queue, not
@@ -61,6 +62,10 @@ the stale-checkout/PATH root causes, fixed same day [cite:2026-09-02].
 
 ## Changelog
 
+- 2026-09-05 — two more `review` contracts verified done (`talentradar-review-01`,
+  `tomgreenai-planetary-review-01`); n=6→8; `review` now has 5 straight
+  first-pass frontier/openai outcomes, a stronger basis for a retro lane-move
+  trial.
 - 2026-09-04 — three more contracts verified (`context-01`, `copy-02` both
   `build`; `vfx-review-01` review) via the new cross-repo query-string
   technique [[ops]]; n=3→6; `review` class cleared the Pareto

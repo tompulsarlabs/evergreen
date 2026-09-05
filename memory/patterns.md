@@ -1,7 +1,7 @@
 ---
 subject: observed working rhythm
 type: patterns
-updated: 2026-08-30
+updated: 2026-09-05
 ---
 
 # Patterns: how the work actually happens
@@ -34,7 +34,10 @@ On 2026-08-24 and 2026-08-26 real commits kept landing well after the check —
 landed after 18:00 [cite:2026-08-25]. Work also starts early: six commits
 between 06:42 and 07:55, before the 09:00 scout, on 2026-08-27
 [cite:2026-08-27]. So the check sits inside the working day rather than after
-it, and a grey reading at 18:00 has often been a *mid-day* reading.
+it, and a grey reading at 18:00 has often been a *mid-day* reading. Even a
+*green* reading can be mid-day: on 2026-09-05 two more `tomgreen.ai` PRs
+(#28, #29) were opened and merged between 18:20 and 19:30 CEST, after the
+18:00 check had already recorded green off 16 events [cite:2026-09-05].
 
 ## New work outcompetes old open PRs, consistently
 
@@ -112,6 +115,9 @@ demand" when it is actually "no runner."
 
 ## Changelog
 
+- 2026-09-05 — recorded that even a green 18:00 reading can be mid-day:
+  two more `tomgreen.ai` PRs landed 18:20→19:30 CEST tonight, after the
+  check had already recorded green.
 - 2026-09-01 — attribution-nudge pattern corrected: the 08-30/08-31 nudges
   were false positives from a too-narrow address check; non-conversion was
   the right response. Rule kept, test fixed.

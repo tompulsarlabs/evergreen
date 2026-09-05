@@ -1,7 +1,7 @@
 ---
 subject: Ivy's runtime environment
 type: ops
-updated: 2026-09-04
+updated: 2026-09-05
 ---
 
 # Ops: how the environment actually behaves
@@ -45,6 +45,18 @@ left unstamped for lack of access [cite:2026-09-04]. Still no substitute for
 `get_files`/`get_diff` (no file-list or line-level diff this way), but it
 closes the PR-body-reference gap that blocked most `build`-contract
 verification.
+
+`search_code` takes the same `repo:` in query-string treatment and reaches
+cross-repo too — confirmed 2026-09-05 resolving three `tomgreen.ai` file
+paths from a review report. But it only indexes **default branches**: a
+path that exists solely on an open PR's branch returns zero hits, indistinguishable
+from a path that was never added. Verifying `2026-09-05-talentradar-review-01`
+against PR #1 (still draft, not merged) hit exactly this — `search_code`
+came back empty for `src/lib/board.ts`, which the PR's own body then
+confirmed exists. So a review/build contract's file-existence check is only
+directly answerable by `search_code` once the underlying PR has merged;
+before that, PR-body corroboration is the fallback, not a sign the contract
+failed [cite:2026-09-05].
 
 ## The contributions signal is not stable
 
@@ -152,6 +164,10 @@ explicitly [cite:ada1982].
 
 ## Changelog
 
+- 2026-09-05 — recorded that `search_code` reaches cross-repo the same way
+  as the other `search_*` tools but only indexes default branches, so it
+  cannot confirm a path that exists only on an open PR's branch; PR-body
+  text is the fallback for that case.
 - 2026-09-04 — recorded that embedding `repo:owner/name` in a `search_*`
   tool's query string, rather than its `owner`/`repo` parameters, returns
   cross-repo results the dedicated parameters would have blocked; used it to

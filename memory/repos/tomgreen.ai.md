@@ -1,7 +1,7 @@
 ---
 subject: tompulsarlabs/tomgreen.ai
 type: repo
-updated: 2026-08-31
+updated: 2026-09-05
 ---
 
 # tomgreen.ai
@@ -20,6 +20,7 @@ the usual reason a day is green.
 | 2026-08-27 | 6 | 06:42–07:55 local — **none countable**, see below [cite:2026-08-27] |
 | 2026-08-28 | 46 (org total) | 3 merged PRs (#3/#4/#5) + direct pushes; largest day recorded so far [cite:2026-08-28] |
 | 2026-08-29→30 | — | PR #6 ("solar system becomes the site") opened 08-28, drafted through 08-29, merged 2026-08-30T00:10 CEST after an 18:09→00:10 run [cite:2026-08-29][cite:2026-08-30] |
+| 2026-09-05 | 14 PRs merged | New record: PR #16 (carried from 09-04) through #29, one continuous 08:20→19:30 CEST run — "planetary capture engine," mobile CV/nav/hover fixes, copy clarity, home/lab role split [cite:2026-09-05] |
 
 The 2026-08-26 run covered a full design-system round trip (white primary
 ground, twilight planetary map, career corridor walkthrough, per-stop company
@@ -66,6 +67,10 @@ any stale clone needs `git fetch && git reset --hard origin/main`.
 
 ## Changelog
 
+- 2026-09-05 — recorded the highest single-day PR-merge count yet: 14 PRs
+  (#16→#29) merged in one continuous 08:20→19:30 CEST run, extending well
+  past the 18:00 check. Two review contracts also verified done tonight,
+  one against the merged PR #16 directly [[models]].
 - 2026-09-01 — 08-31 attribution risk marked a false alarm: the address is
   connected, the scanner's check was too narrow.
 - 2026-08-31 (failsafe) — recorded the recurring attribution-risk nudge and
