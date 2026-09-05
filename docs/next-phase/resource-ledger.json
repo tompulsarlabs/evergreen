@@ -27,7 +27,7 @@
     "billed_dollars": null,
     "status": "No authenticated isolated model path; dedicated key and $5 cap question pending. No paid calls authorized yet."
   },
-  "stage_status": "36 deterministic tests pass; copy failure reproduced; one candidate repair; recovery and new runtime verification unexecuted; milestone A not passed; engineering allocation exhausted",
+  "stage_status": "36 deterministic tests at prior revision; recovery, ownership rejection and expired-budget refusal now observed; fresh build/cancel/deadline verification awaits extension; milestone A not passed",
   "continuation_rule": "Charge subsequent implementation/debugging and any later verification time to this same budget. Handoffs do not reset it.",
   "stage_debits": [
     {
@@ -50,16 +50,24 @@
   ],
   "runtime_probe_attempts": 1,
   "runtime_probe_outcomes": {
-    "preparation_failed_unconfirmed": 1,
+    "preparation_failed_recovered": 1,
     "completed": 0
   },
   "repair_iterations_used": 1,
   "repair_iterations_limit": 2,
   "runtime_debug_controls": {
     "copy_failure_reproduced": true,
-    "recovery": "unverified_approval_wait_interrupted",
-    "fresh_budget_refusal": "predicted_from_ledger_not_executed",
+    "recovery": "verified_stopped_reservation_closed",
+    "fresh_budget_refusal": "observed_cli_exit_2_ledger_unchanged",
     "runtime_window": "expired_no_reset",
-    "actual_build_cancel_deadline": "unverified"
+    "actual_build_cancel_deadline": "unverified",
+    "ownership_rejection": "observed_real_docker_inspection"
+  },
+  "followup_recovery": {
+    "observed_at": "2026-09-05 18:02:35 UTC",
+    "authorization": "User asked to solve remaining gaps; recovery and nonlaunching diagnostics only.",
+    "runtime_allowance_changed": false,
+    "implementation_extension": "pending_user_response_45_minutes_3_probes_20_minute_window",
+    "engineering_budget_reopened": false
   }
 }

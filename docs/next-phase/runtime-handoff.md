@@ -1,4 +1,25 @@
-# High checkpoint: repair implemented, live verification blocked
+# Recovery verified; bounded execution extension pending
+
+Follow-up on 5 September 2026, after Tom asked to solve the outstanding gaps:
+`recover-probe` confirmed that the original attempt-owned container is stopped
+and closed its reservation. The consumed `isolation-1` attempt is retained with
+`execution_error`; the ledger's original start time and limits are unchanged.
+A real Docker inspection rejected a deliberately mismatched owner. A fresh CLI
+probe returned `attempt or execution time budget exhausted` before creating a
+new attempt; the ledger was unchanged by that refusal.
+
+Private evidence: `recovery-controls-20260905.json` in the original store and
+`isolation-1/stop-1788631255903549000.json`. These are observed recovery/ownership/
+budget controls, not successful worker execution. Image build, success/cancel/
+deadline paths and real agent execution are still unverified.
+
+A proposed extension awaits Tom's answer: up to 45 additional engineering minutes,
+a 20-minute runtime window for at most three new probes, the one remaining repair
+iteration, and all prior attempts/debits retained. No runtime allowance was changed
+and no paid model call was authorized. The recovery diagnostics were authorized
+by this follow-up; they do not reopen the expired implementation budget.
+
+## Previous High checkpoint (retained history)
 
 High continuation, 5 September 2026: one repair iteration, 36 deterministic tests
 passing. The exact original copy failure was reproduced and retained:
